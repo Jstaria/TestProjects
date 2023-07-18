@@ -16,13 +16,15 @@ namespace PathFinding
         private Tile[,] visualGrid;
         private Random rng;
 
-        private const int padding = 5000;
+        private int padding;
 
         private Texture2D asset;
 
-        public AStar(int XYDimension, Texture2D asset, SpriteFont font)
+        public AStar(int padding, int XYDimension, Texture2D asset, SpriteFont font)
         {
             rng = new Random();
+
+            this.padding = padding;
 
             visualGrid = new Tile[XYDimension, XYDimension];
 

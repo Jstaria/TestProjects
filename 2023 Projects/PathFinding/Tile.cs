@@ -124,7 +124,7 @@ namespace PathFinding
             
             sb.Draw(asset, position, color);
            
-            if (!this.isWall && number < 30)
+            if (!this.isWall && number < 20)
             {
                 sb.DrawString(font, number.ToString(), new Vector2(position.X + position.Width / 3, position.Y + position.Height / 3), Color.Black);
             }

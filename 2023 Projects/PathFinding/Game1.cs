@@ -36,7 +36,7 @@ namespace PathFinding
 
             square = Content.Load<Texture2D>("square");
             font = Content.Load<SpriteFont>("font");
-            pathFinding = new AStar(200, square, font);
+            pathFinding = new AStar(0, 50, square, font);
 
            
 
