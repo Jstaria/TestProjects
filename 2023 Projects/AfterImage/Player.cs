@@ -78,6 +78,7 @@ namespace AfterImage
 
             if (kb.IsKeyDown(Keys.W) && !dashFlag[0])
             {
+
                 if (speedY > -speed)
                 {
                     speedY--;
