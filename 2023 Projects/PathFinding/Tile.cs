@@ -27,6 +27,11 @@ namespace PathFinding
             get { return position; }
         }
 
+        public Vector2 PositionV
+        {
+            get { return new Vector2((int)position.X, (int)position.Y); }
+        }
+
         public int Number
         {
             get { return number; }
@@ -114,7 +119,7 @@ namespace PathFinding
 
             if (this.isWall)
             {
-                color = Color.Firebrick;
+                color = Color.SaddleBrown;
             }
 
             else

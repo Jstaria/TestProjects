@@ -53,7 +53,7 @@ namespace PathFinding
             }
         }
 
-        public void Algo(Vector2 pos)
+        public Tile[,] Algo(Vector2 pos)
         {
             ResetTiles();
 
@@ -89,6 +89,8 @@ namespace PathFinding
                     i--;
                 }
             }
+
+            return visualGrid;
         }
 
         private Tile GetUnvisitedNeighbor(Tile current)

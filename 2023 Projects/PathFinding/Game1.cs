@@ -14,6 +14,8 @@ namespace PathFinding
 
         private AStar pathFinding;
 
+        private Entity enemy;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -36,9 +38,10 @@ namespace PathFinding
 
             square = Content.Load<Texture2D>("square");
             font = Content.Load<SpriteFont>("font");
+
             pathFinding = new AStar(0, 50, square, font);
 
-           
+            enemy = new Entity(square, 25, 25, 50);           
 
             // TODO: use this.Content to load your game content here
         }
@@ -51,7 +54,8 @@ namespace PathFinding
             // TODO: Add your update logic here
             Vector2 mousePos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
-            pathFinding.Algo(mousePos);
+            enemy.Update(pathFinding.Algo(mousePos));
+
             base.Update(gameTime);
         }
 
@@ -64,6 +68,8 @@ namespace PathFinding
             _spriteBatch.Begin();
 
             pathFinding.Draw(_spriteBatch);
+
+            enemy.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);
