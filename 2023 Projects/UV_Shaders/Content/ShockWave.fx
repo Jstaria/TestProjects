@@ -33,23 +33,23 @@ float4 MainPS(in VertexShaderOutput input) : COLOR
 	
     float2 newUV = input.UV * 2 - 1;
 	
-    float len2 = length(input.UV - float2(x, 1));
-    float len = length(input.UV - float2(x, 0));
+    //float len2 = length(input.UV - float2(x, 1));
+    float len = length(input.UV - float2(x, y));
 	
     float timer = frac(time);
     float upperRing = smoothstep(len + UpperFeather, len - BottomFeather, timer);
-    float upperRing2 = smoothstep(len2 + UpperFeather, len2 - BottomFeather, timer);
+    //float upperRing2 = smoothstep(len2 + UpperFeather, len2 - BottomFeather, timer);
 	
     float inverseRing = 1 - upperRing;
-    float inverseRing2 = 1 - upperRing2;
+    //float inverseRing2 = 1 - upperRing2;
 	
     float finalRing = upperRing * inverseRing;
-    float finalRing2 = upperRing2 * inverseRing2;
+    //float finalRing2 = upperRing2 * inverseRing2;
 	
     float2 finalUV = input.UV - newUV * finalRing * rippleIntensity * (1 - timer);
-    float2 finalUV2 = input.UV - newUV * finalRing2 * rippleIntensity * (1 - timer);
+    //float2 finalUV2 = input.UV - newUV * finalRing2 * rippleIntensity * (1 - timer);
 	
-    finalUV = (input.UV) / finalUV * finalUV2;
+    //finalUV = (input.UV) / finalUV; //* finalUV2;
 	
     float4 col = tex2D(textureSampler, finalUV);
 	
