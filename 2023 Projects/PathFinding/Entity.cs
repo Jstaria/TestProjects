@@ -43,7 +43,7 @@ namespace PathFinding
 
             Vector2 nextPosition = CheckNeighbors(current, visualGrid);
 
-            int num = 50;
+            int num = 10;
 
             if (nextPosition != position)
             {
