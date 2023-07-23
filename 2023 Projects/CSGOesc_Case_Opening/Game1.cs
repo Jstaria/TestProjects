@@ -17,13 +17,14 @@ namespace CSGOesc_Case_Opening
         private SpriteBatch _spriteBatch;
 
         public static SpriteFont ReadOut;
+        public static SpriteFont regular;
 
         public static SoundEffect hitMarker;
 
-        private static Soundtrack playlist;
-
         private SlotMachine slot;
-        
+
+        private Song[] songs;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -45,7 +46,7 @@ namespace CSGOesc_Case_Opening
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playlist = new Soundtrack(new Song[]
+            songs = new Song[]
             {
                 Content.Load<Song>("Elevator-music"),
                 Content.Load<Song>("Fluffing-a-Duck"),
@@ -54,9 +55,10 @@ namespace CSGOesc_Case_Opening
                 Content.Load<Song>("Monkeys-Spinning-Monkeys"),
                 Content.Load<Song>("Scheming-Weasel-faster"),
                 Content.Load<Song>("Sneaky-Snitch"),
-            });
+            };
 
             ReadOut = Content.Load<SpriteFont>("ReadOut");
+            regular = Content.Load<SpriteFont>("regular");
 
             Dictionary<string, Texture2D> assets = new Dictionary<string, Texture2D>
             {
@@ -67,15 +69,13 @@ namespace CSGOesc_Case_Opening
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
 
-            slot = new SlotMachine(assets, Vector2.Zero);
+            slot = new SlotMachine(assets, Vector2.Zero, songs);
 
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            playlist.Play();
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -98,11 +98,6 @@ namespace CSGOesc_Case_Opening
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-        }
-
-        public static void PlayNext()
-        {
-            playlist.PlayNext();
         }
     }
 }

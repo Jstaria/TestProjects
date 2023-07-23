@@ -35,24 +35,14 @@ namespace CSGOesc_Case_Opening
             rng = new Random();
 
             count = rng.Next(songs.Length);
-
-            MediaPlayer.IsRepeating = true;
         }
 
         public void Play()
         {
-            if (!(MediaPlayer.State == MediaState.Playing))
+            if (MediaPlayer.State != MediaState.Playing)
             {
-                MediaPlayer.Volume = volumes[count];
-                MediaPlayer.Play(songs[count]);
-
-                while ((count = rng.Next(songs.Length)) == prevCount)
-                {
-                    count = rng.Next(songs.Length);
-                }
+                PlayNext();
             }
-
-            prevCount = count;
         }
 
         /// <summary>
@@ -60,7 +50,55 @@ namespace CSGOesc_Case_Opening
         /// </summary>
         public void PlayNext()
         {
+            prevCount = count;
+
+            while ((count = rng.Next(songs.Length)) == prevCount)
+            {
+                count = rng.Next(songs.Length);
+            }
+
+            MediaPlayer.Volume = volumes[count];
+            MediaPlayer.Play(songs[count]);
+        }
+
+        public void VolumeUp()
+        {
+            MediaPlayer.Pause();
+
+            for (int i = 0; i < songs.Length; i++)
+            {
+                volumes[i] = Math.Clamp(volumes[i] + .05f, 0, 1);
+            }
+
+            MediaPlayer.Volume = volumes[count];
+
+            MediaPlayer.Resume();
+        }
+
+        public void VolumeDown()
+        {
+            MediaPlayer.Pause();
+
+            for (int i = 0; i < songs.Length; i++)
+            {
+                volumes[i] = Math.Clamp(volumes[i] - .05f, 0, 1);
+            }
+
+            MediaPlayer.Volume = volumes[count];
+
+            MediaPlayer.Resume();
+        }
+
+        public void Previous()
+        {
             MediaPlayer.Stop();
+            MediaPlayer.Volume = volumes[prevCount];
+            MediaPlayer.Play(songs[prevCount]);
+        }
+
+        public void Mute()
+        {
+            MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
         }
     }
 }

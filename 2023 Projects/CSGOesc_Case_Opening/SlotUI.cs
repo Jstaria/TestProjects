@@ -22,6 +22,7 @@ namespace CSGOesc_Case_Opening
 
         private Item prevWonItem;
         private bool canSpin;
+        private bool idle;
 
         private List<Item> items;
         private List<Item> activeItems;
@@ -39,10 +40,10 @@ namespace CSGOesc_Case_Opening
         private StreamReader itemReader;
         private Random rng;
 
-        public bool CanSpin
+        public bool Idle
         {
-            get { return canSpin; }
-            set { canSpin = value; }
+            get { return idle; }
+            set { idle = value; }
         }
 
         public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position)
@@ -55,6 +56,7 @@ namespace CSGOesc_Case_Opening
             this.items = new List<Item>();
             this.activeItems = new List<Item>();
             this.activeItemsPos = new List<Vector2>();
+            this.idle = true;
 
             this.num = 1;
             this.spinCount = 0;
@@ -76,19 +78,26 @@ namespace CSGOesc_Case_Opening
 
             if (spinCount > 0)
             {
-                if (num > 5)
+                if (idle)
                 {
-                    num *= .992f;
-                }
-
-                else if (num > .005f & num <= 5)
-                {
-                    num *= .975f;
+                    num = 1;
                 }
                 else
                 {
-                    num = 0;
-                    CanSpin = true;
+                    if (num > 5)
+                    {
+                        num *= .992f;
+                    }
+
+                    else if (num > .005f & num <= 5)
+                    {
+                        num *= .975f;
+                    }
+                    else
+                    {
+                        num = 0;
+                        canSpin = true;
+                    }
                 }
             }
             
@@ -110,7 +119,7 @@ namespace CSGOesc_Case_Opening
                     activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, 185);
                 }
 
-                activeItems[i].Update();               
+                activeItems[i].Update(idle);               
                 activeItemsPos[i] -= new Vector2(num, 0);
 
                 if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
@@ -174,6 +183,8 @@ namespace CSGOesc_Case_Opening
                 num = rng.Next(70,100);
 
                 spinCount++;
+
+                idle = false;
 
                 canSpin = false;
             }

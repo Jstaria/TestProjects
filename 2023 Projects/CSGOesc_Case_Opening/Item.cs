@@ -83,17 +83,17 @@ namespace CSGOesc_Case_Opening
             this.expand = 1;
         }
 
-        public void Update()
+        public void Update(bool idle)
         {
             if (hoveredOver && expand < 40)
             {
-                if (hoveredOver != previouslyHovered)
+                if (hoveredOver != previouslyHovered && !idle)
                 {
                     SoundEffectInstance sound;
 
                     sound = Game1.hitMarker.CreateInstance();
 
-                    sound.Volume = .05f;
+                    sound.Volume = .03f;
 
                     sound.Play();
                 }
