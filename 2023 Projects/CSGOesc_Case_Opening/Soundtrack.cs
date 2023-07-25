@@ -21,16 +21,16 @@ namespace CSGOesc_Case_Opening
         public Soundtrack(Song[] songs)
         {
             this.songs = songs;
-            this.volumes = new float[]
+            this.volumes = new float[songs.Length];
+
+            List<string> stringVolumes = FileIO.ReadFrom("Volume");
+
+            for (int i = 0; i < songs.Length; i++)
             {
-                0.05f,
-                0.1f,
-                0.075f,
-                0.075f,
-                0.075f,
-                0.1f,
-                0.075f,
-            };
+                volumes[i] = float.Parse(stringVolumes[i + 1]);
+            }
+
+            MediaPlayer.IsMuted = bool.Parse(stringVolumes[0]);
 
             rng = new Random();
 
@@ -65,10 +65,15 @@ namespace CSGOesc_Case_Opening
         {
             MediaPlayer.Pause();
 
+            List<string> newVolumes = FileIO.ReadFrom("Volume");
+
             for (int i = 0; i < songs.Length; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] + .05f, 0, 1);
+                volumes[i] = Math.Clamp(volumes[i] + .02f, 0, 1);
+                newVolumes[i + 1] = volumes[i].ToString();
             }
+
+            FileIO.WriteTo("Volume", newVolumes);
 
             MediaPlayer.Volume = volumes[count];
 
@@ -79,10 +84,15 @@ namespace CSGOesc_Case_Opening
         {
             MediaPlayer.Pause();
 
+            List<string> newVolumes = FileIO.ReadFrom("Volume");
+
             for (int i = 0; i < songs.Length; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] - .05f, 0, 1);
+                volumes[i] = Math.Clamp(volumes[i] - .01f, 0, 1);
+                newVolumes[i + 1] = volumes[i].ToString();
             }
+
+            FileIO.WriteTo("Volume", newVolumes);
 
             MediaPlayer.Volume = volumes[count];
 
@@ -98,7 +108,13 @@ namespace CSGOesc_Case_Opening
 
         public void Mute()
         {
-            MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
+            List<string> newVolumes = FileIO.ReadFrom("Volume");
+
+            MediaPlayer.IsMuted = !bool.Parse(newVolumes[0]);
+
+            newVolumes[0] = MediaPlayer.IsMuted.ToString();
+
+            FileIO.WriteTo("Volume", newVolumes);
         }
     }
 }

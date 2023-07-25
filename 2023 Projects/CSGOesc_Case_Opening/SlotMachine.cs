@@ -24,7 +24,6 @@ namespace CSGOesc_Case_Opening
     {
         private Dictionary<string, Texture2D> assets;
         private Texture2D[] buttonAssets;
-        private Soundtrack playlist;
 
         private Vector2 position;
 
@@ -39,7 +38,7 @@ namespace CSGOesc_Case_Opening
 
         private Dictionary<string, List<Button>> buttons;
 
-        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, Song[] songs)
+        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position)
         {
             this.assets = assets;
             this.buttonAssets = new Texture2D[]
@@ -56,8 +55,6 @@ namespace CSGOesc_Case_Opening
 
             this.wonItems = null;
 
-            this.playlist = new Soundtrack(songs);
-
             buttons = new Dictionary<string, List<Button>>();
 
             CreateButtons();
@@ -65,8 +62,6 @@ namespace CSGOesc_Case_Opening
 
         public void Update(GameTime gameTime)
         {
-            playlist.Play();
-
             float timeSinceWin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfWin;
             System.Diagnostics.Debug.WriteLine(timeSinceWin);
 
@@ -136,21 +131,6 @@ namespace CSGOesc_Case_Opening
 
             buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black));
             buttons["SlotUI"][0].OnLeftClick += SlotUI.Spin;
-
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black));
-            buttons["SlotUI"][1].OnLeftClick += playlist.Mute;
-
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(60, 520, 90, 30), "Vol Up", Game1.regular, Color.Black));
-            buttons["SlotUI"][2].OnLeftClick += playlist.VolumeUp;
-
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(60, 655, 90, 30), "Vol Down", Game1.regular, Color.Black));
-            buttons["SlotUI"][3].OnLeftClick += playlist.VolumeDown;
-
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(15, 565, 30, 75), "<", Game1.ReadOut, Color.Black));
-            buttons["SlotUI"][4].OnLeftClick += playlist.Previous;
-
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(165, 565, 30, 75), ">", Game1.ReadOut, Color.Black));
-            buttons["SlotUI"][5].OnLeftClick += playlist.PlayNext;
         }
     }
 }
