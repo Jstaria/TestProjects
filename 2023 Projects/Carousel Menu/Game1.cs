@@ -40,16 +40,7 @@ namespace Carousel_Menu
             Content.Load<Texture2D>("square"),   // Load square.png
             Content.Load<Texture2D>("square"),   // Load square.png
             Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
-            Content.Load<Texture2D>("square"),   // Load square.png
+
 
         };
 
@@ -87,7 +78,7 @@ namespace Carousel_Menu
             spriteBatch.Begin();
 
             // Draw the Carousel passing the GraphicsDevice, view matrix, projection matrix, and camera position
-            carousel.Draw(GraphicsDevice, viewMatrix, projectionMatrix, new Vector3(0, 0, 1000000));
+            carousel.Draw(GraphicsDevice, viewMatrix, projectionMatrix, new Vector3(0, 0, 10000000000));
 
             // End drawing with the SpriteBatch
             spriteBatch.End();

@@ -23,6 +23,8 @@ namespace CSGOesc_Case_Opening
         private Color fontColor;
         private bool active;
 
+        public bool Active { get { return active; } }
+
         public event OnButtonClick OnLeftClick;
 
         /// <summary>

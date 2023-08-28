@@ -117,6 +117,13 @@ namespace CSGOesc_Case_Opening
                         button.Draw(sb);
                     }
 
+                    PointManager.DrawPoints(sb, new Vector2(620, 685) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2);
+
+                    if (SlotUI.spin != null)
+                    {
+                        SlotUI.spin.Draw(sb);
+                    }
+
                     break;
 
                 case SlotState.WinUI:

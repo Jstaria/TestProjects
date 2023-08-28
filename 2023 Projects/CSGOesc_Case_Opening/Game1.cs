@@ -33,7 +33,7 @@ namespace CSGOesc_Case_Opening
 
         private Dictionary<string, List<Button>> buttons;
 
-        private Dictionary<string, Texture2D> assets;
+        public static Dictionary<string, Texture2D> assets;
 
         private GameState prevState;
         private GameState currentState;
@@ -41,6 +41,7 @@ namespace CSGOesc_Case_Opening
         private BasicEffect BasicEffect;
 
         private SlotMachine slot;
+        private PointManager pointManager;
 
         private Soundtrack playlist;
         private Song[] songs;
@@ -63,7 +64,7 @@ namespace CSGOesc_Case_Opening
 
             currentState = GameState.Slots;
 
-            buttons = new Dictionary<string, List<Button>>(); 
+            buttons = new Dictionary<string, List<Button>>();
 
             base.Initialize();
         }
@@ -99,7 +100,10 @@ namespace CSGOesc_Case_Opening
 
             slot = new SlotMachine(assets, Vector2.Zero);
 
+            pointManager = new PointManager();
+
             CreateButtons();
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -115,6 +119,13 @@ namespace CSGOesc_Case_Opening
                 case GameState.Game:
 
                     ReduceFade();
+
+                    pointManager.Update(gameTime);
+
+                    foreach (Button button in buttons["Game"])
+                    {
+                        button.Update(gameTime);
+                    }
 
                     break;
 
@@ -161,6 +172,23 @@ namespace CSGOesc_Case_Opening
             {
                 case GameState.Game:
 
+                    pointManager.Draw(_spriteBatch);
+
+                    foreach (Button button in buttons["Game"])
+                    {
+                        button.Draw(_spriteBatch);
+                    }
+
+                    if (fade != 0)
+                    {
+                        _spriteBatch.Draw(
+                            assets["square"],
+                            new Rectangle(
+                                (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
+                                (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
+                            Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
+                    }
+
                     break;
 
                 case GameState.Slots:
@@ -186,7 +214,16 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Pause:
 
-                    slot.Draw(_spriteBatch);
+                    switch(prevState)
+                    {
+                        case GameState.Game:
+                            pointManager.Draw(_spriteBatch);
+                            break;
+
+                        case GameState.Slots:
+                            slot.Draw(_spriteBatch);
+                            break;
+                    }
 
                     _spriteBatch.Draw(
                         assets["square"], 
@@ -219,9 +256,19 @@ namespace CSGOesc_Case_Opening
             currentState = GameState.Pause;
         }
 
+        private void Game()
+        {
+            currentState = GameState.Game;
+        }
+
         private void Slots()
         {
             currentState = GameState.Slots;
+        }
+
+        private void PrevState()
+        {
+            currentState = prevState;
         }
 
         private void ReduceFade()
@@ -242,12 +289,21 @@ namespace CSGOesc_Case_Opening
 
             buttons.Add("Slots", new List<Button>());
             buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black));
+            buttons["Slots"][0].OnLeftClick += SavePrevState;
             buttons["Slots"][0].OnLeftClick += Pause;
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black));
+            buttons["Slots"][1].OnLeftClick += Game;
+
+            buttons.Add("Game", new List<Button>());
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black));
+            buttons["Game"][0].OnLeftClick += SavePrevState;
+            buttons["Game"][0].OnLeftClick += Pause;
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Slots", regular, Color.Black));
+            buttons["Game"][1].OnLeftClick += Slots;
 
             buttons.Add("Pause", new List<Button>());
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black));
-            buttons["Pause"][0].OnLeftClick += SavePrevState;
-            buttons["Pause"][0].OnLeftClick += Slots;
+            buttons["Pause"][0].OnLeftClick += PrevState;
 
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black));
             buttons["Pause"][1].OnLeftClick += playlist.Mute;

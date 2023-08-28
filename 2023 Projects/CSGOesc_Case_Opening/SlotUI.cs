@@ -33,9 +33,10 @@ namespace CSGOesc_Case_Opening
         private int spinCount;
         private int prevSpinCount;
 
+        public static int spinCost = 15;
+
         private int itemBoxWidth;
         private int itemBoxHeight;
-        private float expandNum;
 
         private StreamReader itemReader;
         private Random rng;
@@ -45,6 +46,8 @@ namespace CSGOesc_Case_Opening
             get { return idle; }
             set { idle = value; }
         }
+
+        public Particle spin { get; set; }
 
         public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position)
         {
@@ -65,7 +68,7 @@ namespace CSGOesc_Case_Opening
 
             GetItems();
 
-            this.expandNum = 20;
+            this.spin = null;
             this.itemBoxWidth = 100;
             this.itemBoxHeight = 250;
 
@@ -74,6 +77,11 @@ namespace CSGOesc_Case_Opening
 
         public Item[] Update(GameTime gameTime)
         {
+            if (spin != null)
+            {
+                spin.Update();
+            }
+
             Item[] wonItems = new Item[2];
 
             if (spinCount > 0)
@@ -178,7 +186,7 @@ namespace CSGOesc_Case_Opening
 
             MouseState currentMouseState = Mouse.GetState();
             if (new Rectangle(0, 0, 1240, 720).Intersects(new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1)) &&
-                currentMouseState.LeftButton == ButtonState.Pressed && canSpin)
+                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost)
             {
                 num = rng.Next(70,100);
 
@@ -187,6 +195,10 @@ namespace CSGOesc_Case_Opening
                 idle = false;
 
                 canSpin = false;
+
+                spin = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()));
+
+                PointManager.SubtractPoints(spinCost);
             }
         }
 
