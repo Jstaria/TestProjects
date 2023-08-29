@@ -89,6 +89,7 @@ namespace CSGOesc_Case_Opening
                 if (idle)
                 {
                     num = 1;
+                    canSpin = true;
                 }
                 else
                 {
@@ -104,7 +105,6 @@ namespace CSGOesc_Case_Opening
                     else
                     {
                         num = 0;
-                        canSpin = true;
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace CSGOesc_Case_Opening
 
             MouseState currentMouseState = Mouse.GetState();
             if (new Rectangle(0, 0, 1240, 720).Intersects(new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1)) &&
-                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost)
+                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost && num == 1)
             {
                 num = rng.Next(70,100);
 

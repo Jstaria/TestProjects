@@ -23,7 +23,7 @@ namespace CSGOesc_Case_Opening
             clickParticles = new List<Particle>();
 
             ClickTotal = 1;
-            TotalPoints = 1000;
+            TotalPoints = 60;
 
             items = new Dictionary<String, int>();
             ClickMe = new Button(new Texture2D[]
