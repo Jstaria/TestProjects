@@ -22,6 +22,9 @@ namespace CSGOesc_Case_Opening
         private SpriteFont font;
         private Color fontColor;
         private bool active;
+        private float expandNum = 10;
+        private int expandNumHalf;
+        private bool expand;
 
         public bool Active { get { return active; } }
 
@@ -42,6 +45,7 @@ namespace CSGOesc_Case_Opening
             this.font = font;
             this.fontColor = fontColor;
             this.position = position;
+            this.expandNumHalf = (int)expandNum / 2;
 
             Vector2 textLength = font.MeasureString(text);
             textPos = new Vector2(
@@ -52,6 +56,9 @@ namespace CSGOesc_Case_Opening
 
         public void Update(GameTime gameTime)
         {
+            expandNum = 10;
+            expand = false;
+
             active = false;
 
             MouseState currentMState = Mouse.GetState();
@@ -70,6 +77,19 @@ namespace CSGOesc_Case_Opening
                 if (OnLeftClick != null)
                 {
                     OnLeftClick();
+                    expand = true;
+                }
+            }
+
+            if (expand)
+            {
+                if (expandNum > expandNumHalf)
+                {
+                    expandNum = expandNumHalf;
+                }
+                else if (expandNum <= expandNumHalf * 2)
+                {
+                    expandNum *= 1.1f;
                 }
             }
 
@@ -81,8 +101,7 @@ namespace CSGOesc_Case_Opening
             // Hovered over
             if (active)
             {
-                int expand = 10;
-                sb.Draw(assets[1], new Rectangle(position.X - expand, position.Y - expand, position.Width + expand * 2, position.Height + expand * 2), Color.White); ;
+                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), Color.White); ;
             }
             // Regular
             else
