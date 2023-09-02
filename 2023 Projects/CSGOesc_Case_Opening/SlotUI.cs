@@ -110,18 +110,13 @@ namespace CSGOesc_Case_Opening
                     //     num = (float)Math.Pow(2, 30 * ((rng.Next(10, 26) / 10) * timeSinceLastSpin + 3) / rng.Next(14,17)) - .05f;
                     // }
 
-                    if (num > 5)
-                    {
-                        num *= .5f;
-                    }
+                    // condition ? value_if_true : value_if_false
 
-                    else if (num > .005f & num <= 5)
+                    // condition ? value_if_true : (condition ? value_if_true : value_if_false)
+                    num *= (float)(num > 5 ? 0.992 : (num > 0.005 ? 0.975 : 0));
+
+                    if (num == 0)
                     {
-                        num *= .1f;
-                    }
-                    else
-                    {
-                        num = 0;
                         idle = true;
                     }
                 }
