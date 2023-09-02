@@ -15,8 +15,6 @@ namespace CSGOesc_Case_Opening
         private Color color;
         private string name;
 
-        private int uniqueID;
-
         private bool hoveredOver;
         private bool previouslyHovered;
 
@@ -68,17 +66,14 @@ namespace CSGOesc_Case_Opening
             get { return name; }
         }
 
-        public int UniqueID
-        {
-            get { return uniqueID; }
-            set { uniqueID = value; }
-        }
+        public string UniqueID { get; private set; }
 
-        public Item(int weight, Color color, string name)
+        public Item(int weight, Color color, string name, string uniqueID)
         {
             this.weight = weight;
             this.color = color;
             this.name = name;
+            this.UniqueID = uniqueID;
 
             this.expand = 1;
         }

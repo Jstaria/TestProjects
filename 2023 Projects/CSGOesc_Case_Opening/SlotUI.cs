@@ -24,7 +24,6 @@ namespace CSGOesc_Case_Opening
         private bool canSpin;
         private bool idle;
 
-        private List<Item> items;
         private List<Item> activeItems;
         private List<Vector2> activeItemsPos;
 
@@ -47,6 +46,8 @@ namespace CSGOesc_Case_Opening
             set { idle = value; }
         }
 
+        public List<Item> Items { get; private set; }
+
         public Particle spin { get; set; }
 
         public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position)
@@ -56,7 +57,7 @@ namespace CSGOesc_Case_Opening
             this.prevWonItem = null;
             this.canSpin = true;
 
-            this.items = new List<Item>();
+            this.Items = new List<Item>();
             this.activeItems = new List<Item>();
             this.activeItemsPos = new List<Vector2>();
             this.idle = true;
@@ -116,15 +117,22 @@ namespace CSGOesc_Case_Opening
             { 
                 int randNum = rng.Next(totalWeight);
 
+                string randString = null;
+
+                for (int j = 0; j < 20; j++)
+                {
+                    randString += (char)rng.Next(128);
+                }
+
                 if (activeItems.Count < numItems)
                 {
-                    activeItems.Add(GrabItem(randNum));
+                    activeItems.Add(GrabItem(randNum, randString));
                     activeItemsPos.Add(new Vector2(-2 * itemBoxWidth + i * itemBoxWidth, 185));
                 }
 
                 else if (activeItemsPos[i].X < -itemBoxWidth)
                 {
-                    activeItems[i] = GrabItem(randNum);
+                    activeItems[i] = GrabItem(randNum, randString);
                     activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, 185);
                 }
 
@@ -210,15 +218,15 @@ namespace CSGOesc_Case_Opening
         /// </summary>
         /// <param name="randNum"></param>
         /// <returns></returns>
-        private Item GrabItem(int randNum)
+        private Item GrabItem(int randNum, string randString)
         {
             Item newItem = null;
 
-            foreach (Item item in items)
+            foreach (Item item in Items)
             {
                 if (item.Min < randNum && randNum <= item.Max)
                 {
-                    newItem = new Item(item.Weight, item.Color, item.Name);
+                    newItem = new Item(item.Weight, item.Color, item.Name, randString);
                 }
             }
 
@@ -239,17 +247,18 @@ namespace CSGOesc_Case_Opening
             {
                 string[] itemDetails = line.Split(',');
 
-                items.Add(
+                Items.Add(
                     new Item(
                         int.Parse(itemDetails[4]),
                         new Color(
                             int.Parse(itemDetails[1]),
                             int.Parse(itemDetails[2]),
                             int.Parse(itemDetails[3])),
-                        itemDetails[0]));
+                        itemDetails[0], 
+                        "PLACEHOLDER"));
 
-                items[items.Count - 1].Min = totalWeight;
-                items[items.Count - 1].Max = totalWeight + int.Parse(itemDetails[4]);
+                Items[Items.Count - 1].Min = totalWeight;
+                Items[Items.Count - 1].Max = totalWeight + int.Parse(itemDetails[4]);
 
                 totalWeight += int.Parse(itemDetails[4]);
 
