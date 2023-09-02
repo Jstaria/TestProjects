@@ -288,36 +288,36 @@ namespace CSGOesc_Case_Opening
             };
 
             buttons.Add("Slots", new List<Button>());
-            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black));
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White));
             buttons["Slots"][0].OnLeftClick += SavePrevState;
             buttons["Slots"][0].OnLeftClick += Pause;
-            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black));
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black, Color.White));
             buttons["Slots"][1].OnLeftClick += Game;
 
             buttons.Add("Game", new List<Button>());
-            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black));
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White));
             buttons["Game"][0].OnLeftClick += SavePrevState;
             buttons["Game"][0].OnLeftClick += Pause;
-            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Slots", regular, Color.Black));
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Slots", regular, Color.Black, Color.White));
             buttons["Game"][1].OnLeftClick += Slots;
 
             buttons.Add("Pause", new List<Button>());
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black, Color.White));
             buttons["Pause"][0].OnLeftClick += PrevState;
 
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White));
             buttons["Pause"][1].OnLeftClick += playlist.Mute;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 520, 90, 30), "Vol Up", Game1.regular, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 520, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White));
             buttons["Pause"][2].OnLeftClick += playlist.VolumeUp;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 655, 90, 30), "Vol Down", Game1.regular, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 655, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White));
             buttons["Pause"][3].OnLeftClick += playlist.VolumeDown;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(15 + 200, 565, 30, 75), "<", Game1.ReadOut, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(15 + 200, 565, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White));
             buttons["Pause"][4].OnLeftClick += playlist.Previous;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165 + 200, 565, 30, 75), ">", Game1.ReadOut, Color.Black));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165 + 200, 565, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White));
             buttons["Pause"][5].OnLeftClick += playlist.PlayNext;
         }
     }

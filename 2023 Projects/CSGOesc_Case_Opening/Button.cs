@@ -21,10 +21,13 @@ namespace CSGOesc_Case_Opening
         private string text;
         private SpriteFont font;
         private Color fontColor;
+        private Color buttonColor;
         private bool active;
         private float expandNum = 10;
         private int expandNumHalf;
         private bool expand;
+
+        public Rectangle Position { get { return position; } }
 
         public bool Active { get { return active; } }
 
@@ -38,12 +41,13 @@ namespace CSGOesc_Case_Opening
         /// <param name="text"></param>
         /// <param name="font"></param>
         /// <param name="fontColor"></param>
-        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor)
+        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColor)
         {
             this.assets = assets;
             this.text = text;
             this.font = font;
             this.fontColor = fontColor;
+            this.buttonColor = buttonColor;
             this.position = position;
             this.expandNumHalf = (int)expandNum / 2;
 
@@ -101,12 +105,12 @@ namespace CSGOesc_Case_Opening
             // Hovered over
             if (active)
             {
-                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), Color.White); ;
+                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), buttonColor); ;
             }
             // Regular
             else
             {
-                sb.Draw(assets[0], position, Color.White);
+                sb.Draw(assets[0], position, buttonColor);
             }
 
             if (text != null)

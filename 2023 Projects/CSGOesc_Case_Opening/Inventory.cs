@@ -11,28 +11,67 @@ namespace CSGOesc_Case_Opening
 {
     internal class Inventory
     {
-        private Dictionary<String, Dictionary<string, Item>> inventory; 
+        private Dictionary<String, Dictionary<string, Item>> inventory;
+        private Dictionary<String, Dictionary<string, Button>> itemButtons;
+
+        private List<Item> items;
+
+        private Texture2D[] buttonAssets;
 
         public int NumItems { get; private set; }
 
         public Inventory(List<Item> items)
         {
+            this.items = items;
             this.inventory = new Dictionary<string, Dictionary<string, Item>>();
+            this.itemButtons = new Dictionary<string, Dictionary<string, Button>>();
 
-            foreach (Item item in items)
+            this.itemButtons.Add("Rarity", new Dictionary<string, Button>());
+
+            this.buttonAssets = new Texture2D[]
             {
-                inventory.Add(item.Name, new Dictionary<string, Item>());
+                Game1.assets["button_active"],
+                Game1.assets["button_inactive"]
+            };
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                Rectangle rect = new Rectangle();
+                if (i < 4)
+                {
+                    rect = new Rectangle(i * 200 + i * 60 + 130, 30, 200, 200);
+                }
+                else
+                {
+                    rect = new Rectangle((i - 4) * 200 + (i - 4) * 60 + 260, 260, 200, 200);
+                }
+
+                inventory.Add(items[i].Name, new Dictionary<string, Item>());
+                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color));
             }
         }
 
         public void Update(GameTime gameTime)
         {
-
+            for (int i = 0; i < itemButtons["Rarity"].Count; i++)
+            {
+                itemButtons["Rarity"].ElementAt(i).Value.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch sb)
         {
+            for (int i = 0; i < itemButtons["Rarity"].Count; i++)
+            {
+                itemButtons["Rarity"].ElementAt(i).Value.Draw(sb);
+            }
 
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                Rectangle rect = itemButtons["Rarity"].ElementAt(i).Value.Position;
+
+                sb.DrawString(Game1.ReadOut, inventory[items[i].Name].Count.ToString(), new Vector2((rect.X + rect.Width / 2) - Game1.ReadOut.MeasureString(inventory[items[i].Name].Count.ToString()).X / 2, (rect.Y + rect.Height / 2) + 20), Color.Black);
+            }
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ namespace CSGOesc_Case_Opening
         private Dictionary<string, Texture2D> assets;
         private Vector2 position;
 
+        private float timeOfLastSpin;
         private Item prevWonItem;
         private bool canSpin;
         private bool idle;
@@ -40,6 +41,8 @@ namespace CSGOesc_Case_Opening
         private StreamReader itemReader;
         private Random rng;
 
+        public bool HasSpun { get; private set; }
+
         public bool Idle
         {
             get { return idle; }
@@ -48,7 +51,7 @@ namespace CSGOesc_Case_Opening
 
         public List<Item> Items { get; private set; }
 
-        public Particle spin { get; set; }
+        public Particle spinParticle { get; set; }
 
         public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position)
         {
@@ -69,7 +72,7 @@ namespace CSGOesc_Case_Opening
 
             GetItems();
 
-            this.spin = null;
+            this.spinParticle = null;
             this.itemBoxWidth = 100;
             this.itemBoxHeight = 250;
 
@@ -78,9 +81,14 @@ namespace CSGOesc_Case_Opening
 
         public Item[] Update(GameTime gameTime)
         {
-            if (spin != null)
+            if (HasSpun)
             {
-                spin.Update();
+                timeOfLastSpin = (float)gameTime.TotalGameTime.TotalSeconds;
+            }
+
+            if (spinParticle != null)
+            {
+                spinParticle.Update();
             }
 
             Item[] wonItems = new Item[2];
@@ -94,14 +102,22 @@ namespace CSGOesc_Case_Opening
                 }
                 else
                 {
+                    float timeSinceLastSpin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastSpin;
+                    System.Diagnostics.Debug.WriteLine(timeSinceLastSpin);
+
+                    // if (num > 0)
+                    // {
+                    //     num = (float)Math.Pow(2, 30 * ((rng.Next(10, 26) / 10) * timeSinceLastSpin + 3) / rng.Next(14,17)) - .05f;
+                    // }
+
                     if (num > 5)
                     {
-                        num *= .992f;
+                        num *= .5f;
                     }
 
                     else if (num > .005f & num <= 5)
                     {
-                        num *= .975f;
+                        num *= .1f;
                     }
                     else
                     {
@@ -158,6 +174,8 @@ namespace CSGOesc_Case_Opening
                 }
             }
 
+            HasSpun = false;
+
             return wonItems;
         }
 
@@ -205,7 +223,9 @@ namespace CSGOesc_Case_Opening
 
                 canSpin = false;
 
-                spin = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()));
+                HasSpun = true;
+
+                spinParticle = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()));
 
                 PointManager.SubtractPoints(spinCost);
             }

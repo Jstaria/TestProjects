@@ -17,7 +17,8 @@ namespace CSGOesc_Case_Opening
     public enum SlotState
     {
         SlotsUI,
-        WinUI
+        WinUI,
+        Inventory
     }
 
     internal class SlotMachine
@@ -33,6 +34,7 @@ namespace CSGOesc_Case_Opening
         private Item prevWonItem;
 
         private SlotUI SlotUI;
+        private Inventory inventory;
 
         private SlotState currentState;
 
@@ -52,6 +54,7 @@ namespace CSGOesc_Case_Opening
             this.currentState = SlotState.SlotsUI;
 
             this.SlotUI = new SlotUI(assets, position);
+            this.inventory = new Inventory(SlotUI.Items);
 
             this.wonItems = null;
 
@@ -63,7 +66,6 @@ namespace CSGOesc_Case_Opening
         public void Update(GameTime gameTime)
         {
             float timeSinceWin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfWin;
-            System.Diagnostics.Debug.WriteLine(timeSinceWin);
 
             switch (currentState)
             {
@@ -79,6 +81,9 @@ namespace CSGOesc_Case_Opening
 
                     if (wonItems[0] != prevWonItem)
                     {
+                        Item wonItem = new Item(wonItems[1].Weight, wonItems[1].Color, wonItems[1].Name, wonItems[1].UniqueID);
+
+                        inventory.AddItem(wonItem);
                         timeOfWin = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
 
@@ -92,7 +97,18 @@ namespace CSGOesc_Case_Opening
                     break;
 
                 case SlotState.WinUI:
-                    System.Diagnostics.Debug.WriteLine(wonItems[0].Name);
+
+                    break;
+
+                case SlotState.Inventory:
+
+                    foreach (Button button in buttons["Inventory"])
+                    {
+                        button.Update(gameTime);
+                    }
+
+                    inventory.Update(gameTime);
+
                     break;
             }
         }
@@ -119,9 +135,9 @@ namespace CSGOesc_Case_Opening
 
                     PointManager.DrawPoints(sb, new Vector2(620, 685) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2);
 
-                    if (SlotUI.spin != null)
+                    if (SlotUI.spinParticle != null)
                     {
-                        SlotUI.spin.Draw(sb);
+                        SlotUI.spinParticle.Draw(sb);
                     }
 
                     break;
@@ -129,15 +145,46 @@ namespace CSGOesc_Case_Opening
                 case SlotState.WinUI:
 
                     break;
+
+                case SlotState.Inventory:
+
+                    sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
+
+                    foreach (Button button in buttons["Inventory"])
+                    {
+                        button.Draw(sb);
+                    }
+
+                    inventory.Draw(sb);
+
+                    break;
             }
+        }
+
+        private void OpenInventory()
+        {
+            currentState = SlotState.Inventory;
+        }
+
+        private void CloseInventory()
+        {
+            currentState = SlotState.SlotsUI;
         }
 
         private void CreateButtons()
         {
             buttons.Add("SlotUI", new List<Button>());
 
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black));
+            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black, Color.White));
             buttons["SlotUI"][0].OnLeftClick += SlotUI.Spin;
+
+            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Inventory", Game1.regular, Color.Black, Color.White));
+            buttons["SlotUI"][1].OnLeftClick += OpenInventory;
+
+            buttons.Add("Inventory", new List<Button>());
+
+            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Back", Game1.regular, Color.Black, Color.White));
+            buttons["Inventory"][0].OnLeftClick += CloseInventory;
         }
     }
 }

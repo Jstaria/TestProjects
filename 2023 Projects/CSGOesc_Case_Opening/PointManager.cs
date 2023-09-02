@@ -23,7 +23,7 @@ namespace CSGOesc_Case_Opening
             clickParticles = new List<Particle>();
 
             ClickTotal = 1;
-            TotalPoints = 60;
+            TotalPoints = 6000;
 
             items = new Dictionary<String, int>();
             ClickMe = new Button(new Texture2D[]
@@ -31,7 +31,7 @@ namespace CSGOesc_Case_Opening
                 Game1.assets["button_active"],
                 Game1.assets["button_inactive"]
             }, 
-            new Rectangle((1240 - 200) / 2, 160, 200, 200), "Click Me", Game1.ReadOut, Color.Black);
+            new Rectangle((1240 - 200) / 2, 160, 200, 200), "Click Me", Game1.ReadOut, Color.Black, Color.White);
 
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
