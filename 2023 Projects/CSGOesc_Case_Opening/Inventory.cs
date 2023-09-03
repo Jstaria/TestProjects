@@ -16,6 +16,7 @@ namespace CSGOesc_Case_Opening
         private Dictionary<String, Dictionary<string, Item>> inventory;
         private Dictionary<String, Dictionary<string, Button>> itemButtons;
 
+        private List<Item> itemsInInv;
         private List<Item> items;
 
         private Texture2D[] buttonAssets;
@@ -26,6 +27,7 @@ namespace CSGOesc_Case_Opening
         {
             this.itemNumber = 0;
             this.items = items;
+            this.itemsInInv = new List<Item>();
             this.inventory = new Dictionary<string, Dictionary<string, Item>>();
             this.itemButtons = new Dictionary<string, Dictionary<string, Button>>();
 
@@ -51,6 +53,7 @@ namespace CSGOesc_Case_Opening
 
                 inventory.Add(items[i].Name, new Dictionary<string, Item>());
                 itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .5f));
+                itemButtons["Rarity"][items[i].Name].OnLeftClick += RemoveOne;
             }
 
             LoadItems();
@@ -79,6 +82,11 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        public void RemoveOne()
+        {
+            RemoveItem(inventory["Uncommon"][inventory["Uncommon"].Values.ToList()[0].UniqueID]);
+        }
+
         public void LoadItems()
         {
             List<string> itemInfo = FileIO.ReadFrom("SavedInventory");
@@ -105,6 +113,8 @@ namespace CSGOesc_Case_Opening
         /// </summary>
         public void AddItem(Item item, bool append)
         {
+            itemsInInv.Add(item);
+
             itemNumber++;
 
             if (inventory[item.Name].ContainsKey(item.UniqueID)) { return; }
@@ -139,6 +149,36 @@ namespace CSGOesc_Case_Opening
             if (!inventory[item.Name].ContainsKey(item.UniqueID)) { return; }
 
             inventory[item.Name].Remove(item.UniqueID);
+            itemsInInv.Remove(item);
+
+            List<string> itemInfo = FileIO.ReadFrom("SavedInventory");
+
+            itemInfo.RemoveAt(item.ItemNumber-1);
+
+            itemNumber = 1;
+
+            List<string> newItemInfo = new List<string>();
+
+            foreach (String line in itemInfo)
+            {
+                String[] split = line.Split(',');
+
+                split[split.Length - 1] = itemNumber.ToString();
+                itemsInInv[itemNumber-1].ItemNumber = itemNumber; 
+
+                newItemInfo.Add(
+                    split[0] + "," +
+                    split[1] + "," +
+                    split[2] + "," +
+                    split[3] + "," +
+                    split[4] + "," +
+                    split[5] + "," +
+                    split[6]);
+
+                itemNumber++;
+            }
+
+            FileIO.WriteTo("SavedInventory", newItemInfo);
 
             // remove item at item.ItemNumber
         }
