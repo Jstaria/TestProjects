@@ -29,6 +29,8 @@ namespace CSGOesc_Case_Opening
         private Vector2 position;
 
         private float timeOfWin;
+        private float sceneSwitchTime;
+        private float currentSceneTime;
 
         private Item[] wonItems;
         private Item prevWonItem;
@@ -65,11 +67,20 @@ namespace CSGOesc_Case_Opening
 
         public void Update(GameTime gameTime)
         {
+            currentSceneTime = (float)gameTime.TotalGameTime.TotalSeconds;
             float timeSinceWin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfWin;
 
             switch (currentState)
             {
                 case SlotState.SlotsUI:
+
+                    if (CanUseButtons(gameTime))
+                    {
+                        foreach (Button button in buttons["SlotUI"])
+                        {
+                            button.Update(gameTime);
+                        }
+                    }
 
                     wonItems = SlotUI.Update(gameTime);
 
@@ -79,17 +90,12 @@ namespace CSGOesc_Case_Opening
                         SlotUI.Idle = true;
                     }
 
-                    if (wonItems[0] != prevWonItem)
+                    if (wonItems[0] != prevWonItem && wonItems[0] != null)
                     {
-                        Item wonItem = new Item(wonItems[1].Weight, wonItems[1].Color, wonItems[1].Name, wonItems[1].UniqueID);
+                        Item wonItem = new Item(wonItems[0].Weight, wonItems[0].Color, wonItems[0].Name, wonItems[0].UniqueID);
 
-                        inventory.AddItem(wonItem);
+                        inventory.AddItem(wonItem, true);
                         timeOfWin = (float)gameTime.TotalGameTime.TotalSeconds;
-                    }
-
-                    foreach (Button button in buttons["SlotUI"])
-                    {
-                        button.Update(gameTime);
                     }
 
                     prevWonItem = wonItems[0];
@@ -102,9 +108,12 @@ namespace CSGOesc_Case_Opening
 
                 case SlotState.Inventory:
 
-                    foreach (Button button in buttons["Inventory"])
+                    if (CanUseButtons(gameTime))
                     {
-                        button.Update(gameTime);
+                        foreach (Button button in buttons["Inventory"])
+                        {
+                            button.Update(gameTime);
+                        }
                     }
 
                     inventory.Update(gameTime);
@@ -150,24 +159,36 @@ namespace CSGOesc_Case_Opening
 
                     sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
 
+                    
                     foreach (Button button in buttons["Inventory"])
                     {
                         button.Draw(sb);
                     }
-
+                    
                     inventory.Draw(sb);
 
                     break;
             }
         }
 
+        private bool CanUseButtons(GameTime gameTime)
+        {
+            bool canUse = false;
+
+            if (gameTime.TotalGameTime.TotalSeconds - sceneSwitchTime > .1f) { canUse = true; }
+
+            return canUse;
+        }
+
         private void OpenInventory()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = SlotState.Inventory;
         }
 
         private void CloseInventory()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = SlotState.SlotsUI;
         }
 
@@ -175,15 +196,15 @@ namespace CSGOesc_Case_Opening
         {
             buttons.Add("SlotUI", new List<Button>());
 
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black, Color.White));
+            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black, Color.White, 0));
             buttons["SlotUI"][0].OnLeftClick += SlotUI.Spin;
 
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Inventory", Game1.regular, Color.Black, Color.White));
+            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Inventory", Game1.regular, Color.Black, Color.White, .5f));
             buttons["SlotUI"][1].OnLeftClick += OpenInventory;
 
             buttons.Add("Inventory", new List<Button>());
 
-            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Back", Game1.regular, Color.Black, Color.White));
+            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Back", Game1.regular, Color.Black, Color.White, .5f));
             buttons["Inventory"][0].OnLeftClick += CloseInventory;
         }
     }

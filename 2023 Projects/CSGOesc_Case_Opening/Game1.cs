@@ -38,6 +38,9 @@ namespace CSGOesc_Case_Opening
         private GameState prevState;
         private GameState currentState;
 
+        private float sceneSwitchTime;
+        private float currentSceneTime;
+
         private BasicEffect BasicEffect;
 
         private SlotMachine slot;
@@ -108,7 +111,9 @@ namespace CSGOesc_Case_Opening
         }
 
         protected override void Update(GameTime gameTime)
-        { 
+        {
+            currentSceneTime = (float)gameTime.TotalGameTime.TotalSeconds;
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -122,9 +127,12 @@ namespace CSGOesc_Case_Opening
 
                     pointManager.Update(gameTime);
 
-                    foreach (Button button in buttons["Game"])
+                    if (CanUseButtons(gameTime))
                     {
-                        button.Update(gameTime);
+                        foreach (Button button in buttons["Game"])
+                        {
+                            button.Update(gameTime);
+                        }
                     }
 
                     break;
@@ -135,25 +143,29 @@ namespace CSGOesc_Case_Opening
 
                     slot.Update(gameTime);
 
-                    foreach (Button button in buttons["Slots"])
+                    if (CanUseButtons(gameTime))
                     {
-                        button.Update(gameTime);
+                        foreach (Button button in buttons["Slots"])
+                        {
+                            button.Update(gameTime);
+                        }
                     }
 
                     break;
 
                 case GameState.Pause:
 
-                    slot.Update(gameTime);
-
                     if (fade < .9)
                     {
                         fade += .05f;
                     }
 
-                    foreach (Button button in buttons["Pause"])
+                    if (CanUseButtons(gameTime))
                     {
-                        button.Update(gameTime);
+                        foreach (Button button in buttons["Pause"])
+                        {
+                            button.Update(gameTime);
+                        }
                     }
 
                     break;
@@ -246,6 +258,15 @@ namespace CSGOesc_Case_Opening
             base.Draw(gameTime);
         }
 
+        private bool CanUseButtons(GameTime gameTime)
+        {
+            bool canUse = false;
+
+            if (gameTime.TotalGameTime.TotalSeconds - sceneSwitchTime > .1f) { canUse = true; }
+
+            return canUse;
+        }
+
         private void SavePrevState()
         {
             prevState = currentState;
@@ -253,21 +274,25 @@ namespace CSGOesc_Case_Opening
 
         private void Pause()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = GameState.Pause;
         }
 
         private void Game()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = GameState.Game;
         }
 
         private void Slots()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = GameState.Slots;
         }
 
         private void PrevState()
         {
+            sceneSwitchTime = currentSceneTime;
             currentState = prevState;
         }
 
@@ -287,37 +312,40 @@ namespace CSGOesc_Case_Opening
                 assets["button_inactive"]
             };
 
+            float pressTimerMenu = .5f;
+            float pressTimer = .1f;
+
             buttons.Add("Slots", new List<Button>());
-            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White));
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Slots"][0].OnLeftClick += SavePrevState;
             buttons["Slots"][0].OnLeftClick += Pause;
-            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black, Color.White));
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Slots"][1].OnLeftClick += Game;
 
             buttons.Add("Game", new List<Button>());
-            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White));
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Game"][0].OnLeftClick += SavePrevState;
             buttons["Game"][0].OnLeftClick += Pause;
-            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Slots", regular, Color.Black, Color.White));
+            buttons["Game"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Slots", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Game"][1].OnLeftClick += Slots;
 
             buttons.Add("Pause", new List<Button>());
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Pause"][0].OnLeftClick += PrevState;
 
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][1].OnLeftClick += playlist.Mute;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 520, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 520, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][2].OnLeftClick += playlist.VolumeUp;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 655, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 655, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][3].OnLeftClick += playlist.VolumeDown;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(15 + 200, 565, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(15 + 200, 565, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][4].OnLeftClick += playlist.Previous;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165 + 200, 565, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165 + 200, 565, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][5].OnLeftClick += playlist.PlayNext;
         }
     }

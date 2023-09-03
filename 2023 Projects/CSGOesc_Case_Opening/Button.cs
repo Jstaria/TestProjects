@@ -26,6 +26,8 @@ namespace CSGOesc_Case_Opening
         private float expandNum = 10;
         private int expandNumHalf;
         private bool expand;
+        private float timer;
+        private float timeSinceLastPress;
 
         public Rectangle Position { get { return position; } }
 
@@ -41,8 +43,9 @@ namespace CSGOesc_Case_Opening
         /// <param name="text"></param>
         /// <param name="font"></param>
         /// <param name="fontColor"></param>
-        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColor)
+        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColor, float timer)
         {
+            this.timer = timer;
             this.assets = assets;
             this.text = text;
             this.font = font;
@@ -63,6 +66,8 @@ namespace CSGOesc_Case_Opening
             expandNum = 10;
             expand = false;
 
+            bool canPress = false;
+
             active = false;
 
             MouseState currentMState = Mouse.GetState();
@@ -74,10 +79,14 @@ namespace CSGOesc_Case_Opening
                 active = true;
             }
 
+            if (gameTime.TotalGameTime.TotalSeconds - timeSinceLastPress >= timer) { canPress = true; }
+
             if (currentMState.LeftButton == ButtonState.Pressed &&
                 prevMState.LeftButton == ButtonState.Released &&
-                active) 
+                active && canPress) 
             {
+                timeSinceLastPress = (float)gameTime.TotalGameTime.TotalSeconds;
+
                 if (OnLeftClick != null)
                 {
                     OnLeftClick();

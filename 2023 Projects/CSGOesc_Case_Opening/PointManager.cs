@@ -10,6 +10,7 @@ namespace CSGOesc_Case_Opening
 {
     internal class PointManager
     {
+        Random rng = new Random();
         public static int TotalPoints { get; private set; }
         public static int ClickTotal { get; private set; }
 
@@ -31,7 +32,7 @@ namespace CSGOesc_Case_Opening
                 Game1.assets["button_active"],
                 Game1.assets["button_inactive"]
             }, 
-            new Rectangle((1240 - 200) / 2, 160, 200, 200), "Click Me", Game1.ReadOut, Color.Black, Color.White);
+            new Rectangle((1240 - 200) / 2, 160, 200, 200), "Click Me", Game1.ReadOut, Color.Black, Color.White, 0);
 
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
@@ -84,7 +85,7 @@ namespace CSGOesc_Case_Opening
 
         public void SpawnParticle()
         {
-            clickParticles.Add(new Particle(Mouse.GetState().Position.ToVector2(), .95f, string.Format("+" + ClickTotal.ToString())));
+            clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickTotal.ToString())));
         }
     }
 }

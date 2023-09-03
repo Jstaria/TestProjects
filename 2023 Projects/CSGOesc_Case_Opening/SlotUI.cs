@@ -132,7 +132,7 @@ namespace CSGOesc_Case_Opening
 
                 for (int j = 0; j < 20; j++)
                 {
-                    randString += (char)rng.Next(128);
+                    randString += (char)rng.Next(65, 123);
                 }
 
                 if (activeItems.Count < numItems)
@@ -157,7 +157,7 @@ namespace CSGOesc_Case_Opening
 
                     wonItems[1] = activeItems[i];
 
-                    if (num == 0 && spinCount != 0 && prevSpinCount != spinCount)
+                    if (num == 0)
                     {
                         wonItems[0] = activeItems[i];
                     }
@@ -208,7 +208,7 @@ namespace CSGOesc_Case_Opening
 
             MouseState currentMouseState = Mouse.GetState();
             if (new Rectangle(0, 0, 1240, 720).Intersects(new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1)) &&
-                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost)
+                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost && idle)
             {
                 num = rng.Next(70,100);
 

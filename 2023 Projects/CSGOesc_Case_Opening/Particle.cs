@@ -42,7 +42,7 @@ namespace CSGOesc_Case_Opening
 
         public void Draw(SpriteBatch sb)
         {
-            sb.DrawString(Game1.regular, amount, position - Game1.regular.MeasureString(amount) / 2, Color.Black * LifeSpan);
+            sb.DrawString(Game1.ReadOut, amount, position - Game1.ReadOut.MeasureString(amount) / 2, Color.Black * LifeSpan);
         }
     }
 }

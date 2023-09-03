@@ -11,6 +11,8 @@ namespace CSGOesc_Case_Opening
 {
     internal class Inventory
     {
+        private int itemNumber;
+
         private Dictionary<String, Dictionary<string, Item>> inventory;
         private Dictionary<String, Dictionary<string, Button>> itemButtons;
 
@@ -22,6 +24,7 @@ namespace CSGOesc_Case_Opening
 
         public Inventory(List<Item> items)
         {
+            this.itemNumber = 0;
             this.items = items;
             this.inventory = new Dictionary<string, Dictionary<string, Item>>();
             this.itemButtons = new Dictionary<string, Dictionary<string, Button>>();
@@ -47,8 +50,10 @@ namespace CSGOesc_Case_Opening
                 }
 
                 inventory.Add(items[i].Name, new Dictionary<string, Item>());
-                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color));
+                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .5f));
             }
+
+            LoadItems();
         }
 
         public void Update(GameTime gameTime)
@@ -74,15 +79,55 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        public void LoadItems()
+        {
+            List<string> itemInfo = FileIO.ReadFrom("SavedInventory");
+
+            String[] info = null;
+
+            foreach (string line in itemInfo)
+            {
+                info = line.Split(',');
+                AddItem(new Item(int.Parse(info[0]), new Color(int.Parse(info[1]), int.Parse(info[2]), int.Parse(info[3])), info[4], info[5]), false);
+            }
+
+            if (itemInfo.Count > 0)
+            {
+                info = itemInfo[itemInfo.Count - 1].Split(',');
+
+                itemNumber = int.Parse(info[info.Length - 1]);
+            }   
+        }
+
         /// <summary>
         /// Adds items to a dictionary of dictionaries for each specific type of item with a unique key for each item
         /// If that key already exists (which is almost impossible), it'll just skip over it because it is infinitely rarely ever gonna happen
         /// </summary>
-        public void AddItem(Item item)
+        public void AddItem(Item item, bool append)
         {
+            itemNumber++;
+
             if (inventory[item.Name].ContainsKey(item.UniqueID)) { return; }
 
             inventory[item.Name].Add(item.UniqueID, item);
+
+            item.ItemNumber = itemNumber;
+
+            if (append)
+            {
+                List<string> itemInfo = new List<string>
+                {
+                    item.Weight + "," +
+                    item.Color.R.ToString() + "," +
+                    item.Color.G.ToString() + "," +
+                    item.Color.B.ToString() + "," +
+                    item.Name + "," +
+                    item.UniqueID + "," +
+                    itemNumber
+                };
+
+                FileIO.AppendTo("SavedInventory", itemInfo);
+            }
         }
 
         /// <summary>
@@ -94,6 +139,8 @@ namespace CSGOesc_Case_Opening
             if (!inventory[item.Name].ContainsKey(item.UniqueID)) { return; }
 
             inventory[item.Name].Remove(item.UniqueID);
+
+            // remove item at item.ItemNumber
         }
     }
 }

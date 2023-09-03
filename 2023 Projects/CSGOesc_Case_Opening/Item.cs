@@ -20,6 +20,8 @@ namespace CSGOesc_Case_Opening
 
         private float expand;
 
+        public int ItemNumber { get; set; }
+
         public float Expand
         {
             get { return expand; }
