@@ -24,7 +24,7 @@ namespace CSGOesc_Case_Opening
             clickParticles = new List<Particle>();
 
             ClickTotal = 1;
-            TotalPoints = 6000;
+            TotalPoints = 15;
 
             items = new Dictionary<String, int>();
             ClickMe = new Button(new Texture2D[]
@@ -81,6 +81,11 @@ namespace CSGOesc_Case_Opening
         public static void SubtractPoints(int amount)
         {
             TotalPoints -= amount;
+        }
+
+        public static void AddPoints(int amount)
+        {
+            TotalPoints += amount;
         }
 
         public void SpawnParticle()

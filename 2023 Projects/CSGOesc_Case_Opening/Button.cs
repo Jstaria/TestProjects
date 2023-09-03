@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 namespace CSGOesc_Case_Opening
 {
     // Called by reference when button is clicked on
-    public delegate void OnButtonClick();
+    public delegate void OnRightButtonClick();
+    public delegate void OnLeftButtonClick();
+    public delegate void OnButtonClickString(string name);
 
     internal class Button
     {
@@ -33,7 +35,10 @@ namespace CSGOesc_Case_Opening
 
         public bool Active { get { return active; } }
 
-        public event OnButtonClick OnLeftClick;
+        public event OnRightButtonClick OnRightClick;
+        public event OnLeftButtonClick OnLeftClick;
+        public event OnButtonClickString OnLeftClickString;
+        public event OnButtonClickString OnRightClickString;
 
         /// <summary>
         /// Button Class
@@ -90,6 +95,31 @@ namespace CSGOesc_Case_Opening
                 if (OnLeftClick != null)
                 {
                     OnLeftClick();
+                    expand = true;
+                }
+
+                if (OnLeftClickString != null)
+                {
+                    OnLeftClickString(text);
+                    expand = true;
+                }
+            }
+
+            if (currentMState.RightButton == ButtonState.Pressed &&
+                prevMState.RightButton == ButtonState.Released &&
+                active && canPress)
+            {
+                timeSinceLastPress = (float)gameTime.TotalGameTime.TotalSeconds;
+
+                if (OnRightClick != null)
+                {
+                    OnRightClick();
+                    expand = true;
+                }
+
+                if (OnRightClickString != null)
+                {
+                    OnRightClickString(text);
                     expand = true;
                 }
             }

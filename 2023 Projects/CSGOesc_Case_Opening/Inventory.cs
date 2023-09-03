@@ -52,8 +52,9 @@ namespace CSGOesc_Case_Opening
                 }
 
                 inventory.Add(items[i].Name, new Dictionary<string, Item>());
-                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .5f));
-                itemButtons["Rarity"][items[i].Name].OnLeftClick += RemoveOne;
+                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .1f));
+                itemButtons["Rarity"][items[i].Name].OnRightClickString += SellOne;
+                itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
             }
 
             LoadItems();
@@ -80,11 +81,37 @@ namespace CSGOesc_Case_Opening
 
                 sb.DrawString(Game1.ReadOut, inventory[items[i].Name].Count.ToString(), new Vector2((rect.X + rect.Width / 2) - Game1.ReadOut.MeasureString(inventory[items[i].Name].Count.ToString()).X / 2, (rect.Y + rect.Height / 2) + 20), Color.Black);
             }
+
+            Vector2 pos = new Vector2(620, 600) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2;
+
+            sb.DrawString(Game1.ReadOut, PointManager.TotalPoints.ToString(), pos, Color.White);
         }
 
-        public void RemoveOne()
+        public void SellOne(string name)
         {
-            RemoveItem(inventory["Uncommon"][inventory["Uncommon"].Values.ToList()[0].UniqueID]);
+            if (inventory[name].Count > 0)
+            {
+                RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
+            }
+
+            // condition ? value_if_true : value_if_false
+
+            PointManager.AddPoints(
+                name == "Common" ? 5 :
+                name == "Uncommon" ? 10 :
+                name == "Rare" ? 20 :
+                name == "Epic" ? 40 :
+                name == "Mystic" ? 75 :
+                name == "Legendary" ? 200 :
+                name == "Royal" ? 1000 : 0);
+        }
+
+        public void OpenOne(string name)
+        {
+            if (inventory[name].Count > 0)
+            {
+                RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
+            }
         }
 
         public void LoadItems()
