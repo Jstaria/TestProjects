@@ -69,7 +69,7 @@ namespace CSGOesc_Case_Opening
 
             for (int i = 0; i < songs.Length; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] + .02f, 0, 1);
+                volumes[i] = Math.Clamp(volumes[i] + .05f, 0, 1);
                 newVolumes[i + 1] = volumes[i].ToString();
             }
 
@@ -88,7 +88,7 @@ namespace CSGOesc_Case_Opening
 
             for (int i = 0; i < songs.Length; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] - .01f, 0, 1);
+                volumes[i] = Math.Clamp(volumes[i] - .05f, 0, 1);
                 newVolumes[i + 1] = volumes[i].ToString();
             }
 

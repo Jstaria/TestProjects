@@ -199,12 +199,12 @@ namespace CSGOesc_Case_Opening
             buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(520, 550, 200, 100), "Spin", Game1.ReadOut, Color.Black, Color.White, 0));
             buttons["SlotUI"][0].OnLeftClick += SlotUI.Spin;
 
-            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Inventory", Game1.regular, Color.Black, Color.White, .5f));
+            buttons["SlotUI"].Add(new Button(buttonAssets, new Rectangle(950, 565, 120, 75), "Inventory", Game1.regular, Color.Black, Color.White, .5f));
             buttons["SlotUI"][1].OnLeftClick += OpenInventory;
 
             buttons.Add("Inventory", new List<Button>());
 
-            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(980, 565, 90, 75), "Back", Game1.regular, Color.Black, Color.White, .5f));
+            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(950, 565, 120, 75), "Back", Game1.regular, Color.Black, Color.White, .5f));
             buttons["Inventory"][0].OnLeftClick += CloseInventory;
         }
     }

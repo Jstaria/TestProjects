@@ -54,8 +54,8 @@ namespace UV_Shaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            shock = Content.Load<Effect>("ShockWave");
-            vignette = Content.Load<Effect>("Vignette");
+            //shock = Content.Load<Effect>("ShockWave");
+            //vignette = Content.Load<Effect>("Vignette");
 
             hands = Content.Load<Texture2D>("hands");
 
@@ -116,7 +116,7 @@ namespace UV_Shaders
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.White);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, effect: vignette);
+            _spriteBatch.Begin();
 
             //pixelShader.Parameters["pixelsY"].SetValue((float)1080);
             //pixelShader.Parameters["pixelation"].SetValue((float)8);
@@ -128,9 +128,9 @@ namespace UV_Shaders
             //shock.Parameters["rippleIntensity"].SetValue((float)1);
             //shock.Parameters["x"].SetValue((float)mousePos.X / _graphics.PreferredBackBufferWidth);
             //shock.Parameters["y"].SetValue((float)mousePos.Y / _graphics.PreferredBackBufferHeight);
-            vignette.Parameters["time"].SetValue((float)time);
+            //shock.Parameters["time"].SetValue((float)time);
             //
-            vignette.CurrentTechnique.Passes[0].Apply();
+            //shock.CurrentTechnique.Passes[0].Apply();
 
             _spriteBatch.Draw(renderTarget2D, new Rectangle(0, 0, width, height), Color.White);
             _spriteBatch.End();

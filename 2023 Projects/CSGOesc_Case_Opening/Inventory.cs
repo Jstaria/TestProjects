@@ -92,11 +92,8 @@ namespace CSGOesc_Case_Opening
             if (inventory[name].Count > 0)
             {
                 RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
-            }
 
-            // condition ? value_if_true : value_if_false
-
-            PointManager.AddPoints(
+                PointManager.AddPoints(
                 name == "Common" ? 5 :
                 name == "Uncommon" ? 10 :
                 name == "Rare" ? 20 :
@@ -104,6 +101,9 @@ namespace CSGOesc_Case_Opening
                 name == "Mystic" ? 75 :
                 name == "Legendary" ? 200 :
                 name == "Royal" ? 1000 : 0);
+            }
+
+            // condition ? value_if_true : value_if_false
         }
 
         public void OpenOne(string name)
@@ -182,12 +182,14 @@ namespace CSGOesc_Case_Opening
 
             itemInfo.RemoveAt(item.ItemNumber-1);
 
-            itemNumber = 1;
+            itemNumber = 0;
 
             List<string> newItemInfo = new List<string>();
 
             foreach (String line in itemInfo)
             {
+                itemNumber++;
+
                 String[] split = line.Split(',');
 
                 split[split.Length - 1] = itemNumber.ToString();
@@ -201,8 +203,6 @@ namespace CSGOesc_Case_Opening
                     split[4] + "," +
                     split[5] + "," +
                     split[6]);
-
-                itemNumber++;
             }
 
             FileIO.WriteTo("SavedInventory", newItemInfo);

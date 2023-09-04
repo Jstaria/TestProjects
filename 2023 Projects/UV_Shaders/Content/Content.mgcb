@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Ambient.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Ambient.fx
-
 #begin hands.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -30,16 +24,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:hands.png
-
-#begin ShockWave.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:ShockWave.fx
-
-#begin Vignette.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Vignette.fx
 

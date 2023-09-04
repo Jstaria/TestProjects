@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace CSGOesc_Case_Opening
 
     public class Game1 : Game
     {
+        private RenderTarget2D renderTarget;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -41,8 +44,6 @@ namespace CSGOesc_Case_Opening
         private float sceneSwitchTime;
         private float currentSceneTime;
 
-        private BasicEffect BasicEffect;
-
         private SlotMachine slot;
         private PointManager pointManager;
 
@@ -62,6 +63,8 @@ namespace CSGOesc_Case_Opening
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            renderTarget = new RenderTarget2D(GraphicsDevice, 1240, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
 
             fade = 0;
 
@@ -178,7 +181,13 @@ namespace CSGOesc_Case_Opening
         {
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
+            GraphicsDevice.SetRenderTarget(renderTarget);
+
+            GraphicsDevice.Clear(Color.DarkSlateGray);
+
             _spriteBatch.Begin();
+
+            #region MainGameDraw
 
             switch (currentState)
             {
@@ -215,10 +224,10 @@ namespace CSGOesc_Case_Opening
                     if (fade != 0)
                     {
                         _spriteBatch.Draw(
-                            assets["square"], 
+                            assets["square"],
                             new Rectangle(
-                                (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100, 
-                                (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520), 
+                                (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
+                                (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
                             Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
                     }
 
@@ -226,7 +235,7 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Pause:
 
-                    switch(prevState)
+                    switch (prevState)
                     {
                         case GameState.Game:
                             pointManager.Draw(_spriteBatch);
@@ -237,10 +246,19 @@ namespace CSGOesc_Case_Opening
                             break;
                     }
 
+                    if (prevState == GameState.Game)
+                    {
+                        buttons["Game"][1].Draw(_spriteBatch);
+                    }
+                    else if (prevState == GameState.Slots)
+                    {
+                        buttons["Slots"][1].Draw(_spriteBatch);
+                    }
+
                     _spriteBatch.Draw(
-                        assets["square"], 
+                        assets["square"],
                         new Rectangle(
-                            (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100, 
+                            (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
                             (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
                         Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
 
@@ -251,6 +269,17 @@ namespace CSGOesc_Case_Opening
 
                     break;
             }
+
+            #endregion
+
+            _spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.White);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 1240, 720), Color.White);
 
             _spriteBatch.End();
             // TODO: Add your drawing code here
@@ -333,19 +362,19 @@ namespace CSGOesc_Case_Opening
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Return", Game1.regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Pause"][0].OnLeftClick += PrevState;
 
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 565, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(210, 180, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][1].OnLeftClick += playlist.Mute;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 520, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 180, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][2].OnLeftClick += playlist.VolumeUp;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(60 + 200, 655, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 225, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][3].OnLeftClick += playlist.VolumeDown;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(15 + 200, 565, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165, 180, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][4].OnLeftClick += playlist.Previous;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165 + 200, 565, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(315, 180, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][5].OnLeftClick += playlist.PlayNext;
         }
     }
