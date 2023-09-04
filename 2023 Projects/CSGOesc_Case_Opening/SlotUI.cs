@@ -43,6 +43,7 @@ namespace CSGOesc_Case_Opening
 
         public bool HasSpun { get; private set; }
 
+        private float rand;
         public bool Idle
         {
             get { return idle; }
@@ -103,7 +104,7 @@ namespace CSGOesc_Case_Opening
                 else
                 {
                     float timeSinceLastSpin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastSpin;
-                    System.Diagnostics.Debug.WriteLine(timeSinceLastSpin);
+                    //System.Diagnostics.Debug.WriteLine(timeSinceLastSpin);
 
                     // if (num > 0)
                     // {
@@ -113,7 +114,7 @@ namespace CSGOesc_Case_Opening
                     // condition ? value_if_true : value_if_false
 
                     // condition ? value_if_true : (condition ? value_if_true : value_if_false)
-                    num *= (float)(num > 5 ? 0.992 : (num > 0.005 ? 0.975 : 0));
+                    num *= (float)(num > 5 ? 0.992 : (num > 0.005 ? rand : 0));
 
                     if (num == 0)
                     {
@@ -211,6 +212,9 @@ namespace CSGOesc_Case_Opening
                 currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost && idle)
             {
                 num = rng.Next(70,100);
+
+                rand = rng.Next(974, 986) * .001f;
+                System.Diagnostics.Debug.WriteLine(rand);
 
                 spinCount++;
 
