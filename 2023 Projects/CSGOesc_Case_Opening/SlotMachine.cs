@@ -186,7 +186,7 @@ namespace CSGOesc_Case_Opening
             currentState = SlotState.Inventory;
         }
 
-        private void CloseInventory()
+        public void CloseInventory()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = SlotState.SlotsUI;

@@ -17,7 +17,8 @@ namespace CSGOesc_Case_Opening
     {
         Game,
         Slots,
-        Pause
+        Pause,
+        Menu
     }
 
     public class Game1 : Game
@@ -172,6 +173,11 @@ namespace CSGOesc_Case_Opening
                     }
 
                     break;
+
+                case GameState.Menu:
+
+
+                    break;
             }
 
             base.Update(gameTime);
@@ -268,6 +274,11 @@ namespace CSGOesc_Case_Opening
                     }
 
                     break;
+
+                case GameState.Menu:
+
+
+                    break;
             }
 
             #endregion
@@ -317,6 +328,7 @@ namespace CSGOesc_Case_Opening
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Slots;
+            slot.CloseInventory();
         }
 
         private void PrevState()
