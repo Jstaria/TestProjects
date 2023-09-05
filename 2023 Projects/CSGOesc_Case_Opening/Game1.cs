@@ -132,7 +132,7 @@ namespace CSGOesc_Case_Opening
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
 
-            slot = new SlotMachine(assets, Vector2.Zero, false, 1);
+            slot = new SlotMachine(assets, new Vector2(0, 185), false, 1);
             
             for (int i = 0; i < MenuGraphic.Length-1; i++)
             {
