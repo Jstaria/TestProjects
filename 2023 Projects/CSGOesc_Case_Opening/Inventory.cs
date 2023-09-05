@@ -54,7 +54,7 @@ namespace CSGOesc_Case_Opening
                 inventory.Add(items[i].Name, new Dictionary<string, Item>());
                 itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .1f));
                 itemButtons["Rarity"][items[i].Name].OnRightClickString += SellOne;
-                itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
+                //itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
             }
 
             LoadItems();

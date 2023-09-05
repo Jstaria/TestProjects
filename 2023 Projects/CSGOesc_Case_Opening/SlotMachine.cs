@@ -133,9 +133,13 @@ namespace CSGOesc_Case_Opening
                     sb.Draw(assets["square"], new Rectangle(0, 0, 1240, 120), Color.Gray);
                     sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
 
-                    string name = wonItems[1].Name;
+                    if (wonItems != null)
+                    {
+                        string name = wonItems[1].Name;
 
-                    sb.DrawString(Game1.ReadOut, wonItems[1].Name.ToUpper(), new Vector2(620 - ((Game1.ReadOut.MeasureString(name).X) / 1.75f), 60), Color.Black);
+                        sb.DrawString(Game1.ReadOut, wonItems[1].Name.ToUpper(), new Vector2(620 - ((Game1.ReadOut.MeasureString(name).X) / 1.75f), 60), Color.Black);
+
+                    }
 
                     foreach (Button button in buttons["SlotUI"])
                     {
@@ -158,7 +162,6 @@ namespace CSGOesc_Case_Opening
                 case SlotState.Inventory:
 
                     sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
-
                     
                     foreach (Button button in buttons["Inventory"])
                     {

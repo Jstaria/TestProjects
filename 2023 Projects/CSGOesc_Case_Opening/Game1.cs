@@ -5,11 +5,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CSGOesc_Case_Opening
 {
@@ -69,7 +71,7 @@ namespace CSGOesc_Case_Opening
 
             fade = 0;
 
-            currentState = GameState.Slots;
+            currentState = GameState.Menu;
 
             buttons = new Dictionary<string, List<Button>>();
 
@@ -80,16 +82,17 @@ namespace CSGOesc_Case_Opening
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            songs = new Song[]
+            DirectoryInfo directory = new DirectoryInfo("../../../Content/Music");
+            FileInfo[] files = directory.GetFiles("*.mp3");
+
+            string[] songNames = new string[files.Length];
+            songs = new Song[files.Length];
+
+            for (int i = 0; i < files.Length; i++)
             {
-                Content.Load<Song>("Elevator-music"),
-                Content.Load<Song>("Fluffing-a-Duck"),
-                Content.Load<Song>("Kevin-MacLeod-Investigations"),
-                Content.Load<Song>("Lobby-Time"),
-                Content.Load<Song>("Monkeys-Spinning-Monkeys"),
-                Content.Load<Song>("Scheming-Weasel-faster"),
-                Content.Load<Song>("Sneaky-Snitch"),
-            };
+                songNames[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
+                songs[i] = Content.Load<Song>("Music/" + songNames[i]);
+            }
 
             this.playlist = new Soundtrack(songs);
 
@@ -176,6 +179,15 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Menu:
 
+                    ReduceFade();
+
+                    if (CanUseButtons(gameTime))
+                    {
+                        foreach (Button button in buttons["Menu"])
+                        {
+                            button.Update(gameTime);
+                        }
+                    }
 
                     break;
             }
@@ -206,15 +218,7 @@ namespace CSGOesc_Case_Opening
                         button.Draw(_spriteBatch);
                     }
 
-                    if (fade != 0)
-                    {
-                        _spriteBatch.Draw(
-                            assets["square"],
-                            new Rectangle(
-                                (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
-                                (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
-                            Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
-                    }
+                    DrawFade();
 
                     break;
 
@@ -227,15 +231,7 @@ namespace CSGOesc_Case_Opening
                         button.Draw(_spriteBatch);
                     }
 
-                    if (fade != 0)
-                    {
-                        _spriteBatch.Draw(
-                            assets["square"],
-                            new Rectangle(
-                                (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
-                                (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
-                            Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
-                    }
+                    DrawFade();
 
                     break;
 
@@ -277,6 +273,14 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Menu:
 
+                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 500, 720), Color.Gray);
+
+                    foreach (Button button in buttons["Menu"])
+                    {
+                        button.Draw(_spriteBatch);
+                    }
+
+                    DrawFade();
 
                     break;
             }
@@ -298,6 +302,21 @@ namespace CSGOesc_Case_Opening
             base.Draw(gameTime);
         }
 
+        private void DrawFade()
+        {
+            if (fade != 0)
+            {
+                _spriteBatch.Draw(
+                    assets["square"],
+                    new Rectangle(
+                        (int)(100 * Math.Clamp(fade * 2 + .1, 0, 1)), 100,
+                        (int)(1040 * Math.Clamp(fade * 1.5f + .1, 0, 1)), 520),
+                    Color.Black * (float)Math.Clamp(fade * 1.5f, 0, .9f));
+            }
+        }
+
+        #region Button Functions
+
         private bool CanUseButtons(GameTime gameTime)
         {
             bool canUse = false;
@@ -316,6 +335,12 @@ namespace CSGOesc_Case_Opening
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Pause;
+        }
+
+        private void Menu()
+        {
+            sceneSwitchTime = currentSceneTime;
+            currentState = GameState.Menu;
         }
 
         private void Game()
@@ -344,6 +369,8 @@ namespace CSGOesc_Case_Opening
                 fade -= .05f;
             }
         }
+
+        #endregion
 
         private void CreateButtons()
         {
@@ -388,6 +415,29 @@ namespace CSGOesc_Case_Opening
                      
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(315, 180, 30, 75), ">", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][5].OnLeftClick += playlist.PlayNext;
+
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165, 280, 285, 75), "Menu", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Pause"][6].OnLeftClick += Menu;
+
+            //                   Screen height - spacing on top / how many buttons
+            int numButtons = 4;
+            int buttonHeight = 75;
+            int menuButtonSpacing = buttonHeight + 30;
+            int topSpacing = (int)(((720 - (numButtons * buttonHeight)) - ((numButtons - 1) * menuButtonSpacing)) * 1.5);
+
+            buttons.Add("Menu", new List<Button>());
+            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 0), 285, buttonHeight), "Play", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Menu"][0].OnLeftClick += Game;
+
+            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 1), 285, buttonHeight), "Options", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Menu"][1].OnLeftClick += Game;
+
+            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 2), 285, buttonHeight), "Achievements", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Menu"][2].OnLeftClick += Game;
+            
+            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 3), 285, buttonHeight), "Credits", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Menu"][3].OnLeftClick += Game;
+
         }
     }
 }
