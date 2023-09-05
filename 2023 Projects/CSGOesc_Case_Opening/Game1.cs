@@ -193,6 +193,14 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Pause:
 
+                    if (prevState == GameState.Menu)
+                    {
+                        for (int i = 0; i < MenuGraphic.Length; i++)
+                        {
+                            MenuGraphic[i].Update(gameTime);
+                        }
+                    }
+
                     if (fade < .9)
                     {
                         fade += .05f;
@@ -282,15 +290,31 @@ namespace CSGOesc_Case_Opening
                         case GameState.Slots:
                             slot.Draw(_spriteBatch);
                             break;
+
+                        case GameState.Menu:
+                            DrawMenu();
+                            break;
                     }
 
-                    if (prevState == GameState.Game)
+                    switch(prevState)
                     {
-                        buttons["Game"][1].Draw(_spriteBatch);
-                    }
-                    else if (prevState == GameState.Slots)
-                    {
-                        buttons["Slots"][1].Draw(_spriteBatch);
+                        case GameState.Game:
+                            
+                            buttons["Game"][1].Draw(_spriteBatch);
+
+                            break;
+
+                        case GameState.Slots:
+
+                            buttons["Slots"][1].Draw(_spriteBatch);
+
+                            break;
+
+                        case GameState.Menu:
+
+                            buttons["Menu"][1].Draw(_spriteBatch);
+
+                            break;
                     }
 
                     _spriteBatch.Draw(
@@ -309,25 +333,7 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Menu:
 
-                    for (int i = 0; i < MenuGraphic.Length-1; i++)
-                    {
-                        MenuGraphic[i].Draw(_spriteBatch);
-                    }
-
-                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .75f);
-                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 120, 1240, 470), Color.Black * .25f);
-                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 180, 1240, 350), Color.Black * .25f);
-
-                    MenuGraphic[MenuGraphic.Length-1].Draw(_spriteBatch);
-
-                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 500, 720), Color.Gray);
-
-                    foreach (Button button in buttons["Menu"])
-                    {
-                        button.Draw(_spriteBatch);
-                    }
-
-                    DrawFade();
+                    DrawMenu();
 
                     break;
             }
@@ -347,6 +353,29 @@ namespace CSGOesc_Case_Opening
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void DrawMenu()
+        {
+            for (int i = 0; i < MenuGraphic.Length - 1; i++)
+            {
+                MenuGraphic[i].Draw(_spriteBatch);
+            }
+
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .75f);
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 120, 1240, 470), Color.Black * .25f);
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 180, 1240, 350), Color.Black * .25f);
+
+            MenuGraphic[MenuGraphic.Length - 1].Draw(_spriteBatch);
+
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 500, 720), Color.Gray);
+
+            foreach (Button button in buttons["Menu"])
+            {
+                button.Draw(_spriteBatch);
+            }
+
+            DrawFade();
         }
 
         private void DrawFade()
@@ -477,7 +506,8 @@ namespace CSGOesc_Case_Opening
             buttons["Menu"][0].OnLeftClick += Game;
 
             buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 1), 285, buttonHeight), "Options", Game1.ReadOut, Color.Black, Color.White, pressTimer));
-            buttons["Menu"][1].OnLeftClick += Game;
+            buttons["Menu"][1].OnLeftClick += SavePrevState;
+            buttons["Menu"][1].OnLeftClick += Pause;
 
             buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 2), 285, buttonHeight), "Achievements", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Menu"][2].OnLeftClick += Game;
