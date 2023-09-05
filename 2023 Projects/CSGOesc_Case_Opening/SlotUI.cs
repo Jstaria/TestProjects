@@ -36,6 +36,7 @@ namespace CSGOesc_Case_Opening
         public static int spinCost = 15;
 
         private bool menuActive;
+        private int idleSpeed;
 
         private int itemBoxWidth;
         private int itemBoxHeight;
@@ -56,7 +57,7 @@ namespace CSGOesc_Case_Opening
 
         public Particle spinParticle { get; set; }
 
-        public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive)
+        public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
             this.menuActive = menuActive;
             this.assets = assets;
@@ -69,7 +70,7 @@ namespace CSGOesc_Case_Opening
             this.activeItemsPos = new List<Vector2>();
             this.idle = true;
 
-            this.num = 1;
+            this.num = idleSpeed;
             this.spinCount = 0;
             this.prevSpinCount = 0;
             this.totalWeight = 0;
@@ -101,7 +102,7 @@ namespace CSGOesc_Case_Opening
             {
                 if (idle)
                 {
-                    num = 1;
+                    num = idleSpeed;
                     canSpin = true;
                 }
                 else
@@ -142,13 +143,13 @@ namespace CSGOesc_Case_Opening
                 if (activeItems.Count < numItems)
                 {
                     activeItems.Add(GrabItem(randNum, randString));
-                    activeItemsPos.Add(new Vector2(-2 * itemBoxWidth + i * itemBoxWidth, 185));
+                    activeItemsPos.Add(new Vector2(-2 * itemBoxWidth + i * itemBoxWidth, position.Y));
                 }
 
                 else if (activeItemsPos[i].X < -itemBoxWidth)
                 {
                     activeItems[i] = GrabItem(randNum, randString);
-                    activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, 185);
+                    activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, position.Y);
                 }
 
                 activeItems[i].Update(idle);               

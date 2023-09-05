@@ -44,7 +44,7 @@ namespace CSGOesc_Case_Opening
 
         private Dictionary<string, List<Button>> buttons;
 
-        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive)
+        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
             this.menuActive = menuActive;
 
@@ -59,7 +59,7 @@ namespace CSGOesc_Case_Opening
 
             this.currentState = SlotState.SlotsUI;
 
-            this.SlotUI = new SlotUI(assets, position, menuActive);
+            this.SlotUI = new SlotUI(assets, position, menuActive, idleSpeed);
             this.inventory = new Inventory(SlotUI.Items);
 
             this.wonItems = null;

@@ -34,10 +34,12 @@ namespace CSGOesc_Case_Opening
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Random rng;
+
         public static SpriteFont ReadOut;
         public static SpriteFont regular;
 
-        private SlotMachine MenuGraphic;
+        private SlotMachine[] MenuGraphic;
 
         public static SoundEffect hitMarker;
 
@@ -72,6 +74,10 @@ namespace CSGOesc_Case_Opening
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            rng = new Random();
+
+            MenuGraphic = new SlotMachine[5];
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 1240, 720, false, GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
 
@@ -126,8 +132,14 @@ namespace CSGOesc_Case_Opening
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
 
-            slot = new SlotMachine(assets, Vector2.Zero, false);
-            MenuGraphic = new SlotMachine(assets, Vector2.Zero, true);
+            slot = new SlotMachine(assets, Vector2.Zero, false, 1);
+            
+            for (int i = 0; i < MenuGraphic.Length-1; i++)
+            {
+                MenuGraphic[i] = new SlotMachine(assets, new Vector2(0, -100 + (200 * i)), true, rng.Next(3,10) * .5f);
+            }
+
+            MenuGraphic[MenuGraphic.Length-1] = new SlotMachine(assets, new Vector2(0, 230), true, 1);
 
             pointManager = new PointManager();
 
@@ -200,7 +212,10 @@ namespace CSGOesc_Case_Opening
 
                     ReduceFade();
 
-                    MenuGraphic.Update(gameTime);
+                    for(int i = 0; i < MenuGraphic.Length; i++)
+                    {
+                        MenuGraphic[i].Update(gameTime);
+                    }
 
                     if (CanUseButtons(gameTime))
                     {
@@ -294,7 +309,16 @@ namespace CSGOesc_Case_Opening
 
                 case GameState.Menu:
 
-                    MenuGraphic.Draw(_spriteBatch);
+                    for (int i = 0; i < MenuGraphic.Length-1; i++)
+                    {
+                        MenuGraphic[i].Draw(_spriteBatch);
+                    }
+
+                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .75f);
+                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 120, 1240, 470), Color.Black * .25f);
+                    _spriteBatch.Draw(assets["square"], new Rectangle(0, 180, 1240, 350), Color.Black * .25f);
+
+                    MenuGraphic[MenuGraphic.Length-1].Draw(_spriteBatch);
 
                     _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 500, 720), Color.Gray);
 
