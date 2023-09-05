@@ -9,6 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Security;
+using System.Security.AccessControl;
+using System.Security.Permissions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -32,6 +36,8 @@ namespace CSGOesc_Case_Opening
 
         public static SpriteFont ReadOut;
         public static SpriteFont regular;
+
+        private SlotMachine MenuGraphic;
 
         public static SoundEffect hitMarker;
 
@@ -82,16 +88,28 @@ namespace CSGOesc_Case_Opening
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            DirectoryInfo directory = new DirectoryInfo("../../../Content/Music");
-            FileInfo[] files = directory.GetFiles("*.mp3");
+            DirectoryInfo di = new DirectoryInfo("../../../Content/Music");
+            FileInfo[] files = di.GetFiles("*.mp3");
 
             string[] songNames = new string[files.Length];
             songs = new Song[files.Length];
 
-            for (int i = 0; i < files.Length; i++)
+            // I have no clue why the Uri access is denied, this was my attempt using stack overflow because I have absolutely no clue how to grant permissions, let alone to myself
+
+            //Uri uri = new Uri("../../../Music", UriKind.Relative);
+
+            //DirectoryInfo di = new DirectoryInfo("../../../Music");
+            //DirectorySecurity ds = di.GetAccessControl();
+            //
+            //ds.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+            //di.SetAccessControl(ds);
+
+            for (int i = 0; i < songs.Length; i++)
             {
                 songNames[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
                 songs[i] = Content.Load<Song>("Music/" + songNames[i]);
+
+                //songs[i] = Song.FromUri("../../../Music", uri);
             }
 
             this.playlist = new Soundtrack(songs);
@@ -108,12 +126,13 @@ namespace CSGOesc_Case_Opening
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
 
-            slot = new SlotMachine(assets, Vector2.Zero);
+            slot = new SlotMachine(assets, Vector2.Zero, false);
+            MenuGraphic = new SlotMachine(assets, Vector2.Zero, true);
 
             pointManager = new PointManager();
 
             CreateButtons();
-            
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -180,6 +199,8 @@ namespace CSGOesc_Case_Opening
                 case GameState.Menu:
 
                     ReduceFade();
+
+                    MenuGraphic.Update(gameTime);
 
                     if (CanUseButtons(gameTime))
                     {
@@ -272,6 +293,8 @@ namespace CSGOesc_Case_Opening
                     break;
 
                 case GameState.Menu:
+
+                    MenuGraphic.Draw(_spriteBatch);
 
                     _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 500, 720), Color.Gray);
 

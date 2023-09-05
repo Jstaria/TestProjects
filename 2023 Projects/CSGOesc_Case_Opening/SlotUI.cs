@@ -35,6 +35,8 @@ namespace CSGOesc_Case_Opening
 
         public static int spinCost = 15;
 
+        private bool menuActive;
+
         private int itemBoxWidth;
         private int itemBoxHeight;
 
@@ -54,8 +56,9 @@ namespace CSGOesc_Case_Opening
 
         public Particle spinParticle { get; set; }
 
-        public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position)
+        public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive)
         {
+            this.menuActive = menuActive;
             this.assets = assets;
             this.position = position;
             this.prevWonItem = null;
@@ -151,22 +154,25 @@ namespace CSGOesc_Case_Opening
                 activeItems[i].Update(idle);               
                 activeItemsPos[i] -= new Vector2(num, 0);
 
-                if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
+                if (!menuActive)
+                {
+                    if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
                     new Rectangle(1240 / 2 - 1, 0, 2, 720)))
-                {
-                    activeItems[i].HoveredOver = true;
-
-                    wonItems[1] = activeItems[i];
-
-                    if (num == 0)
                     {
-                        wonItems[0] = activeItems[i];
-                    }
-                }
+                        activeItems[i].HoveredOver = true;
 
-                else
-                {
-                    activeItems[i].HoveredOver = false;
+                        wonItems[1] = activeItems[i];
+
+                        if (num == 0)
+                        {
+                            wonItems[0] = activeItems[i];
+                        }
+                    }
+
+                    else
+                    {
+                        activeItems[i].HoveredOver = false;
+                    }
                 }
             }
 
@@ -200,7 +206,10 @@ namespace CSGOesc_Case_Opening
                 }
             }
 
-            sb.Draw(assets["square"], new Rectangle(620, 0, 2, 720), Color.Black);
+            if (!menuActive)
+            {
+                sb.Draw(assets["square"], new Rectangle(620, 0, 2, 720), Color.Black);
+            }
         }
 
         public void Spin()

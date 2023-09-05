@@ -35,6 +35,8 @@ namespace CSGOesc_Case_Opening
         private Item[] wonItems;
         private Item prevWonItem;
 
+        private bool menuActive;
+
         private SlotUI SlotUI;
         private Inventory inventory;
 
@@ -42,8 +44,10 @@ namespace CSGOesc_Case_Opening
 
         private Dictionary<string, List<Button>> buttons;
 
-        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position)
+        public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive)
         {
+            this.menuActive = menuActive;
+
             this.assets = assets;
             this.buttonAssets = new Texture2D[]
             {
@@ -55,7 +59,7 @@ namespace CSGOesc_Case_Opening
 
             this.currentState = SlotState.SlotsUI;
 
-            this.SlotUI = new SlotUI(assets, position);
+            this.SlotUI = new SlotUI(assets, position, menuActive);
             this.inventory = new Inventory(SlotUI.Items);
 
             this.wonItems = null;
@@ -63,6 +67,7 @@ namespace CSGOesc_Case_Opening
             buttons = new Dictionary<string, List<Button>>();
 
             CreateButtons();
+            this.menuActive = menuActive;
         }
 
         public void Update(GameTime gameTime)
@@ -74,11 +79,14 @@ namespace CSGOesc_Case_Opening
             {
                 case SlotState.SlotsUI:
 
-                    if (CanUseButtons(gameTime))
+                    if (!menuActive)
                     {
-                        foreach (Button button in buttons["SlotUI"])
+                        if (CanUseButtons(gameTime))
                         {
-                            button.Update(gameTime);
+                            foreach (Button button in buttons["SlotUI"])
+                            {
+                                button.Update(gameTime);
+                            }
                         }
                     }
 
@@ -130,29 +138,32 @@ namespace CSGOesc_Case_Opening
 
                     SlotUI.Draw(sb);
 
-                    sb.Draw(assets["square"], new Rectangle(0, 0, 1240, 120), Color.Gray);
-                    sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
-
-                    if (wonItems != null)
+                    if (!menuActive)
                     {
-                        string name = wonItems[1].Name;
+                        sb.Draw(assets["square"], new Rectangle(0, 0, 1240, 120), Color.Gray);
+                        sb.Draw(assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
 
-                        sb.DrawString(Game1.ReadOut, wonItems[1].Name.ToUpper(), new Vector2(620 - ((Game1.ReadOut.MeasureString(name).X) / 1.75f), 60), Color.Black);
+                        if (wonItems != null)
+                        {
+                            string name = wonItems[1].Name;
 
+                            sb.DrawString(Game1.ReadOut, wonItems[1].Name.ToUpper(), new Vector2(620 - ((Game1.ReadOut.MeasureString(name).X) / 1.75f), 60), Color.Black);
+
+                        }
+
+                        foreach (Button button in buttons["SlotUI"])
+                        {
+                            button.Draw(sb);
+                        }
+
+                        PointManager.DrawPoints(sb, new Vector2(620, 685) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2);
+
+                        if (SlotUI.spinParticle != null)
+                        {
+                            SlotUI.spinParticle.Draw(sb);
+                        }
                     }
-
-                    foreach (Button button in buttons["SlotUI"])
-                    {
-                        button.Draw(sb);
-                    }
-
-                    PointManager.DrawPoints(sb, new Vector2(620, 685) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2);
-
-                    if (SlotUI.spinParticle != null)
-                    {
-                        SlotUI.spinParticle.Draw(sb);
-                    }
-
+                    
                     break;
 
                 case SlotState.WinUI:
