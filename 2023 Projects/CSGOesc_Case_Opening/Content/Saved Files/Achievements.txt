@@ -11,3 +11,15 @@ I6've Just Begun,Make 10 spins,10,false,spins
 A6ddiction?,Make 100 spins,100,false,spins
 1A New Chapter,Make your first spin!,0,false,spins
 1Beginner,Earn 100 points,100,false,points
+iA New Chapter,Make your first spin!,0,false,spins
+iBeginner,Earn 100 points,100,false,points
+iI've Just Begun,Make 10 spins,10,false,spins
+iPocket Change,Earn 1000 points,1000,false,points
+iAddiction?,Make 100 spins,100,false,spins
+i6A New Chapter,Make your first spin!,0,false,spins
+i6Beginner,Earn 100 points,100,false,points
+iI6've Just Begun,Make 10 spins,10,false,spins
+i6Pocket Change,Earn 1000 points,1000,false,points
+iA6ddiction?,Make 100 spins,100,false,spins
+i1A New Chapter,Make your first spin!,0,false,spins
+i1Beginner,Earn 100 points,100,false,points

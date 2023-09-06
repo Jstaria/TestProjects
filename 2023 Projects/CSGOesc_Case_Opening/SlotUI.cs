@@ -36,7 +36,7 @@ namespace CSGOesc_Case_Opening
         public static int spinCost = 15;
 
         private bool menuActive;
-        private int idleSpeed;
+        private float idleSpeed;
 
         private int itemBoxWidth;
         private int itemBoxHeight;
@@ -74,6 +74,7 @@ namespace CSGOesc_Case_Opening
             this.idle = true;
 
             this.num = idleSpeed;
+            this.idleSpeed = idleSpeed;
             this.spinCount = 0;
             this.prevSpinCount = 0;
             this.totalWeight = 0;
@@ -91,6 +92,8 @@ namespace CSGOesc_Case_Opening
 
         public Item[] Update(GameTime gameTime)
         {
+            //System.Diagnostics.Debug.WriteLine(idle);
+
             if (HasSpun)
             {
                 timeOfLastSpin = (float)gameTime.TotalGameTime.TotalSeconds;
@@ -158,25 +161,25 @@ namespace CSGOesc_Case_Opening
                 activeItems[i].Update(idle);               
                 activeItemsPos[i] -= new Vector2(num, 0);
 
-                if (!menuActive)
+                if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
+                new Rectangle(1240 / 2 - 1, 0, 2, 720)))
                 {
-                    if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
-                    new Rectangle(1240 / 2 - 1, 0, 2, 720)))
+                    if (!menuActive)
                     {
                         activeItems[i].HoveredOver = true;
-
-                        wonItems[1] = activeItems[i];
-
-                        if (num == 0)
-                        {
-                            wonItems[0] = activeItems[i];
-                        }
                     }
 
-                    else
+                    wonItems[1] = activeItems[i];
+
+                    if (num == 0)
                     {
-                        activeItems[i].HoveredOver = false;
+                        wonItems[0] = activeItems[i];
                     }
+                }
+
+                else
+                {
+                    activeItems[i].HoveredOver = false;
                 }
             }
 

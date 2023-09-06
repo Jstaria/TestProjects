@@ -491,6 +491,9 @@ namespace CSGOesc_Case_Opening
 
         public void DrawAchievements()
         {
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 100, 720), Color.Gray);
+            _spriteBatch.Draw(assets["square"], new Rectangle(1140, 0, 100, 720), Color.Gray);
+
             for (int i = 0; i < achievements.Count; i++)
             {
                 achievements[i].Draw(_spriteBatch);
