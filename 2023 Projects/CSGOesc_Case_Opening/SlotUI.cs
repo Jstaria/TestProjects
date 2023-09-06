@@ -44,6 +44,8 @@ namespace CSGOesc_Case_Opening
         private StreamReader itemReader;
         private Random rng;
 
+        private int numItems;
+
         public bool HasSpun { get; private set; }
 
         private float rand;
@@ -65,6 +67,7 @@ namespace CSGOesc_Case_Opening
             this.prevWonItem = null;
             this.canSpin = true;
 
+            this.numItems = 16;
             this.Items = new List<Item>();
             this.activeItems = new List<Item>();
             this.activeItemsPos = new List<Vector2>();
@@ -82,6 +85,8 @@ namespace CSGOesc_Case_Opening
             this.itemBoxHeight = 250;
 
             this.rng = new Random();
+
+            SetUpItems();
         }
 
         public Item[] Update(GameTime gameTime)
@@ -126,8 +131,6 @@ namespace CSGOesc_Case_Opening
                     }
                 }
             }
-            
-            int numItems = 16;
 
             for (int i = 0; i < numItems; i++)
             { 
@@ -140,16 +143,16 @@ namespace CSGOesc_Case_Opening
                     randString += (char)rng.Next(65, 123);
                 }
 
-                if (activeItems.Count < numItems)
-                {
-                    activeItems.Add(GrabItem(randNum, randString));
-                    activeItemsPos.Add(new Vector2(-2 * itemBoxWidth + i * itemBoxWidth, position.Y));
-                }
-
-                else if (activeItemsPos[i].X < -itemBoxWidth)
+                if (activeItemsPos[i].X < -itemBoxWidth && num > 0)
                 {
                     activeItems[i] = GrabItem(randNum, randString);
                     activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, position.Y);
+                }
+
+                else if (activeItemsPos[i].X > 1340 && num < 0)
+                {
+                    activeItems[i] = GrabItem(randNum, randString);
+                    activeItemsPos[i] = new Vector2(activeItemsPos[(i + 1) % numItems].X - itemBoxWidth, position.Y);
                 }
 
                 activeItems[i].Update(idle);               
@@ -192,6 +195,7 @@ namespace CSGOesc_Case_Opening
             {
                 Rectangle visualBox = new Rectangle((int)(activeItemsPos[i].X), (int)(activeItemsPos[i].Y - activeItems[i].Expand), (int)(itemBoxWidth), (int)(itemBoxHeight + activeItems[i].Expand * 2));
                 sb.Draw(assets["square"], visualBox, activeItems[i].Color);
+                //sb.DrawString(Game1.ReadOut, (i + 1).ToString(), activeItemsPos[i], Color.Black);
             }
 
             int count = 0;
@@ -210,6 +214,24 @@ namespace CSGOesc_Case_Opening
             if (!menuActive)
             {
                 sb.Draw(assets["square"], new Rectangle(620, 0, 2, 720), Color.Black);
+            }
+        }
+
+        private void SetUpItems()
+        {
+            for (int i = 0; i < numItems; i++)
+            {
+                int randNum = rng.Next(totalWeight);
+
+                string randString = null;
+
+                for (int j = 0; j < 20; j++)
+                {
+                    randString += (char)rng.Next(65, 123);
+                }
+
+                activeItems.Add(GrabItem(randNum, randString));
+                activeItemsPos.Add(new Vector2(-2 * itemBoxWidth + i * itemBoxWidth, position.Y));
             }
         }
 

@@ -64,6 +64,10 @@ namespace CSGOesc_Case_Opening
 
         public void Draw(SpriteBatch sb)
         {
+            sb.Draw(Game1.assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .2f);
+            sb.Draw(Game1.assets["square"], new Rectangle(ClickMe.Position.X - 150, ClickMe.Position.Y - 150, ClickMe.Position.Width + 300, ClickMe.Position.Height + 300), Color.Black * .2f);
+            sb.Draw(Game1.assets["square"], new Rectangle(ClickMe.Position.X - 50, ClickMe.Position.Y - 50, ClickMe.Position.Width + 100, ClickMe.Position.Height + 100), Color.Black * .2f);
+
             ClickMe.Draw(sb);
 
             foreach (Particle particle in clickParticles)

@@ -1,0 +1,6 @@
+﻿spins,points,click
+A New Chapter,Make your first spin!,0,false,spins
+Beginner,Earn 100 points,100,false,points
+I've Just Begun,Make 10 spins,10,false,spins
+Pocket Change,Earn 1000 points,1000,false,points
+Addiction?,Make 100 spins,100,false,spins

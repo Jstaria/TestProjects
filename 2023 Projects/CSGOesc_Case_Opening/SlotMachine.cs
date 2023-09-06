@@ -136,6 +136,11 @@ namespace CSGOesc_Case_Opening
             {
                 case SlotState.SlotsUI:
 
+                    if (!menuActive)
+                    {
+                        sb.Draw(assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .2f);
+                    }
+                    
                     SlotUI.Draw(sb);
 
                     if (!menuActive)
