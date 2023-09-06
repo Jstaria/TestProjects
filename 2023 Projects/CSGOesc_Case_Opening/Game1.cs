@@ -61,6 +61,10 @@ namespace CSGOesc_Case_Opening
         private GameState currentState;
         private MenuState currentMenuState;
 
+        private int prevScrollValue;
+        private List<int> maxScroll;
+        private List<int> minScroll;
+
         private float sceneSwitchTime;
         private float currentSceneTime;
 
@@ -246,8 +250,6 @@ namespace CSGOesc_Case_Opening
 
                     //int mousevalue = Mouse.GetState().ScrollWheelValue;
 
-                    //System.Diagnostics.Debug.WriteLine(mousevalue/10);
-
                     switch (currentMenuState)
                     {
                         case MenuState.Menu:
@@ -270,6 +272,30 @@ namespace CSGOesc_Case_Opening
                             break;
 
                         case MenuState.Achievements:
+
+                            int scrollValue = Mouse.GetState().ScrollWheelValue / 10;
+                            int scrollAmount = 50;
+
+                            if (prevScrollValue - scrollValue != 0)
+                            {
+                                if (prevScrollValue - scrollValue > 0)
+                                {
+                                    for (int i = 0; i < achievements.Count; i++)
+                                    {
+                                        achievements[i].Position = new Rectangle(achievements[i].Position.X, Math.Clamp(achievements[i].Position.Y - scrollAmount, minScroll[i], maxScroll[i]), achievements[i].Position.Width, achievements[i].Position.Height);
+                                    }
+                                }
+                                
+                                if (prevScrollValue - scrollValue < 0)
+                                {
+                                    for (int i = 0; i < achievements.Count; i++)
+                                    {
+                                        achievements[i].Position = new Rectangle(achievements[i].Position.X, Math.Clamp(achievements[i].Position.Y + scrollAmount, minScroll[i], maxScroll[i]), achievements[i].Position.Width, achievements[i].Position.Height);
+                                    }
+                                }
+                            }
+
+                            prevScrollValue = scrollValue;
 
                             break;
 
@@ -423,6 +449,9 @@ namespace CSGOesc_Case_Opening
         {
             AchievementManager.GenerateAchievements();
 
+            minScroll = new List<int>();
+            maxScroll = new List<int>();
+
             achievements = new List<Achievement>();
 
             int positionArrayY = (int)((AchievementManager.NumAchievements + 1) / 2);
@@ -434,17 +463,29 @@ namespace CSGOesc_Case_Opening
                 for (int j = 0; j < AchievementManager.Achievements.ElementAt(i).Value.Values.Count; j++)
                 {
                     achievements.Add(AchievementManager.Achievements.ElementAt(i).Value.ElementAt(j).Value);
+                    minScroll.Add(0);
+                    maxScroll.Add(0);
                 }
             }
+
+            int width = 450;
+            int height = 100;
+            int spacing = 30;
 
             int yPos = 0;
 
             for (int i = 0; i < achievements.Count; i++)
             {
-                positionArray[i % 2, yPos] = new Rectangle(100 + (i % 2) * 300, 50 + yPos * 100, 285, 75);
+                positionArray[i % 2, yPos] = new Rectangle((1240 - ((2 * width) + spacing)) / 2 + (i % 2) * (width + spacing), 50 + yPos * (height + spacing), width, height);
                 achievements[i].Position = positionArray[i % 2, yPos];
 
                 if (i % 2 == 1) { yPos++; }
+            }
+
+            for (int i = 0; i< achievements.Count; i++)
+            {
+                minScroll[i] = achievements[i].Position.Y - (achievements[achievements.Count - 1].Position.Y - 600);
+                maxScroll[i] = achievements[i].Position.Y;
             }
         }
 
