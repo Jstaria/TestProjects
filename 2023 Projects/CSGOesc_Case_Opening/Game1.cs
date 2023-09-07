@@ -90,8 +90,6 @@ namespace CSGOesc_Case_Opening
         {
             // TODO: Add your initialization logic here
 
-            SetupAchievements();
-
             rng = new Random();
 
             MenuGraphic = new SlotMachine[5];
@@ -173,6 +171,7 @@ namespace CSGOesc_Case_Opening
 
             CreateButtons();
 
+            SetupAchievements();
             // TODO: use this.Content to load your game content here
         }
 
@@ -186,6 +185,8 @@ namespace CSGOesc_Case_Opening
             playlist.Play();
 
             #region Update logic
+
+            AchievementManager.Update();
 
             switch (currentState)
             {
@@ -276,7 +277,7 @@ namespace CSGOesc_Case_Opening
                             int scrollValue = Mouse.GetState().ScrollWheelValue / 10;
                             int scrollAmount = 50;
 
-                            if (prevScrollValue - scrollValue != 0)
+                            if (prevScrollValue - scrollValue != 0 && achievements.Count > 8)
                             {
                                 if (prevScrollValue - scrollValue > 0)
                                 {
@@ -297,6 +298,11 @@ namespace CSGOesc_Case_Opening
 
                             prevScrollValue = scrollValue;
 
+                            foreach (Button button in buttons["Inventory"])
+                            {
+                                button.Update(gameTime);
+                            }
+
                             break;
 
                         case MenuState.Credit:
@@ -305,6 +311,12 @@ namespace CSGOesc_Case_Opening
                     }
 
                     break;
+            }
+
+            if ((int)(gameTime.TotalGameTime.Seconds) % 15 == 0)
+            {
+                AchievementManager.SaveAchievements();
+                PointManager.Save();
             }
 
             #endregion
@@ -418,6 +430,11 @@ namespace CSGOesc_Case_Opening
 
                             DrawAchievements();
 
+                            foreach (Button button in buttons["Inventory"])
+                            {
+                                button.Draw(_spriteBatch);
+                            }
+
                             break;
 
                         case MenuState.Credit:
@@ -469,14 +486,14 @@ namespace CSGOesc_Case_Opening
             }
 
             int width = 450;
-            int height = 100;
+            int height = 125;
             int spacing = 30;
 
             int yPos = 0;
 
             for (int i = 0; i < achievements.Count; i++)
             {
-                positionArray[i % 2, yPos] = new Rectangle((1240 - ((2 * width) + spacing)) / 2 + (i % 2) * (width + spacing), 50 + yPos * (height + spacing), width, height);
+                positionArray[i % 2, yPos] = new Rectangle((1240 - ((2 * width) + spacing)) / 2 + (i % 2) * (width + spacing), 200 + yPos * (height + spacing), width, height);
                 achievements[i].Position = positionArray[i % 2, yPos];
 
                 if (i % 2 == 1) { yPos++; }
@@ -491,13 +508,19 @@ namespace CSGOesc_Case_Opening
 
         public void DrawAchievements()
         {
+            _spriteBatch.Draw(assets["behindSlots"], new Rectangle(200, 0, 720, 200), null, Color.Black * .35f, MathHelper.ToRadians(90), Vector2.Zero, SpriteEffects.None, 0);
             _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 100, 720), Color.Gray);
+            _spriteBatch.Draw(assets["behindSlots"], new Rectangle(1240, 0, 720, 200), null, Color.Black * .35f, MathHelper.ToRadians(90), Vector2.Zero, SpriteEffects.None, 0);
             _spriteBatch.Draw(assets["square"], new Rectangle(1140, 0, 100, 720), Color.Gray);
+            _spriteBatch.Draw(assets["behindSlots"], new Rectangle(0, 0, 1240, 250), Color.Black * .35f);
 
             for (int i = 0; i < achievements.Count; i++)
             {
                 achievements[i].Draw(_spriteBatch);
             }
+
+            _spriteBatch.Draw(assets["square"], new Rectangle(0, 0, 1240, 150), Color.Gray);
+            
         }
 
         public void DrawMenu()
@@ -681,6 +704,9 @@ namespace CSGOesc_Case_Opening
             buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 3), 285, buttonHeight), "Credits", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Menu"][3].OnLeftClick += Game;
 
+            buttons.Add("Inventory", new List<Button>());
+            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Inventory"][0].OnLeftClick += ReturnToMenu;
         }
     }
 }

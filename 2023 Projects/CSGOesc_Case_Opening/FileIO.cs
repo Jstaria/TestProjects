@@ -25,15 +25,22 @@ namespace CSGOesc_Case_Opening
         public static void WriteTo(string name, List<string> data)
         {
             string stream = "../../../Content/Saved Files/" + name + ".txt";
-
-            StreamWriter fileWriter = new StreamWriter(stream, false);
-
-            foreach (string item in data)
+            
+            try
             {
-                fileWriter.WriteLine(item);
-            }
+                StreamWriter fileWriter = new StreamWriter(stream, false);
 
-            fileWriter.Close();
+                foreach (string item in data)
+                {
+                    fileWriter.WriteLine(item);
+                }
+
+                fileWriter.Close();
+            }
+            catch
+            {
+                //oh well
+            }
         }
 
         public static void AppendTo(string name, List<string> data)

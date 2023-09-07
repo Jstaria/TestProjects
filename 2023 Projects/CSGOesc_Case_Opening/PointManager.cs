@@ -11,8 +11,11 @@ namespace CSGOesc_Case_Opening
     internal class PointManager
     {
         Random rng = new Random();
+        public static int CurrentPoints { get; private set; }
         public static int TotalPoints { get; private set; }
-        public static int ClickTotal { get; private set; }
+        public static int ClickAmount { get; private set; }
+        
+        public static int TotalClicks { get; private set; }
 
         public List<Particle> clickParticles;
 
@@ -24,8 +27,13 @@ namespace CSGOesc_Case_Opening
         {
             clickParticles = new List<Particle>();
 
-            ClickTotal = 1;
-            TotalPoints = 15;
+            List<String> info = FileIO.ReadFrom("Clicker");
+
+            CurrentPoints = int.Parse(info[0]);
+            ClickAmount = int.Parse(info[1]);
+            TotalClicks = int.Parse(info[2]);
+            SlotUI.TotalSpins = int.Parse(info[3]);
+            TotalPoints = int.Parse(info[4]);
 
             items = new Dictionary<String, int>();
             ClickMe = new Button(new Texture2D[]
@@ -77,32 +85,49 @@ namespace CSGOesc_Case_Opening
 
             sb.Draw(Game1.assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
 
-            DrawPoints(sb, new Vector2(620, 600) - Game1.ReadOut.MeasureString(TotalPoints.ToString()) / 2);
+            DrawPoints(sb, new Vector2(620, 600) - Game1.ReadOut.MeasureString(CurrentPoints.ToString()) / 2);
         }
 
         public static void DrawPoints(SpriteBatch sb, Vector2 pos)
         {
-            sb.DrawString(Game1.ReadOut, TotalPoints.ToString(), pos, Color.White);
+            sb.DrawString(Game1.ReadOut, CurrentPoints.ToString(), pos, Color.White);
+        }
+
+        public static void Save()
+        {
+            List<string> list = new List<string>
+            {
+                CurrentPoints.ToString(),
+                ClickAmount.ToString(),
+                TotalClicks.ToString(),
+                SlotUI.TotalSpins.ToString(),
+                TotalPoints.ToString()
+            };
+
+            FileIO.WriteTo("Clicker", list);
         }
 
         public void AddPoint()
         {
-            TotalPoints += ClickTotal;
+            CurrentPoints += ClickAmount;
+            TotalPoints += ClickAmount;
+            TotalClicks++;
         }
 
         public static void SubtractPoints(int amount)
         {
-            TotalPoints -= amount;
+            CurrentPoints -= amount;
         }
 
         public static void AddPoints(int amount)
         {
+            CurrentPoints += amount;
             TotalPoints += amount;
         }
 
         public void SpawnParticle()
         {
-            clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickTotal.ToString())));
+            clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickAmount.ToString())));
         }
     }
 }

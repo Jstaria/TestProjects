@@ -82,9 +82,9 @@ namespace CSGOesc_Case_Opening
                 sb.DrawString(Game1.ReadOut, inventory[items[i].Name].Count.ToString(), new Vector2((rect.X + rect.Width / 2) - Game1.ReadOut.MeasureString(inventory[items[i].Name].Count.ToString()).X / 2, (rect.Y + rect.Height / 2) + 20), Color.Black);
             }
 
-            Vector2 pos = new Vector2(620, 600) - Game1.ReadOut.MeasureString(PointManager.TotalPoints.ToString()) / 2;
+            Vector2 pos = new Vector2(620, 600) - Game1.ReadOut.MeasureString(PointManager.CurrentPoints.ToString()) / 2;
 
-            sb.DrawString(Game1.ReadOut, PointManager.TotalPoints.ToString(), pos, Color.White);
+            sb.DrawString(Game1.ReadOut, PointManager.CurrentPoints.ToString(), pos, Color.White);
         }
 
         public void SellOne(string name)

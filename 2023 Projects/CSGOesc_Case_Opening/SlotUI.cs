@@ -43,12 +43,14 @@ namespace CSGOesc_Case_Opening
 
         private StreamReader itemReader;
         private Random rng;
+        private float rand;
 
         private int numItems;
 
         public bool HasSpun { get; private set; }
 
-        private float rand;
+        public static int TotalSpins { get; set; }
+
         public bool Idle
         {
             get { return idle; }
@@ -244,8 +246,10 @@ namespace CSGOesc_Case_Opening
 
             MouseState currentMouseState = Mouse.GetState();
             if (new Rectangle(0, 0, 1240, 720).Intersects(new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1)) &&
-                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.TotalPoints >= spinCost && idle)
+                currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.CurrentPoints >= spinCost && idle)
             {
+                TotalSpins++;
+
                 num = rng.Next(70,100);
 
                 rand = rng.Next(974, 986) * .001f;

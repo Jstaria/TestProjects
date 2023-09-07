@@ -1,25 +1,21 @@
-﻿spins,points,click
-A New Chapter,Make your first spin!,0,false,spins
-Beginner,Earn 100 points,100,false,points
-I've Just Begun,Make 10 spins,10,false,spins
-Pocket Change,Earn 1000 points,1000,false,points
-Addiction?,Make 100 spins,100,false,spins
-6A New Chapter,Make your first spin!,0,false,spins
-6Beginner,Earn 100 points,100,false,points
-I6've Just Begun,Make 10 spins,10,false,spins
-6Pocket Change,Earn 1000 points,1000,false,points
-A6ddiction?,Make 100 spins,100,false,spins
-1A New Chapter,Make your first spin!,0,false,spins
-1Beginner,Earn 100 points,100,false,points
-iA New Chapter,Make your first spin!,0,false,spins
-iBeginner,Earn 100 points,100,false,points
-iI've Just Begun,Make 10 spins,10,false,spins
-iPocket Change,Earn 1000 points,1000,false,points
-iAddiction?,Make 100 spins,100,false,spins
-i6A New Chapter,Make your first spin!,0,false,spins
-i6Beginner,Earn 100 points,100,false,points
-iI6've Just Begun,Make 10 spins,10,false,spins
-i6Pocket Change,Earn 1000 points,1000,false,points
-iA6ddiction?,Make 100 spins,100,false,spins
-i1A New Chapter,Make your first spin!,0,false,spins
-i1Beginner,Earn 100 points,100,false,points
+spins,points,click,item
+A New Chapter,Make your first spin!,1,True,spins
+I've Just Begun,Make 10 spins,10,True,spins
+Addiction?,Make 100 spins,100,True,spins
+Addiction,Make 1000 spins,1000,False,spins
+Pocket Change,Earn 100 points,100,True,points
+Heftier Wallet,Earn 1000 points,1000,True,points
+Mr. Rich,Earn 10000 points,10000,False,points
+College Tuition,Earn 100000 points,100000,False,points
+Click,Click 10 times,10,True,click
+Clickier,Click 100 times,100,True,click
+Clickiest,Click 1000 times,1000,True,click
+Click Diety,Click 10000 times,10000,False,click
+The Clicker God,Click 100000 times,100000,False,click
+"Ew. Commons...",Earn your first common,0,True,item
+Getting There,Earn your first uncommon,0,True,item
+Now We Are Talking,Earn your first rare,0,True,item
+Epic,Earn your first epic,0,True,item
+The Wise Among Us,Earn your first mystic,0,True,item
+Legend-Dairy,Earn your first legendary,0,True,item
+The King's Reign,Earn your first royal,0,True,item
