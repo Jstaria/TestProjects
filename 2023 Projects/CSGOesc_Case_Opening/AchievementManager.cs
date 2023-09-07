@@ -29,7 +29,7 @@ namespace CSGOesc_Case_Opening
             {
                 if (achievement.Completed) { continue; }
 
-                achievement.Update(PointManager.CurrentPoints);
+                achievement.Update(PointManager.TotalPoints);
             }
 
             foreach (Achievement achievement in Achievements["spins"].Values)

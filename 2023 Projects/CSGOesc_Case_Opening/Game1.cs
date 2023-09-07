@@ -313,7 +313,7 @@ namespace CSGOesc_Case_Opening
                     break;
             }
 
-            if ((int)(gameTime.TotalGameTime.Seconds) % 15 == 0)
+            if ((int)(gameTime.TotalGameTime.Seconds) % 5 == 0)
             {
                 AchievementManager.SaveAchievements();
                 PointManager.Save();
