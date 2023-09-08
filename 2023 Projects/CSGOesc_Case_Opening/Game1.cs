@@ -321,6 +321,8 @@ namespace CSGOesc_Case_Opening
 
             #endregion
 
+            PointManager.TotalClicks += 10;
+
             base.Update(gameTime);
         }
 

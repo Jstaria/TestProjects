@@ -70,7 +70,7 @@ namespace CSGOesc_Case_Opening
             sb.Draw(Game1.assets["square"], Position, Color.Gray);
             sb.Draw(Game1.assets["square"], Position, Color.Red * .1f);
 
-            Color lerpColor = Progress < .5f ? Color.Lerp(Color.Red, Color.Orange, Progress * 2) : Color.Lerp(Color.Orange, Color.Green, (Progress - .5f) * 2);
+            Color lerpColor = Progress < .5f ? Color.Lerp(Color.DarkRed, Color.Orange, Progress * 2) : (Progress < .75f ? Color.Lerp(Color.Orange, Color.Yellow, (Progress - .5f) * 4) : Color.Lerp(Color.Yellow, Color.Green, (Progress - .75f) * 4));
 
             sb.Draw(Game1.assets["square"], new Rectangle(Position.X, Position.Y, (int)(Position.Width * Progress), Position.Height), Position, lerpColor);
 

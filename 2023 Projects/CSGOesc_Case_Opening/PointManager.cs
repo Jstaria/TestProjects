@@ -15,7 +15,7 @@ namespace CSGOesc_Case_Opening
         public static int TotalPoints { get; private set; }
         public static int ClickAmount { get; private set; }
         
-        public static int TotalClicks { get; private set; }
+        public static int TotalClicks { get;  set; }
 
         public List<Particle> clickParticles;
 
