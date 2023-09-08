@@ -98,7 +98,7 @@ namespace CSGOesc_Case_Opening
                 {
                     string name = inventory.ElementAt(i).Value.ElementAt(j).Value.Name;
 
-                    RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
+                    RemoveItem(inventory[name][inventory[name].Values.ToList()[j].UniqueID]);
 
                     points += (
                     name == "Common" ? 5 :
