@@ -39,12 +39,23 @@ namespace CSGOesc_Case_Opening
                 achievement.Update(SlotUI.TotalSpins);
             }
 
+            List<bool> Completed = new List<bool>();
+
             for (int i = 0; i < Achievements["item"].Values.Count; i++)
             {
-                if (Achievements["item"].Values.ElementAt(i).Completed) { continue; }
+                if (Achievements["item"].Values.ElementAt(i).Completed)
+                {
+                    Completed.Add(Achievements["item"].Values.ElementAt(i).Completed);
+                    continue;
+                }
 
-                Achievements["item"].Values.ElementAt(i).Update();
+                if (i != 7 && SlotMachine.OneOfEach[i] != null)
+                {
+                    Achievements["item"].Values.ElementAt(i).Update();
+                }
             }
+
+            Achievements["item"].Values.ElementAt(7).Update(Completed.Count);
         }
 
         public static void GenerateAchievements()

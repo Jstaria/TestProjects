@@ -26,6 +26,7 @@ namespace CSGOesc_Case_Opening
             this.Name = name;
             this.Description = description;
             this.Completed = completed;
+            this.Progress = this.Completed ? 1 : 0;
             this.NeededAmount = 0;
         }
 
@@ -35,7 +36,7 @@ namespace CSGOesc_Case_Opening
             this.Name = name;
             this.Description = description;
             this.Completed = completed;
-            this.Progress = completed ? 1 : 0;
+            this.Progress = this.Completed ? 1 : 0;
             this.NeededAmount = neededAmount;
         }
 

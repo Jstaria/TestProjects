@@ -321,8 +321,6 @@ namespace CSGOesc_Case_Opening
 
             #endregion
 
-            PointManager.TotalClicks += 10;
-
             base.Update(gameTime);
         }
 
@@ -566,6 +564,14 @@ namespace CSGOesc_Case_Opening
 
         #region Button Functions
 
+        private void Quit()
+        {
+            PointManager.Save();
+            AchievementManager.SaveAchievements();
+
+            Exit();
+        }
+
         private bool CanUseButtons(GameTime gameTime)
         {
             bool canUse = false;
@@ -703,8 +709,8 @@ namespace CSGOesc_Case_Opening
             buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 2), 285, buttonHeight), "Achievements", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Menu"][2].OnLeftClick += Achievements;
             
-            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 3), 285, buttonHeight), "Credits", Game1.ReadOut, Color.Black, Color.White, pressTimer));
-            buttons["Menu"][3].OnLeftClick += Game;
+            buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 3), 285, buttonHeight), "Quit", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Menu"][3].OnLeftClick += Quit;
 
             buttons.Add("Inventory", new List<Button>());
             buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimer));

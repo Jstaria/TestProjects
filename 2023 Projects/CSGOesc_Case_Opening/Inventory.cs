@@ -100,7 +100,7 @@ namespace CSGOesc_Case_Opening
                 name == "Epic" ? 40 :
                 name == "Mystic" ? 75 :
                 name == "Legendary" ? 200 :
-                name == "Royal" ? 1000 : 0);
+                name == "Royal" ? 2000 : 0);
             }
 
             // condition ? value_if_true : value_if_false

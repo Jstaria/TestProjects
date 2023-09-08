@@ -42,7 +42,11 @@ namespace CSGOesc_Case_Opening
 
         private SlotState currentState;
 
+        private static string[] oneOfEach;
+
         private Dictionary<string, List<Button>> buttons;
+
+        public static string[] OneOfEach { get { return oneOfEach; } }
 
         public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
@@ -63,6 +67,7 @@ namespace CSGOesc_Case_Opening
             this.inventory = new Inventory(SlotUI.Items);
 
             this.wonItems = null;
+            oneOfEach = new string[7];
 
             buttons = new Dictionary<string, List<Button>>();
 
@@ -92,8 +97,17 @@ namespace CSGOesc_Case_Opening
 
                     wonItems = SlotUI.Update(gameTime);
 
+                    
+
                     if (wonItems[0] != null)
                     {
+                        for (int i = 0; i < oneOfEach.Length; i++)
+                        {
+                            if (oneOfEach[i] != null) { continue; }
+
+                            oneOfEach[i] = wonItems[0].Name == SlotUI.Items[i].Name ? wonItems[0].Name : null;
+                        }
+
                         //currentState = SlotState.WinUI;
                         SlotUI.Idle = true;
                     }
