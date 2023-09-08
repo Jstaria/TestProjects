@@ -43,13 +43,6 @@ namespace CSGOesc_Case_Opening
             }, 
             new Rectangle((1240 - 200) / 2, 160, 200, 200), "Click Me", Game1.ReadOut, Color.Black, Color.White, 0);
 
-            Achievements = new Button(new Texture2D[]
-            {
-                Game1.assets["button_active"],
-                Game1.assets["button_inactive"]
-            },
-            new Rectangle((1240 - 200) / 2 - 20, 160, 200, 220), "Achievements", Game1.regular, Color.Black, Color.White, 0);
-
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
         }

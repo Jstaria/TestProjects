@@ -239,6 +239,9 @@ namespace CSGOesc_Case_Opening
 
             buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(950, 565, 120, 75), "Back", Game1.regular, Color.Black, Color.White, .5f));
             buttons["Inventory"][0].OnLeftClick += CloseInventory;
+
+            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(175, 565, 90, 75), "Sell All", Game1.regular, Color.Black, Color.White, .5f));
+            buttons["Inventory"][1].OnLeftClick += inventory.SellAll;
         }
     }
 }

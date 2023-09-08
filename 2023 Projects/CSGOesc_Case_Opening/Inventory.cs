@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CSGOesc_Case_Opening
 {
@@ -85,6 +86,32 @@ namespace CSGOesc_Case_Opening
             Vector2 pos = new Vector2(620, 600) - Game1.ReadOut.MeasureString(PointManager.CurrentPoints.ToString()) / 2;
 
             sb.DrawString(Game1.ReadOut, PointManager.CurrentPoints.ToString(), pos, Color.White);
+        }
+
+        public void SellAll()
+        {
+            int points = 0;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                for (int j = 0; j < inventory.ElementAt(i).Value.Count; j++)
+                {
+                    string name = inventory.ElementAt(i).Value.ElementAt(j).Value.Name;
+
+                    RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
+
+                    points += (
+                    name == "Common" ? 5 :
+                    name == "Uncommon" ? 10 :
+                    name == "Rare" ? 20 :
+                    name == "Epic" ? 40 :
+                    name == "Mystic" ? 75 :
+                    name == "Legendary" ? 200 :
+                    name == "Royal" ? 2000 : 0);
+                }
+            }
+
+            PointManager.AddPoints(points);
         }
 
         public void SellOne(string name)
