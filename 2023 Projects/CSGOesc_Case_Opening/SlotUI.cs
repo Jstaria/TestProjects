@@ -263,7 +263,7 @@ namespace CSGOesc_Case_Opening
 
                 HasSpun = true;
 
-                spinParticle = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()));
+                spinParticle = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()), Game1.ReadOut);
 
                 PointManager.SubtractPoints(spinCost);
             }

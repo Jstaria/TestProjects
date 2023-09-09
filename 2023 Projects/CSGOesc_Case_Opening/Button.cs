@@ -32,7 +32,7 @@ namespace CSGOesc_Case_Opening
         private float timeSinceLastPress;
 
         public Rectangle Position { get { return position; } }
-
+        public string HoverText { get; set; }
         public bool Active { get { return active; } }
 
         public event OnRightButtonClick OnRightClick;
@@ -100,7 +100,7 @@ namespace CSGOesc_Case_Opening
 
                 if (OnLeftClickString != null)
                 {
-                    OnLeftClickString(text);
+                    OnLeftClickString(HoverText);
                     expand = true;
                 }
             }
@@ -144,7 +144,18 @@ namespace CSGOesc_Case_Opening
             // Hovered over
             if (active)
             {
-                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), buttonColor); ;
+                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), buttonColor);
+
+                if (HoverText != null)
+                {
+                    Vector2 textLength = Game1.regular.MeasureString(HoverText);
+                    Vector2 textPos = new Vector2(
+                        Mouse.GetState().X - textLength.X / 2,
+                        Mouse.GetState().Y - textLength.Y
+                        );
+        
+                            sb.DrawString(Game1.regular, HoverText, textPos, Color.Black);
+                }
             }
             // Regular
             else

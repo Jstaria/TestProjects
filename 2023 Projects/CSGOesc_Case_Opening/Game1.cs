@@ -36,6 +36,8 @@ namespace CSGOesc_Case_Opening
 
     public class Game1 : Game
     {
+        private ParticleSystem ps;
+
         private List<Achievement> achievements;
         private RenderTarget2D renderTarget;
 
@@ -172,6 +174,8 @@ namespace CSGOesc_Case_Opening
             CreateButtons();
 
             SetupAchievements();
+
+            ps = new ParticleSystem(1000, Color.Yellow, Color.Red, .98f, assets["square"], new Rectangle(620, 360, 0, 0), 2, true, 360);
             // TODO: use this.Content to load your game content here
         }
 
@@ -298,7 +302,7 @@ namespace CSGOesc_Case_Opening
 
                             prevScrollValue = scrollValue;
 
-                            foreach (Button button in buttons["Inventory"])
+                            foreach (Button button in buttons["Achievements"])
                             {
                                 button.Update(gameTime);
                             }
@@ -320,6 +324,8 @@ namespace CSGOesc_Case_Opening
             }
 
             #endregion
+
+            ps.Update();
 
             base.Update(gameTime);
         }
@@ -430,7 +436,7 @@ namespace CSGOesc_Case_Opening
 
                             DrawAchievements();
 
-                            foreach (Button button in buttons["Inventory"])
+                            foreach (Button button in buttons["Achievements"])
                             {
                                 button.Draw(_spriteBatch);
                             }
@@ -446,6 +452,8 @@ namespace CSGOesc_Case_Opening
             }
 
             #endregion
+
+            ps.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -464,7 +472,7 @@ namespace CSGOesc_Case_Opening
 
         public void SetupAchievements()
         {
-            AchievementManager.GenerateAchievements();
+            AchievementManager.Clear();
 
             minScroll = new List<int>();
             maxScroll = new List<int>();
@@ -563,6 +571,13 @@ namespace CSGOesc_Case_Opening
         }
 
         #region Button Functions
+
+        private void Reset()
+        {
+            PointManager.Clear();
+            slot.Clear();
+            SetupAchievements();
+        }
 
         private void Quit()
         {
@@ -712,9 +727,12 @@ namespace CSGOesc_Case_Opening
             buttons["Menu"].Add(new Button(buttonAssets, new Rectangle(107, topSpacing + (menuButtonSpacing * 3), 285, buttonHeight), "Quit", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Menu"][3].OnLeftClick += Quit;
 
-            buttons.Add("Inventory", new List<Button>());
-            buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimer));
-            buttons["Inventory"][0].OnLeftClick += ReturnToMenu;
+            buttons.Add("Achievements", new List<Button>());
+            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Achievements"][0].OnLeftClick += ReturnToMenu;
+
+            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(330, 30, 285, buttonHeight), "Clear Progress", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Achievements"][1].OnLeftClick += Reset;
         }
     }
 }

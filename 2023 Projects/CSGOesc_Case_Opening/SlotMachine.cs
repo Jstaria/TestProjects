@@ -43,6 +43,7 @@ namespace CSGOesc_Case_Opening
         private SlotState currentState;
 
         private static string[] oneOfEach;
+        private List<Particle> particles;
 
         private Dictionary<string, List<Button>> buttons;
 
@@ -51,6 +52,7 @@ namespace CSGOesc_Case_Opening
         public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
             this.menuActive = menuActive;
+            this.particles = new List<Particle>();
 
             this.assets = assets;
             this.buttonAssets = new Texture2D[]
@@ -138,10 +140,17 @@ namespace CSGOesc_Case_Opening
                         }
                     }
 
+                    foreach (Particle particle in particles)
+                    {
+                        particle.Update();
+                    }
+
                     inventory.Update(gameTime);
 
                     break;
             }
+
+            buttons["Inventory"][1].HoverText = String.Format("+" + inventory.InventoryValue.ToString());
         }
 
         public void Draw(SpriteBatch sb)
@@ -179,7 +188,7 @@ namespace CSGOesc_Case_Opening
 
                         if (SlotUI.spinParticle != null)
                         {
-                            SlotUI.spinParticle.Draw(sb);
+                            SlotUI.spinParticle.DrawString(sb);
                         }
                     }
                     
@@ -198,6 +207,11 @@ namespace CSGOesc_Case_Opening
                         button.Draw(sb);
                     }
                     
+                    foreach (Particle particle in particles)
+                    {
+                        particle.DrawString(sb);
+                    }
+
                     inventory.Draw(sb);
 
                     break;
@@ -219,10 +233,22 @@ namespace CSGOesc_Case_Opening
             currentState = SlotState.Inventory;
         }
 
+        private void SpawnParticle(string text)
+        {
+            particles.Add(new Particle(Mouse.GetState().Position.ToVector2(), .985f, text, Game1.regular));
+        }
+
         public void CloseInventory()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = SlotState.SlotsUI;
+        }
+
+        public void Clear()
+        {
+            inventory.Clear();
+
+            oneOfEach = new string[7];
         }
 
         private void CreateButtons()
@@ -242,6 +268,7 @@ namespace CSGOesc_Case_Opening
 
             buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(175, 565, 90, 75), "Sell All", Game1.regular, Color.Black, Color.White, .5f));
             buttons["Inventory"][1].OnLeftClick += inventory.SellAll;
+            buttons["Inventory"][1].OnLeftClickString += SpawnParticle;
         }
     }
 }

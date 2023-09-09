@@ -9,8 +9,8 @@ namespace CSGOesc_Case_Opening
 {
     internal static class AchievementManager
     {
-        private static Dictionary<string, Dictionary<string, Achievement>> achievements = new Dictionary<string, Dictionary<string, Achievement>>();
-        private static List<Achievement> achievementList = new List<Achievement>();
+        private static Dictionary<string, Dictionary<string, Achievement>> achievements;
+        private static List<Achievement> achievementList;
 
         public static Dictionary<string, Dictionary<string, Achievement>> Achievements { get { return achievements; } }
         public static List<Achievement> AchievementList { get { return achievementList; } }
@@ -60,6 +60,9 @@ namespace CSGOesc_Case_Opening
 
         public static void GenerateAchievements()
         {
+            achievements = new Dictionary<string, Dictionary<string, Achievement>>();
+            achievementList = new List<Achievement>();
+
             List<string> itemInfo = FileIO.ReadFrom("Achievements");
 
             String[] line = null;
@@ -102,6 +105,40 @@ namespace CSGOesc_Case_Opening
             }
 
             FileIO.WriteTo("Achievements", info);
+        }
+
+        public static void Clear()
+        {
+            List<string> info = FileIO.ReadFrom("Achievements");
+
+            for (int i = 1; i < info.Count; i++)
+            {
+                string[] line = info[i].Split(',');
+                line[3] = false.ToString();
+
+                string fullLine = null;
+                for (int j = 0; j < line.Length; j++)
+                {
+                    string str = "";
+
+                    if (j != line.Length - 1)
+                    {
+                        str = ",";
+                    }
+
+                    fullLine += line[j] + str;
+                }
+
+                info[i] = fullLine;
+            }
+
+            FileIO.WriteTo("Achievements", info);
+
+            achievementList = null;
+            achievements = null;
+
+            GenerateAchievements();
+            Update();
         }
     }
 }

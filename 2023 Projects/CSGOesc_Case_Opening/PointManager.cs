@@ -73,7 +73,7 @@ namespace CSGOesc_Case_Opening
 
             foreach (Particle particle in clickParticles)
             {
-                particle.Draw(sb);
+                particle.DrawString(sb);
             }
 
             sb.Draw(Game1.assets["square"], new Rectangle(0, 500, 1240, 720), Color.Gray);
@@ -120,7 +120,18 @@ namespace CSGOesc_Case_Opening
 
         public void SpawnParticle()
         {
-            clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickAmount.ToString())));
+            clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickAmount.ToString()), Game1.ReadOut));
+        }
+
+        public static void Clear()
+        {
+            ClickAmount = 1;
+            TotalClicks = 0;
+            TotalPoints = 0;
+            SlotUI.TotalSpins = 0;
+            CurrentPoints = 0;
+
+            Save();
         }
     }
 }

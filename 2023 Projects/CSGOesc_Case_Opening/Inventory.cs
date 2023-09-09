@@ -23,6 +23,7 @@ namespace CSGOesc_Case_Opening
         private Texture2D[] buttonAssets;
 
         public int NumItems { get; private set; }
+        public int InventoryValue { get; private set; }
 
         public Inventory(List<Item> items)
         {
@@ -40,23 +41,7 @@ namespace CSGOesc_Case_Opening
                 Game1.assets["button_inactive"]
             };
 
-            for (int i = 0; i < items.Count; i++)
-            {
-                Rectangle rect = new Rectangle();
-                if (i < 4)
-                {
-                    rect = new Rectangle(i * 200 + i * 60 + 130, 30, 200, 200);
-                }
-                else
-                {
-                    rect = new Rectangle((i - 4) * 200 + (i - 4) * 60 + 260, 260, 200, 200);
-                }
-
-                inventory.Add(items[i].Name, new Dictionary<string, Item>());
-                itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .1f));
-                itemButtons["Rarity"][items[i].Name].OnRightClickString += SellOne;
-                //itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
-            }
+            SetupInv(true);
 
             LoadItems();
         }
@@ -98,7 +83,7 @@ namespace CSGOesc_Case_Opening
                 {
                     string name = inventory.ElementAt(i).Value.ElementAt(j).Value.Name;
 
-                    RemoveItem(inventory[name][inventory[name].Values.ToList()[j].UniqueID]);
+                    RemoveItem(inventory.ElementAt(i).Value[inventory.ElementAt(i).Value.Values.ToList()[j].UniqueID]);
 
                     points += (
                     name == "Common" ? 5 :
@@ -108,9 +93,12 @@ namespace CSGOesc_Case_Opening
                     name == "Mystic" ? 75 :
                     name == "Legendary" ? 200 :
                     name == "Royal" ? 2000 : 0);
+
+                    j--;
                 }
             }
 
+            InventoryValue = 0;
             PointManager.AddPoints(points);
         }
 
@@ -120,14 +108,18 @@ namespace CSGOesc_Case_Opening
             {
                 RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
 
-                PointManager.AddPoints(
+                int points = 
                 name == "Common" ? 5 :
                 name == "Uncommon" ? 10 :
                 name == "Rare" ? 20 :
                 name == "Epic" ? 40 :
                 name == "Mystic" ? 75 :
                 name == "Legendary" ? 200 :
-                name == "Royal" ? 2000 : 0);
+                name == "Royal" ? 2000 : 0;
+
+                PointManager.AddPoints(points);
+
+                InventoryValue -= points;
             }
 
             // condition ? value_if_true : value_if_false
@@ -141,7 +133,31 @@ namespace CSGOesc_Case_Opening
             }
         }
 
-        public void LoadItems()
+        public void SetupInv(bool setup)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                Rectangle rect = new Rectangle();
+                if (i < 4)
+                {
+                    rect = new Rectangle(i * 200 + i * 60 + 130, 30, 200, 200);
+                }
+                else
+                {
+                    rect = new Rectangle((i - 4) * 200 + (i - 4) * 60 + 260, 260, 200, 200);
+                }
+
+                inventory.Add(items[i].Name, new Dictionary<string, Item>());
+                if (setup)
+                {
+                    itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .1f));
+                    itemButtons["Rarity"][items[i].Name].OnRightClickString += SellOne;
+                    //itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
+                }
+            }
+        }
+
+        private void LoadItems()
         {
             List<string> itemInfo = FileIO.ReadFrom("SavedInventory");
 
@@ -151,6 +167,17 @@ namespace CSGOesc_Case_Opening
             {
                 info = line.Split(',');
                 AddItem(new Item(int.Parse(info[0]), new Color(int.Parse(info[1]), int.Parse(info[2]), int.Parse(info[3])), info[4], info[5]), false);
+
+                string name = info[0];
+
+                InventoryValue +=
+                name == "Common" ? 5 :
+                name == "Uncommon" ? 10 :
+                name == "Rare" ? 20 :
+                name == "Epic" ? 40 :
+                name == "Mystic" ? 75 :
+                name == "Legendary" ? 200 :
+                name == "Royal" ? 2000 : 0;
             }
 
             if (itemInfo.Count > 0)
@@ -168,6 +195,8 @@ namespace CSGOesc_Case_Opening
         public void AddItem(Item item, bool append)
         {
             itemsInInv.Add(item);
+
+            string name = item.Name;
 
             itemNumber++;
 
@@ -192,6 +221,15 @@ namespace CSGOesc_Case_Opening
 
                 FileIO.AppendTo("SavedInventory", itemInfo);
             }
+
+            InventoryValue +=
+                name == "Common" ? 5 :
+                name == "Uncommon" ? 10 :
+                name == "Rare" ? 20 :
+                name == "Epic" ? 40 :
+                name == "Mystic" ? 75 :
+                name == "Legendary" ? 200 :
+                name == "Royal" ? 2000 : 0;
         }
 
         /// <summary>
@@ -235,6 +273,19 @@ namespace CSGOesc_Case_Opening
             FileIO.WriteTo("SavedInventory", newItemInfo);
 
             // remove item at item.ItemNumber
+        }
+
+        public void Clear()
+        {
+            FileIO.WriteTo("SavedInventory", new List<string>());
+
+            InventoryValue = 0;
+            itemNumber = 0;
+            inventory.Clear();
+            itemsInInv.Clear();
+
+            SetupInv(false);
+            LoadItems();
         }
     }
 }
