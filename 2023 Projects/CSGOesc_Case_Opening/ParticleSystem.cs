@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,10 @@ namespace CSGOesc_Case_Opening
         private float spreadAngle;
         private float spawnAmount;
 
+        public Vector2 Position { set { position = new Rectangle((int)value.X, (int)value.Y, 0, 0); } }
+
+        public Color StartColor { get { return startColor; } set { startColor = value; } }
+
         public ParticleSystem(int particleAmount, Color startColor, Color endColor, float decaySpeed, Texture2D asset, Rectangle position, int speed, bool doesRotate, float spreadAngle)
         {
             this.particleAmount = particleAmount;
@@ -40,7 +45,7 @@ namespace CSGOesc_Case_Opening
             this.doesRotate = doesRotate;
             this.rotationSpeed = 0;
             this.spreadAngle = spreadAngle;
-            this.spawnAmount = particleAmount / 500;
+            this.spawnAmount = particleAmount * .005f;
         }
 
         public void Update()
@@ -65,7 +70,7 @@ namespace CSGOesc_Case_Opening
 
                     for (int i = 0; i < spawnAmount; i++)
                     {
-                        particles.Add(new Particle(new Vector2(random.Next(position.X, position.X + position.Width + 1), random.Next(position.Y, position.Y + position.Height + 1)), decaySpeed, asset, startColor, endColor, speed, rotationSpeed, random.Next((int)spreadAngle), doesRotate));
+                        particles.Add(new Particle(new Vector2(random.Next(position.X, position.X + position.Width + 1), random.Next(position.Y, position.Y + position.Height + 1)), random.Next((int)((decaySpeed * 100) - 10), (int)(decaySpeed * 100)) * .01f, asset, startColor, endColor, speed, rotationSpeed, random.Next((int)spreadAngle), doesRotate));
                     }
                 }
 

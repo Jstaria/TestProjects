@@ -18,6 +18,7 @@ namespace CSGOesc_Case_Opening
         private Color endColor;
         private float rotationSpeed;
         private float rotationAngle;
+        private float colorDecay;
 
         private const int def = 1;
         private int speed;
@@ -113,15 +114,16 @@ namespace CSGOesc_Case_Opening
             this.size = 1;
             this.spreadAngle = spreadAngle - 135;
             this.isRadial = isRadial;
+            this.colorDecay = 1f;
         }
-
+         
         public void Update()
         {
             if (isRadial)
             {
                 position += new Vector2(
-                                (float)(Math.Cos(MathHelper.ToRadians(spreadAngle)) - Math.Sin(MathHelper.ToRadians(spreadAngle))) * speed,
-                                (float)(Math.Sin(MathHelper.ToRadians(spreadAngle)) + Math.Cos(MathHelper.ToRadians(spreadAngle))) * speed);
+                    (float)(Math.Cos(MathHelper.ToRadians(spreadAngle)) - Math.Sin(MathHelper.ToRadians(spreadAngle))) * speed,
+                    (float)(Math.Sin(MathHelper.ToRadians(spreadAngle)) + Math.Cos(MathHelper.ToRadians(spreadAngle))) * speed);
             }
             else
             {
@@ -139,6 +141,7 @@ namespace CSGOesc_Case_Opening
             }
 
             size *= .995f;
+            colorDecay *= (new Random()).Next(970,985) * .001f;
 
             rotationAngle += rotationSpeed;
         }
@@ -150,7 +153,7 @@ namespace CSGOesc_Case_Opening
 
         public void DrawAsset(SpriteBatch sb)
         {
-            sb.Draw(asset, position, null, Color.Lerp(endColor, startColor, LifeSpan) * LifeSpan, rotationAngle, new Vector2(asset.Width / 2, asset.Height / 2), size, SpriteEffects.None, 0);
+            sb.Draw(asset, position, null, Color.Lerp(endColor, startColor, colorDecay) * LifeSpan, rotationAngle, new Vector2(asset.Width / 2, asset.Height / 2), size, SpriteEffects.None, 0);
         }
     }
 }

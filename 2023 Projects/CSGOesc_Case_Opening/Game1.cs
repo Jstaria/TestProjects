@@ -36,8 +36,6 @@ namespace CSGOesc_Case_Opening
 
     public class Game1 : Game
     {
-        private ParticleSystem ps;
-
         private List<Achievement> achievements;
         private RenderTarget2D renderTarget;
 
@@ -78,6 +76,7 @@ namespace CSGOesc_Case_Opening
         private Soundtrack playlist;
         private Song[] songs;
 
+        private float time;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -91,6 +90,8 @@ namespace CSGOesc_Case_Opening
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            time = 0;
 
             rng = new Random();
 
@@ -148,6 +149,9 @@ namespace CSGOesc_Case_Opening
                 {"button_inactive",Content.Load<Texture2D>("button_inactive")},
                 {"behindSlots",Content.Load<Texture2D>("behindSlotsBlur")},
                 {"behindMenu",Content.Load<Texture2D>("behindMenuBlur")},
+                {"light_effect",Content.Load<Texture2D>("light_effect")},
+                {"cloud",Content.Load<Texture2D>("cloud")},
+                {"sparkle",Content.Load<Texture2D>("sparkle")},
             };
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
@@ -174,9 +178,6 @@ namespace CSGOesc_Case_Opening
             CreateButtons();
 
             SetupAchievements();
-
-            ps = new ParticleSystem(1000, Color.Yellow, Color.Red, .98f, assets["square"], new Rectangle(620, 360, 0, 0), 2, true, 360);
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -185,6 +186,8 @@ namespace CSGOesc_Case_Opening
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            //ps.Position = Mouse.GetState().Position.ToVector2();
 
             playlist.Play();
 
@@ -325,7 +328,7 @@ namespace CSGOesc_Case_Opening
 
             #endregion
 
-            ps.Update();
+            //ps.Update();
 
             base.Update(gameTime);
         }
@@ -453,7 +456,7 @@ namespace CSGOesc_Case_Opening
 
             #endregion
 
-            ps.Draw(_spriteBatch);
+            //ps.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -675,7 +678,7 @@ namespace CSGOesc_Case_Opening
             buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(60, 565, 90, 75), "Options", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Slots"][0].OnLeftClick += SavePrevState;
             buttons["Slots"][0].OnLeftClick += Pause;
-            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Home", regular, Color.Black, Color.White, pressTimerMenu));
+            buttons["Slots"].Add(new Button(buttonAssets, new Rectangle(1090, 565, 90, 75), "Clicker", regular, Color.Black, Color.White, pressTimerMenu));
             buttons["Slots"][1].OnLeftClick += Game;
 
             buttons.Add("Game", new List<Button>());
@@ -692,10 +695,10 @@ namespace CSGOesc_Case_Opening
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(210, 180, 90, 75), "Mute", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][1].OnLeftClick += playlist.Mute;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 180, 90, 30), "Vol Up", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 180, 90, 30), "Vol /\\", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][2].OnLeftClick += playlist.VolumeUp;
                      
-            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 225, 90, 30), "Vol Down", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(360, 225, 90, 30), "Vol \\/", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][3].OnLeftClick += playlist.VolumeDown;
                      
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165, 180, 30, 75), "<", Game1.ReadOut, Color.Black, Color.White, pressTimer));
@@ -706,6 +709,12 @@ namespace CSGOesc_Case_Opening
 
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(165, 280, 285, 75), "Menu", Game1.ReadOut, Color.Black, Color.White, pressTimer));
             buttons["Pause"][6].OnLeftClick += Menu;
+
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(465, 180, 90, 30), "Sound /\\", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"][7].OnLeftClick += slot.VolumeUp;
+
+            buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(465, 225, 90, 30), "Sound \\/", Game1.regular, Color.Black, Color.White, pressTimer));
+            buttons["Pause"][8].OnLeftClick += slot.VolumeDown;
 
             //                   Screen height - spacing on top / how many buttons
             int numButtons = 4;

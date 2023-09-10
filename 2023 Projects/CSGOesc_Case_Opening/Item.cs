@@ -20,6 +20,8 @@ namespace CSGOesc_Case_Opening
 
         private float expand;
 
+        public static SoundEffectInstance sound;
+
         public int ItemNumber { get; set; }
 
         public float Expand
@@ -33,6 +35,8 @@ namespace CSGOesc_Case_Opening
         private int min;
         // Max weight value
         private int max;
+
+        public float Volume { set { sound.Volume = value; } }
 
         public int Weight
         {
@@ -70,7 +74,7 @@ namespace CSGOesc_Case_Opening
 
         public string UniqueID { get; private set; }
 
-        public Item(int weight, Color color, string name, string uniqueID)
+        public Item(int weight, Color color, string name, string uniqueID, float volume)
         {
             this.weight = weight;
             this.color = color;
@@ -78,6 +82,10 @@ namespace CSGOesc_Case_Opening
             this.UniqueID = uniqueID;
 
             this.expand = 1;
+
+            sound = Game1.hitMarker.CreateInstance();
+
+            sound.Volume = volume;
         }
 
         public void Update(bool idle)
@@ -86,12 +94,6 @@ namespace CSGOesc_Case_Opening
             {
                 if (hoveredOver != previouslyHovered && !idle)
                 {
-                    SoundEffectInstance sound;
-
-                    sound = Game1.hitMarker.CreateInstance();
-
-                    sound.Volume = .03f;
-
                     sound.Play();
                 }
                 expand += 4;

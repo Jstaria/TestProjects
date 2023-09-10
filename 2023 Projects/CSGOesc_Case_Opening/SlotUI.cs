@@ -269,6 +269,35 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        public void AutoSpin()
+        {
+            prevSpinCount = spinCount;
+
+            MouseState currentMouseState = Mouse.GetState();
+
+            if (canSpin && PointManager.CurrentPoints >= spinCost && idle)
+            {
+                TotalSpins++;
+
+                num = rng.Next(70, 100);
+
+                rand = rng.Next(974, 986) * .001f;
+                System.Diagnostics.Debug.WriteLine(rand);
+
+                spinCount++;
+
+                idle = false;
+
+                canSpin = false;
+
+                HasSpun = true;
+
+                spinParticle = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()), Game1.ReadOut);
+
+                PointManager.SubtractPoints(spinCost);
+            }
+        }
+
         /// <summary>
         /// Picks from the assorted deck of rarites via a random number,
         /// It copies over the data from one of the templates to insure it is a unique card,
@@ -280,15 +309,49 @@ namespace CSGOesc_Case_Opening
         {
             Item newItem = null;
 
+            List<string> stringVolumes = FileIO.ReadFrom("Volume");
+
             foreach (Item item in Items)
             {
                 if (item.Min < randNum && randNum <= item.Max)
                 {
-                    newItem = new Item(item.Weight, item.Color, item.Name, randString);
+                    newItem = new Item(item.Weight, item.Color, item.Name, randString, float.Parse(stringVolumes[1]));
                 }
             }
 
             return newItem;
+        }
+
+        public void VolumeUp()
+        {
+            MediaPlayer.Pause();
+
+            List<string> newVolumes = FileIO.ReadFrom("Volume");
+
+            newVolumes[1] = (Math.Clamp(float.Parse(newVolumes[1]) + .005f, 0, 1)).ToString();
+
+            for (int i = 0; i < activeItems.Count; i++)
+            {
+                activeItems[i].Volume = float.Parse(newVolumes[1]);
+            }
+
+            FileIO.WriteTo("Volume", newVolumes);
+        }
+
+        public void VolumeDown()
+        {
+            MediaPlayer.Pause();
+
+            List<string> newVolumes = FileIO.ReadFrom("Volume");
+
+            newVolumes[1] = (Math.Clamp(float.Parse(newVolumes[1]) - .005f, 0, 1)).ToString();
+
+            for (int i = 0; i < activeItems.Count; i++)
+            {
+                activeItems[i].Volume = float.Parse(newVolumes[1]);
+            }
+
+            FileIO.WriteTo("Volume", newVolumes);
         }
 
         /// <summary>
@@ -313,7 +376,8 @@ namespace CSGOesc_Case_Opening
                             int.Parse(itemDetails[2]),
                             int.Parse(itemDetails[3])),
                         itemDetails[0], 
-                        "PLACEHOLDER"));
+                        "PLACEHOLDER",
+                        0));
 
                 Items[Items.Count - 1].Min = totalWeight;
                 Items[Items.Count - 1].Max = totalWeight + int.Parse(itemDetails[4]);

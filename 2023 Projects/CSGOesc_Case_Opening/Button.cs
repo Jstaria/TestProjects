@@ -23,17 +23,21 @@ namespace CSGOesc_Case_Opening
         private string text;
         private SpriteFont font;
         private Color fontColor;
-        private Color buttonColor;
+        private Color buttonColorNotActive;
+        private Color buttonColorActive;
         private bool active;
         private float expandNum = 10;
         private int expandNumHalf;
         private bool expand;
         private float timer;
         private float timeSinceLastPress;
+        private bool switchBool;
+        private bool isSwitch;
 
         public Rectangle Position { get { return position; } }
         public string HoverText { get; set; }
         public bool Active { get { return active; } }
+        public bool SwitchBool { get { return switchBool; } set { switchBool = value; } }
 
         public event OnRightButtonClick OnRightClick;
         public event OnLeftButtonClick OnLeftClick;
@@ -55,7 +59,8 @@ namespace CSGOesc_Case_Opening
             this.text = text;
             this.font = font;
             this.fontColor = fontColor;
-            this.buttonColor = buttonColor;
+            this.buttonColorNotActive = buttonColor;
+            this.buttonColorActive = buttonColor;
             this.position = position;
             this.expandNumHalf = (int)expandNum / 2;
 
@@ -64,6 +69,45 @@ namespace CSGOesc_Case_Opening
                 (position.X + position.Width / 2) - textLength.X / 2,
                 (position.Y + position.Height / 2) - textLength.Y / 2
             );
+        }
+
+        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColorNotActive, Color buttonColorActive, float timer)
+        {
+            this.timer = timer;
+            this.assets = assets;
+            this.text = text;
+            this.font = font;
+            this.fontColor = fontColor;
+            this.buttonColorNotActive = buttonColorNotActive;
+            this.buttonColorActive = buttonColorActive;
+            this.position = position;
+            this.expandNumHalf = (int)expandNum / 2;
+
+            Vector2 textLength = font.MeasureString(text);
+            textPos = new Vector2(
+                (position.X + position.Width / 2) - textLength.X / 2,
+                (position.Y + position.Height / 2) - textLength.Y / 2
+            );
+        }
+
+        public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColorNotActive, Color buttonColorActive, float timer, bool isSwitch)
+        {
+            this.timer = timer;
+            this.assets = assets;
+            this.text = text;
+            this.font = font;
+            this.fontColor = fontColor;
+            this.buttonColorNotActive = buttonColorNotActive;
+            this.buttonColorActive = buttonColorActive;
+            this.position = position;
+            this.expandNumHalf = (int)expandNum / 2;
+
+            Vector2 textLength = font.MeasureString(text);
+            textPos = new Vector2(
+                (position.X + position.Width / 2) - textLength.X / 2,
+                (position.Y + position.Height / 2) - textLength.Y / 2
+            );
+            this.isSwitch = isSwitch;
         }
 
         public void Update(GameTime gameTime)
@@ -141,27 +185,38 @@ namespace CSGOesc_Case_Opening
 
         public void Draw(SpriteBatch sb)
         {
-            // Hovered over
-            if (active)
+            if (!isSwitch)
             {
-                sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), buttonColor);
-
-                if (HoverText != null)
+                // Hovered over
+                if (active)
                 {
-                    Vector2 textLength = Game1.regular.MeasureString(HoverText);
-                    Vector2 textPos = new Vector2(
-                        Mouse.GetState().X - textLength.X / 2,
-                        Mouse.GetState().Y - textLength.Y
-                        );
-        
-                            sb.DrawString(Game1.regular, HoverText, textPos, Color.Black);
+                    sb.Draw(assets[1], new Rectangle((int)(position.X - expandNum), (int)(position.Y - expandNum), (int)(position.Width + expandNum * 2), (int)(position.Height + expandNum * 2)), buttonColorActive);
+
+                    if (HoverText != null)
+                    {
+                        Vector2 textLength = Game1.regular.MeasureString(HoverText);
+                        Vector2 textPos = new Vector2(
+                            Mouse.GetState().X - textLength.X / 2,
+                            Mouse.GetState().Y - textLength.Y
+                            );
+
+                        sb.DrawString(Game1.regular, HoverText, textPos, Color.Black);
+                    }
+                }
+                // Regular
+                else
+                {
+                    sb.Draw(assets[0], position, buttonColorNotActive);
                 }
             }
-            // Regular
+
             else
             {
-                sb.Draw(assets[0], position, buttonColor);
+                Color color = switchBool ? buttonColorActive : buttonColorNotActive;
+
+                sb.Draw(assets[0], position, color);
             }
+            
 
             if (text != null)
             {

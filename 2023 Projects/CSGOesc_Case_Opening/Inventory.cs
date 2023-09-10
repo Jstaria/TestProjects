@@ -166,7 +166,7 @@ namespace CSGOesc_Case_Opening
             foreach (string line in itemInfo)
             {
                 info = line.Split(',');
-                AddItem(new Item(int.Parse(info[0]), new Color(int.Parse(info[1]), int.Parse(info[2]), int.Parse(info[3])), info[4], info[5]), false);
+                AddItem(new Item(int.Parse(info[0]), new Color(int.Parse(info[1]), int.Parse(info[2]), int.Parse(info[3])), info[4], info[5], Item.sound.Volume), false);
 
                 string name = info[0];
 

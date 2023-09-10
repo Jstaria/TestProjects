@@ -27,7 +27,7 @@ namespace CSGOesc_Case_Opening
 
             for (int i = 0; i < songs.Length; i++)
             {
-                volumes[i] = float.Parse(stringVolumes[i + 1]);
+                volumes[i] = float.Parse(stringVolumes[i + 2]);
             }
 
             MediaPlayer.IsMuted = bool.Parse(stringVolumes[0]);
@@ -67,10 +67,10 @@ namespace CSGOesc_Case_Opening
 
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
-            for (int i = 0; i < songs.Length; i++)
+            for (int i = 1; i < songs.Length + 1; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] + .05f, 0, 1);
-                newVolumes[i + 1] = volumes[i].ToString();
+                volumes[i - 1] = Math.Clamp(volumes[i - 1] + .05f, 0, 1);
+                newVolumes[i + 1] = volumes[i - 1].ToString();
             }
 
             FileIO.WriteTo("Volume", newVolumes);
@@ -86,10 +86,10 @@ namespace CSGOesc_Case_Opening
 
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
-            for (int i = 0; i < songs.Length; i++)
+            for (int i = 1; i < songs.Length + 1; i++)
             {
-                volumes[i] = Math.Clamp(volumes[i] - .05f, 0, 1);
-                newVolumes[i + 1] = volumes[i].ToString();
+                volumes[i-1] = Math.Clamp(volumes[i-1] - .05f, 0, 1);
+                newVolumes[i + 1] = volumes[i - 1].ToString();
             }
 
             FileIO.WriteTo("Volume", newVolumes);
