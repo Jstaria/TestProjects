@@ -67,17 +67,18 @@ namespace CSGOesc_Case_Opening
 
             ps.ParticleAmount =
                 ClicksPerScene < 10 ? 0 :
-                ClicksPerScene < 50 ? 100 :
-                ClicksPerScene < 110 ? 250 :
-                ClicksPerScene < 200 ? 400 :
-                1000;
+                ClicksPerScene < 30 ? 100 :
+                ClicksPerScene < 60 ? 250 :
+                ClicksPerScene < 120 ? 400 :
+                ClicksPerScene < 200 ? 1000 :
+                2000;
 
             ps.Speed =
-                ClicksPerScene < 10 ? 1 :
-                ClicksPerScene < 50 ? 1 :
-                ClicksPerScene < 110 ? 2 :
-                ClicksPerScene < 200 ? 3 :
-                5;
+                ClicksPerScene < 30 ? 1 :
+                ClicksPerScene < 60 ? 2 :
+                ClicksPerScene < 120 ? 3 :
+                ClicksPerScene < 200 ? 5 :
+                7;
 
             for (int i = 0; i < clickParticles.Count; i++)
             {
