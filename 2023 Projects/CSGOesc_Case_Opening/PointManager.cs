@@ -10,7 +10,12 @@ namespace CSGOesc_Case_Opening
 {
     internal class PointManager
     {
-        Random rng = new Random();
+        private int ClicksPerScene;
+        private double lastClickTime;
+        private double time;
+        private Random rng = new Random();
+        private GameTime gameTime;
+
         public static int CurrentPoints { get; private set; }
         public static int TotalPoints { get; private set; }
         public static int ClickAmount { get; private set; }
@@ -22,6 +27,7 @@ namespace CSGOesc_Case_Opening
         private Dictionary<String, int> items;
         private Button ClickMe;
         private Button Achievements;
+        private ParticleSystem ps;
 
         public PointManager()
         {
@@ -45,10 +51,34 @@ namespace CSGOesc_Case_Opening
 
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
+            ps = new ParticleSystem(0, Color.Yellow, Color.Red, .98f, Game1.assets["square"], new Rectangle(0, 530, 1240, 0), 1, true, 0);
         }
 
         public void Update(GameTime gameTime)
         {
+            ps.Update();
+
+            this.gameTime = gameTime;
+
+            if (gameTime.TotalGameTime.TotalSeconds - lastClickTime > 10)
+            {
+                ClicksPerScene = 0;
+            }
+
+            ps.ParticleAmount =
+                ClicksPerScene < 10 ? 0 :
+                ClicksPerScene < 50 ? 100 :
+                ClicksPerScene < 110 ? 250 :
+                ClicksPerScene < 200 ? 400 :
+                1000;
+
+            ps.Speed =
+                ClicksPerScene < 10 ? 1 :
+                ClicksPerScene < 50 ? 1 :
+                ClicksPerScene < 110 ? 2 :
+                ClicksPerScene < 200 ? 3 :
+                5;
+
             for (int i = 0; i < clickParticles.Count; i++)
             {
                 clickParticles[i].Update();
@@ -65,6 +95,8 @@ namespace CSGOesc_Case_Opening
 
         public void Draw(SpriteBatch sb)
         {
+            ps.Draw(sb);
+
             sb.Draw(Game1.assets["square"], new Rectangle(0, 0, 1240, 720), Color.Black * .2f);
             sb.Draw(Game1.assets["square"], new Rectangle(ClickMe.Position.X - 150, ClickMe.Position.Y - 150, ClickMe.Position.Width + 300, ClickMe.Position.Height + 300), Color.Black * .2f);
             sb.Draw(Game1.assets["square"], new Rectangle(ClickMe.Position.X - 50, ClickMe.Position.Y - 50, ClickMe.Position.Width + 100, ClickMe.Position.Height + 100), Color.Black * .2f);
@@ -102,6 +134,8 @@ namespace CSGOesc_Case_Opening
 
         public void AddPoint()
         {
+            lastClickTime = gameTime.TotalGameTime.TotalSeconds;
+            ClicksPerScene++;
             CurrentPoints += ClickAmount;
             TotalPoints += ClickAmount;
             TotalClicks++;

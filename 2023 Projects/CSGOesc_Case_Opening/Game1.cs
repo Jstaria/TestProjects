@@ -50,6 +50,7 @@ namespace CSGOesc_Case_Opening
         private SlotMachine[] MenuGraphic;
 
         public static SoundEffect hitMarker;
+        public static SoundEffect buttonSound;
 
         private float fade;
 
@@ -145,6 +146,7 @@ namespace CSGOesc_Case_Opening
             };
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
+            buttonSound = Content.Load<SoundEffect>("button_sound");
 
             slot = new SlotMachine(assets, new Vector2(0, 185), false, 1);
             
@@ -773,10 +775,10 @@ namespace CSGOesc_Case_Opening
             buttons["Menu"][3].OnLeftClick += Quit;
 
             buttons.Add("Achievements", new List<Button>());
-            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(30, 30, 285, buttonHeight), "Back", Game1.ReadOut, Color.Black, Color.White, pressTimerMenu));
             buttons["Achievements"][0].OnLeftClick += ReturnToMenu;
 
-            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(330, 30, 285, buttonHeight), "Clear Progress", Game1.ReadOut, Color.Black, Color.White, pressTimer));
+            buttons["Achievements"].Add(new Button(buttonAssets, new Rectangle(330, 30, 285, buttonHeight), "Clear Progress", Game1.ReadOut, Color.Black, Color.White, pressTimerMenu));
             buttons["Achievements"][1].OnLeftClick += Reset;
         }
     }

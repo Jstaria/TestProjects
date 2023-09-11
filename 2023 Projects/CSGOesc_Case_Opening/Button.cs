@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -33,6 +34,7 @@ namespace CSGOesc_Case_Opening
         private float timeSinceLastPress;
         private bool switchBool;
         private bool isSwitch;
+        private SoundEffectInstance sound;
 
         public Rectangle Position { get { return position; } }
         public string HoverText { get; set; }
@@ -69,6 +71,9 @@ namespace CSGOesc_Case_Opening
                 (position.X + position.Width / 2) - textLength.X / 2,
                 (position.Y + position.Height / 2) - textLength.Y / 2
             );
+
+            sound = Game1.buttonSound.CreateInstance();
+            sound.Volume = .05f;
         }
 
         public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColorNotActive, Color buttonColorActive, float timer)
@@ -88,6 +93,9 @@ namespace CSGOesc_Case_Opening
                 (position.X + position.Width / 2) - textLength.X / 2,
                 (position.Y + position.Height / 2) - textLength.Y / 2
             );
+
+            sound = Game1.buttonSound.CreateInstance();
+            sound.Volume = .05f;
         }
 
         public Button(Texture2D[] assets, Rectangle position, string text, SpriteFont font, Color fontColor, Color buttonColorNotActive, Color buttonColorActive, float timer, bool isSwitch)
@@ -108,6 +116,9 @@ namespace CSGOesc_Case_Opening
                 (position.Y + position.Height / 2) - textLength.Y / 2
             );
             this.isSwitch = isSwitch;
+
+            sound = Game1.buttonSound.CreateInstance();
+            sound.Volume = .05f;
         }
 
         public void Update(GameTime gameTime)
@@ -134,6 +145,8 @@ namespace CSGOesc_Case_Opening
                 prevMState.LeftButton == ButtonState.Released &&
                 active && canPress) 
             {
+                sound.Play();
+
                 timeSinceLastPress = (float)gameTime.TotalGameTime.TotalSeconds;
 
                 if (OnLeftClick != null)
@@ -153,6 +166,8 @@ namespace CSGOesc_Case_Opening
                 prevMState.RightButton == ButtonState.Released &&
                 active && canPress)
             {
+                sound.Play();
+
                 timeSinceLastPress = (float)gameTime.TotalGameTime.TotalSeconds;
 
                 if (OnRightClick != null)

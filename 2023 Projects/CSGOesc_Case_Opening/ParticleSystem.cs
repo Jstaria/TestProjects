@@ -27,8 +27,9 @@ namespace CSGOesc_Case_Opening
         private float spawnAmount;
 
         public Vector2 Position { set { position = new Rectangle((int)value.X, (int)value.Y, 0, 0); } }
-
+        public int ParticleAmount { get { return particleAmount; } set { particleAmount = value; this.spawnAmount = particleAmount * .005f; } }
         public Color StartColor { get { return startColor; } set { startColor = value; } }
+        public int Speed { get { return speed; } set { speed = value; } }
 
         public ParticleSystem(int particleAmount, Color startColor, Color endColor, float decaySpeed, Texture2D asset, Rectangle position, int speed, bool doesRotate, float spreadAngle)
         {
