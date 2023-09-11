@@ -143,6 +143,7 @@ namespace CSGOesc_Case_Opening
                 {"cloud",Content.Load<Texture2D>("cloud")},
                 {"sparkle",Content.Load<Texture2D>("sparkle")},
                 {"orb",Content.Load<Texture2D>("orb")},
+                {"triangle",Content.Load<Texture2D>("triangle")},
             };
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");

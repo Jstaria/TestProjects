@@ -21,6 +21,7 @@ namespace CSGOesc_Case_Opening
         private Vector2 textPos;
         private Texture2D[] assets;
         private MouseState prevMState;
+        private KeyboardState prevKBState;
         private string text;
         private SpriteFont font;
         private Color fontColor;
@@ -131,6 +132,7 @@ namespace CSGOesc_Case_Opening
             active = false;
 
             MouseState currentMState = Mouse.GetState();
+            KeyboardState currentKBState = Keyboard.GetState();
 
             // If the cursor is over the button, it will trigger a different texture
             // and allow it to be clicked
@@ -141,8 +143,10 @@ namespace CSGOesc_Case_Opening
 
             if (gameTime.TotalGameTime.TotalSeconds - timeSinceLastPress >= timer) { canPress = true; }
 
-            if (currentMState.LeftButton == ButtonState.Pressed &&
-                prevMState.LeftButton == ButtonState.Released &&
+            if (((currentMState.LeftButton == ButtonState.Pressed &&
+                prevMState.LeftButton == ButtonState.Released)
+                || (currentKBState.IsKeyDown(Keys.C) &&
+                prevKBState.IsKeyUp(Keys.C))) &&
                 active && canPress) 
             {
                 sound.Play();
@@ -195,6 +199,7 @@ namespace CSGOesc_Case_Opening
                 }
             }
 
+            prevKBState = currentKBState;
             prevMState = currentMState;
         }
 

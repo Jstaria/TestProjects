@@ -51,7 +51,7 @@ namespace CSGOesc_Case_Opening
 
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
-            ps = new ParticleSystem(0, Color.Yellow, Color.Red, .98f, Game1.assets["square"], new Rectangle(0, 530, 1240, 0), 1, true, 0);
+            ps = new ParticleSystem(0, Color.Yellow, Color.Red, .98f, Game1.assets["triangle"], new Rectangle(0, 530, 1240, 0), 1, true, 0);
         }
 
         public void Update(GameTime gameTime)
@@ -136,7 +136,7 @@ namespace CSGOesc_Case_Opening
         public void AddPoint()
         {
             lastClickTime = gameTime.TotalGameTime.TotalSeconds;
-            ClicksPerScene++;
+            ClicksPerScene +=10;
             CurrentPoints += ClickAmount;
             TotalPoints += ClickAmount;
             TotalClicks++;
