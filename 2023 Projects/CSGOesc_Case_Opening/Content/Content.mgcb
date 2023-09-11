@@ -96,47 +96,125 @@
 /processorParam:TextureFormat=Color
 /build:light_effect.png
 
-#begin Music/Elevator-music.mp3
+#begin Music/Aurea Carmina.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Elevator-music.mp3
+/build:Music/Aurea Carmina.mp3
 
-#begin Music/Fluffing-a-Duck.mp3
+#begin Music/Blippy Trance.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Fluffing-a-Duck.mp3
+/build:Music/Blippy Trance.mp3
 
-#begin Music/Kevin-MacLeod-Investigations.mp3
+#begin Music/Ethernight Club.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Kevin-MacLeod-Investigations.mp3
+/build:Music/Ethernight Club.mp3
 
-#begin Music/Lobby-Time.mp3
+#begin Music/Fluffing a Duck.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Lobby-Time.mp3
+/build:Music/Fluffing a Duck.mp3
 
-#begin Music/Monkeys-Spinning-Monkeys.mp3
+#begin Music/Investigations.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Monkeys-Spinning-Monkeys.mp3
+/build:Music/Investigations.mp3
 
-#begin Music/Scheming-Weasel-faster.mp3
+#begin Music/Lobby Time.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Scheming-Weasel-faster.mp3
+/build:Music/Lobby Time.mp3
 
-#begin Music/Sneaky-Snitch.mp3
+#begin Music/Local Forecast - Elevator.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Music/Sneaky-Snitch.mp3
+/build:Music/Local Forecast - Elevator.mp3
+
+#begin Music/Monkeys Spinning Monkeys.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Monkeys Spinning Monkeys.mp3
+
+#begin Music/Rollin at 5.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Rollin at 5.mp3
+
+#begin Music/Scheming Weasel.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Scheming Weasel.mp3
+
+#begin Music/Sneaky Snitch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Sneaky Snitch.mp3
+
+#begin Music/Space Jazz.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Space Jazz.mp3
+
+#begin Music/Tiki Bar Mixer.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Tiki Bar Mixer.mp3
+
+#begin Music/Two Finger Johnny.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Two Finger Johnny.mp3
+
+#begin Music/Upbeat Forever.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Upbeat Forever.mp3
+
+#begin Music/Verano Sensual.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Verano Sensual.mp3
+
+#begin Music/Who Likes To Party.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Who Likes To Party.mp3
+
+#begin Music/Winner Winner.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Winner Winner.mp3
+
+#begin orb.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:orb.png
 
 #begin ReadOut.spritefont
 /importer:FontDescriptionImporter

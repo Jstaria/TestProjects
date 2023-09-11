@@ -67,11 +67,8 @@ namespace CSGOesc_Case_Opening
 
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
-            for (int i = 1; i < songs.Length + 1; i++)
-            {
-                volumes[i - 1] = Math.Clamp(volumes[i - 1] + .05f, 0, 1);
-                newVolumes[i + 1] = volumes[i - 1].ToString();
-            }
+            volumes[count] = Math.Clamp(volumes[count] + .02f, 0, .2f);
+            newVolumes[count + 2] = volumes[count].ToString();
 
             FileIO.WriteTo("Volume", newVolumes);
 
@@ -86,11 +83,8 @@ namespace CSGOesc_Case_Opening
 
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
-            for (int i = 1; i < songs.Length + 1; i++)
-            {
-                volumes[i-1] = Math.Clamp(volumes[i-1] - .05f, 0, 1);
-                newVolumes[i + 1] = volumes[i - 1].ToString();
-            }
+            volumes[count] = Math.Clamp(volumes[count] - .02f, 0, .2f);
+            newVolumes[count + 2] = volumes[count].ToString();
 
             FileIO.WriteTo("Volume", newVolumes);
 

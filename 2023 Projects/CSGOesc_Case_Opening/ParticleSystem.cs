@@ -88,5 +88,10 @@ namespace CSGOesc_Case_Opening
                 particle.DrawAsset(sb);
             }
         }
+
+        public void Reset()
+        {
+            particles.Clear();
+        }
     }
 }

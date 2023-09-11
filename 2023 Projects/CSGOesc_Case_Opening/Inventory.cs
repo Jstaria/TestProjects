@@ -102,6 +102,26 @@ namespace CSGOesc_Case_Opening
             PointManager.AddPoints(points);
         }
 
+        public void SellWonItem()
+        {
+            string name = SlotMachine.WonItem.Name;
+
+            RemoveItem(inventory[name][inventory[name].Values.ToList()[0].UniqueID]);
+
+            int points =
+            name == "Common" ? 5 :
+            name == "Uncommon" ? 10 :
+            name == "Rare" ? 20 :
+            name == "Epic" ? 40 :
+            name == "Mystic" ? 75 :
+            name == "Legendary" ? 200 :
+            name == "Royal" ? 2000 : 0;
+
+            PointManager.AddPoints(points);
+
+            InventoryValue -= points;
+        }
+
         public void SellOne(string name)
         {
             if (inventory[name].Count > 0)

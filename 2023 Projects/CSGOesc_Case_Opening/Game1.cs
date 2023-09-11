@@ -75,6 +75,7 @@ namespace CSGOesc_Case_Opening
 
         private Soundtrack playlist;
         private Song[] songs;
+        private string[] songNames;
 
         private float time;
         public Game1()
@@ -119,22 +120,10 @@ namespace CSGOesc_Case_Opening
             string[] songNames = new string[files.Length];
             songs = new Song[files.Length];
 
-            // I have no clue why the Uri access is denied, this was my attempt using stack overflow because I have absolutely no clue how to grant permissions, let alone to myself
-
-            //Uri uri = new Uri("../../../Music", UriKind.Relative);
-
-            //DirectoryInfo di = new DirectoryInfo("../../../Music");
-            //DirectorySecurity ds = di.GetAccessControl();
-            //
-            //ds.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
-            //di.SetAccessControl(ds);
-
             for (int i = 0; i < songs.Length; i++)
             {
                 songNames[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
                 songs[i] = Content.Load<Song>("Music/" + songNames[i]);
-
-                //songs[i] = Song.FromUri("../../../Music", uri);
             }
 
             this.playlist = new Soundtrack(songs);
@@ -152,6 +141,7 @@ namespace CSGOesc_Case_Opening
                 {"light_effect",Content.Load<Texture2D>("light_effect")},
                 {"cloud",Content.Load<Texture2D>("cloud")},
                 {"sparkle",Content.Load<Texture2D>("sparkle")},
+                {"orb",Content.Load<Texture2D>("orb")},
             };
 
             hitMarker = Content.Load<SoundEffect>("hitmarker-sound-effect");
@@ -410,7 +400,7 @@ namespace CSGOesc_Case_Opening
 
                             break;
                     }
-
+                    
                     _spriteBatch.Draw(
                         assets["square"],
                         new Rectangle(
@@ -422,6 +412,8 @@ namespace CSGOesc_Case_Opening
                     {
                         button.Draw(_spriteBatch);
                     }
+
+                    _spriteBatch.DrawString(ReadOut, MediaPlayer.Queue.ActiveSong.Name + " By Kevin Mcleod", new Vector2(165, 120), Color.Gray);
 
                     break;
 
@@ -475,7 +467,7 @@ namespace CSGOesc_Case_Opening
 
         public void SetupAchievements()
         {
-            AchievementManager.Clear();
+            AchievementManager.GenerateAchievements();
 
             minScroll = new List<int>();
             maxScroll = new List<int>();
@@ -511,6 +503,50 @@ namespace CSGOesc_Case_Opening
             }
 
             for (int i = 0; i< achievements.Count; i++)
+            {
+                minScroll[i] = achievements[i].Position.Y - (achievements[achievements.Count - 1].Position.Y - 600);
+                maxScroll[i] = achievements[i].Position.Y;
+            }
+        }
+
+        public void SetupAchievementsClear()
+        {
+            AchievementManager.Clear();
+
+            minScroll = new List<int>();
+            maxScroll = new List<int>();
+
+            achievements = new List<Achievement>();
+
+            int positionArrayY = (int)((AchievementManager.NumAchievements + 1) / 2);
+
+            positionArray = new Rectangle[2, positionArrayY];
+
+            for (int i = 0; i < AchievementManager.Achievements.Values.Count; i++)
+            {
+                for (int j = 0; j < AchievementManager.Achievements.ElementAt(i).Value.Values.Count; j++)
+                {
+                    achievements.Add(AchievementManager.Achievements.ElementAt(i).Value.ElementAt(j).Value);
+                    minScroll.Add(0);
+                    maxScroll.Add(0);
+                }
+            }
+
+            int width = 450;
+            int height = 125;
+            int spacing = 30;
+
+            int yPos = 0;
+
+            for (int i = 0; i < achievements.Count; i++)
+            {
+                positionArray[i % 2, yPos] = new Rectangle((1240 - ((2 * width) + spacing)) / 2 + (i % 2) * (width + spacing), 200 + yPos * (height + spacing), width, height);
+                achievements[i].Position = positionArray[i % 2, yPos];
+
+                if (i % 2 == 1) { yPos++; }
+            }
+
+            for (int i = 0; i < achievements.Count; i++)
             {
                 minScroll[i] = achievements[i].Position.Y - (achievements[achievements.Count - 1].Position.Y - 600);
                 maxScroll[i] = achievements[i].Position.Y;
@@ -579,7 +615,7 @@ namespace CSGOesc_Case_Opening
         {
             PointManager.Clear();
             slot.Clear();
-            SetupAchievements();
+            SetupAchievementsClear();
         }
 
         private void Quit()
@@ -644,7 +680,7 @@ namespace CSGOesc_Case_Opening
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Slots;
-            slot.CloseInventory();
+            slot.Slots();
         }
 
         private void PrevState()

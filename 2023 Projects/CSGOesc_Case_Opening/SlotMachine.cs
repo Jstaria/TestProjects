@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CSGOesc_Case_Opening
 {
@@ -26,6 +27,8 @@ namespace CSGOesc_Case_Opening
         private Dictionary<string, Texture2D> assets;
         private Texture2D[] buttonAssets;
 
+        private float expand;
+        private double time;
         private Vector2 position;
 
         private float timeOfWin;
@@ -45,13 +48,17 @@ namespace CSGOesc_Case_Opening
 
         private static string[] oneOfEach;
         private List<Particle> particles;
+        private List<ParticleSystem> pSystems;
+        private ParticleSystem ps;
 
         private Dictionary<string, List<Button>> buttons;
 
+        public static Item WonItem { get; private set; }
         public static string[] OneOfEach { get { return oneOfEach; } }
 
         public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
+            this.expand = 0;
             this.menuActive = menuActive;
             this.particles = new List<Particle>();
 
@@ -78,6 +85,28 @@ namespace CSGOesc_Case_Opening
 
             CreateButtons();
             this.menuActive = menuActive;
+
+            pSystems = new List<ParticleSystem>();
+
+            for (int i = 0; i < SlotUI.Items.Count; i++)
+            {
+                Texture2D asset =
+                    i <= 1 ? assets["square"] :
+                    i > 1 && i <= 3 ? assets["cloud"] :
+                    i == 4 ? assets["light_effect"] :
+                    i == 5 ? assets["orb"] :
+                    assets["sparkle"];
+
+                int speed =
+                    i == 0 ? 1 :
+                    i > 0 && i < 3 ? 2 :
+                    i == 3 ? 3 :
+                    i == 4 ? 4 :
+                    i == 5 ? 5 :
+                    10;
+
+                pSystems.Add(new ParticleSystem((i + 1) * (i + 1) * 200, SlotUI.Items[i].Color, Color.White, .96f, asset, new Rectangle(540,230,160,160), speed, true, 360));
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -88,6 +117,8 @@ namespace CSGOesc_Case_Opening
             switch (currentState)
             {
                 case SlotState.SlotsUI:
+
+                    expand = 0;
 
                     buttons["SlotUI"][2].SwitchBool = autoSpin;
 
@@ -113,6 +144,8 @@ namespace CSGOesc_Case_Opening
 
                     if (wonItems[0] != prevWonItem && wonItems[0] != null)
                     {
+                        WonItem = wonItems[0];
+
                         for (int i = 0; i < oneOfEach.Length; i++)
                         {
                             if (oneOfEach[i] != null) { continue; }
@@ -128,7 +161,22 @@ namespace CSGOesc_Case_Opening
                         inventory.AddItem(wonItem, true);
                         timeOfWin = (float)gameTime.TotalGameTime.TotalSeconds;
 
-                        currentState = SlotState.WinUI;
+                        string name = wonItems[0].Name;
+
+                        ps =
+                            name == "Common" ? pSystems[0] :
+                            name == "Uncommon" ? pSystems[1] :
+                            name == "Rare" ? pSystems[2] :
+                            name == "Epic" ? pSystems[3] :
+                            name == "Mystic" ? pSystems[4] :
+                            name == "Legendary" ? pSystems[5] :
+                            name == "Royal" ? pSystems[6] : null;
+
+                        if (!autoSpin)
+                        {
+                            currentState = SlotState.WinUI;
+                            ps.Reset();
+                        }
                     }
 
                     prevWonItem = wonItems[0];
@@ -137,11 +185,30 @@ namespace CSGOesc_Case_Opening
 
                 case SlotState.WinUI:
 
-                    double time = gameTime.TotalGameTime.TotalSeconds - timeOfWin;
+                    time = gameTime.TotalGameTime.TotalSeconds - timeOfWin;
 
-                    if (time > (autoSpin ? 1 : 10))
+                    if (time > .25 && time < 9.5)
+                    {
+                        ps.Update();
+                    }
+
+                    if (time < 2.5)
+                    {
+                        expand = (float)Math.Clamp(expand + .05, 0, 1);
+                    }
+                    else if (time > 9.5)
+                    {
+                        expand = (float)Math.Clamp(expand - .1, 0, 1);
+                    }
+
+                    if (time > 10)
                     {
                         currentState = SlotState.SlotsUI;
+                    }
+
+                    foreach (Button button in buttons["WinUI"])
+                    {
+                        button.Update(gameTime);
                     }
 
                     break;
@@ -182,6 +249,28 @@ namespace CSGOesc_Case_Opening
                 case SlotState.WinUI:
 
                     SlotUIDraw(sb);
+
+                    sb.Draw(Game1.assets["square"], new Rectangle((int)(100 + (520*(1-expand))), 100, (int)(1040 * expand), 520), Color.Black*.9f);
+
+                    if (time > .05 && time < 9.5)
+                    {
+                        int yOffset = -50;
+
+                        sb.Draw(Game1.assets["square"], new Rectangle(400 + (int)(Math.Clamp(100 * (1 - expand * 2), 0, 200)), 280 + yOffset, (int)(100 * Math.Clamp((expand * 2), 0, 1)), 160), wonItems[0].Color * .75f);
+                        sb.Draw(Game1.assets["square"], new Rectangle(740 + (int)(Math.Clamp(100 * (1 - expand * 2), 0, 200)), 280 + yOffset, (int)(100 * Math.Clamp((expand * 2), 0, 1)), 160), wonItems[0].Color * .75f);
+
+                        sb.Draw(Game1.assets["square"], new Rectangle(330 + (int)(Math.Clamp(100 * (1 - expand * 2), 0, 200)), 300 + yOffset, (int)(50 * Math.Clamp((expand * 2), 0, 1)), 120), wonItems[0].Color * .25f);
+                        sb.Draw(Game1.assets["square"], new Rectangle(860 + (int)(Math.Clamp(100 * (1 - expand * 2), 0, 200)), 300 + yOffset, (int)(50 * Math.Clamp((expand * 2), 0, 1)), 120), wonItems[0].Color * .25f);
+
+                        ps.Draw(sb);
+                        
+                        sb.Draw(Game1.assets["square"], new Rectangle(520 + (int)(Math.Clamp(100 * (1 - expand * 2), 0, 200)), 260 + yOffset, (int)(200 * Math.Clamp((expand * 2), 0, 1)), 200), wonItems[0].Color);
+
+                        foreach (Button button in buttons["WinUI"])
+                        {
+                            button.Draw(sb);
+                        }
+                    }
 
                     break;
 
@@ -266,7 +355,7 @@ namespace CSGOesc_Case_Opening
             autoSpin = !autoSpin;
         }
 
-        public void CloseInventory()
+        public void Slots()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = SlotState.SlotsUI;
@@ -305,11 +394,20 @@ namespace CSGOesc_Case_Opening
             buttons.Add("Inventory", new List<Button>());
 
             buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(950, 565, 120, 75), "Back", Game1.regular, Color.Black, Color.White, .5f));
-            buttons["Inventory"][0].OnLeftClick += CloseInventory;
+            buttons["Inventory"][0].OnLeftClick += Slots;
 
             buttons["Inventory"].Add(new Button(buttonAssets, new Rectangle(175, 565, 90, 75), "Sell All", Game1.regular, Color.Black, Color.White, .5f));
             buttons["Inventory"][1].OnLeftClick += inventory.SellAll;
             buttons["Inventory"][1].OnLeftClickString += SpawnParticle;
+
+            buttons.Add("WinUI", new List<Button>());
+
+            buttons["WinUI"].Add(new Button(buttonAssets, new Rectangle(450, 500, 150, 75), "Sell", Game1.ReadOut, Color.Black, Color.White, .5f));
+            buttons["WinUI"][0].OnLeftClick += inventory.SellWonItem;
+            buttons["WinUI"][0].OnLeftClick += Slots;
+
+            buttons["WinUI"].Add(new Button(buttonAssets, new Rectangle(640, 500, 150, 75), "Continue", Game1.ReadOut, Color.Black, Color.White, .5f));
+            buttons["WinUI"][1].OnLeftClick += Slots;
         }
     }
 }

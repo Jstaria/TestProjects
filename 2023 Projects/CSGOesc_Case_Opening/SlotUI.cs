@@ -324,8 +324,6 @@ namespace CSGOesc_Case_Opening
 
         public void VolumeUp()
         {
-            MediaPlayer.Pause();
-
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
             newVolumes[1] = (Math.Clamp(float.Parse(newVolumes[1]) + .005f, 0, 1)).ToString();
@@ -340,8 +338,6 @@ namespace CSGOesc_Case_Opening
 
         public void VolumeDown()
         {
-            MediaPlayer.Pause();
-
             List<string> newVolumes = FileIO.ReadFrom("Volume");
 
             newVolumes[1] = (Math.Clamp(float.Parse(newVolumes[1]) - .005f, 0, 1)).ToString();
