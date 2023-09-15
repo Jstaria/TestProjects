@@ -136,7 +136,7 @@ namespace CSGOesc_Case_Opening
         public void AddPoint()
         {
             lastClickTime = gameTime.TotalGameTime.TotalSeconds;
-            ClicksPerScene +=10;
+            ClicksPerScene ++;
             CurrentPoints += ClickAmount;
             TotalPoints += ClickAmount;
             TotalClicks++;

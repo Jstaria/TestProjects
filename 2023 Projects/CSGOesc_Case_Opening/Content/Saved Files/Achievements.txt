@@ -4,19 +4,19 @@ I've Just Begun,Make 10 spins,10,True,spins
 Addiction?,Make 100 spins,100,False,spins
 Addiction,Make 1000 spins,1000,False,spins
 Pocket Change,Earn 100 points,100,True,points
-Heftier Wallet,Earn 1000 points,1000,True,points
+Heftier Wallet,Earn 1000 points,1000,False,points
 Mr. Rich,Earn 10000 points,10000,False,points
 College Tuition,Earn 100000 points,100000,False,points
 Click,Click 10 times,10,True,click
 Clickier,Click 100 times,100,True,click
-Clickiest,Click 1000 times,1000,True,click
+Clickiest,Click 1000 times,1000,False,click
 Click Diety,Click 10000 times,10000,False,click
 The Clicker God,Click 100000 times,100000,False,click
 "Ew. Commons...",Earn your first common,0,True,item
 Getting There,Earn your first uncommon,0,True,item
 Now We Are Talking,Earn your first rare,0,True,item
-Epic,Earn your first epic,0,False,item
-The Wise Among Us,Earn your first mystic,0,True,item
+Epic,Earn your first epic,0,True,item
+The Wise Among Us,Earn your first mystic,0,False,item
 Legend-Dairy,Earn your first legendary,0,False,item
 The King's Reign,Earn your first royal,0,False,item
 Collect Them All,Believe it!,7,False,item

@@ -54,7 +54,7 @@ namespace UV_Shaders
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //shock = Content.Load<Effect>("ShockWave");
+            shock = Content.Load<Effect>("ShockWave");
             //vignette = Content.Load<Effect>("Vignette");
 
             hands = Content.Load<Texture2D>("hands");
@@ -69,24 +69,24 @@ namespace UV_Shaders
 
             MouseState mouseState = Mouse.GetState();
 
-            //if (mouseState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released)
-            //{
-            //    mousePos = new Vector2(mouseState.X, mouseState.Y);
-            //
-            //    time = .9999f;
-            //    flag = true;
-            //}
-            //
-            //if (flag)
-            //{
-            //    time += .01f;
-            //}
-            //
-            //if (time > 1.99)
-            //{
-            //    flag = false;
-            //    time = 0.99999f;
-            //}
+            if (mouseState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released)
+            {
+                mousePos = new Vector2(mouseState.X, mouseState.Y);
+            
+                time = .9999f;
+                flag = true;
+            }
+            
+            if (flag)
+            {
+                time += .01f;
+            }
+            
+            if (time > 1.99)
+            {
+                flag = false;
+                time = 0.99999f;
+            }
 
             time = (float)gameTime.TotalGameTime.TotalSeconds;
 
@@ -116,21 +116,21 @@ namespace UV_Shaders
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.White);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, effect: shock);
 
             //pixelShader.Parameters["pixelsY"].SetValue((float)1080);
             //pixelShader.Parameters["pixelation"].SetValue((float)8);
             //pixelShader.CurrentTechnique.Passes[0].Apply();
             //pixelShader.Parameters["pixelsX"].SetValue((float)1920);
 
-            //shock.Parameters["UpperFeather"].SetValue((float).1);
-            //shock.Parameters["BottomFeather"].SetValue((float).1);
-            //shock.Parameters["rippleIntensity"].SetValue((float)1);
-            //shock.Parameters["x"].SetValue((float)mousePos.X / _graphics.PreferredBackBufferWidth);
-            //shock.Parameters["y"].SetValue((float)mousePos.Y / _graphics.PreferredBackBufferHeight);
-            //shock.Parameters["time"].SetValue((float)time);
-            //
-            //shock.CurrentTechnique.Passes[0].Apply();
+            shock.Parameters["UpperFeather"].SetValue((float).1);
+            shock.Parameters["BottomFeather"].SetValue((float).1);
+            shock.Parameters["rippleIntensity"].SetValue((float)4);
+            shock.Parameters["x"].SetValue((float)mousePos.X / _graphics.PreferredBackBufferWidth);
+            shock.Parameters["y"].SetValue((float)mousePos.Y / _graphics.PreferredBackBufferHeight);
+            shock.Parameters["time"].SetValue((float)time);
+            
+            shock.CurrentTechnique.Passes[0].Apply();
 
             _spriteBatch.Draw(renderTarget2D, new Rectangle(0, 0, width, height), Color.White);
             _spriteBatch.End();

@@ -47,7 +47,7 @@ namespace HLSL_Shaders
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            model = Content.Load<Model>("Source/LargeAsteroid");
+            model = Content.Load<Model>("sword_basemesh1");
             effect = Content.Load<Effect>("Ambient");
 
             

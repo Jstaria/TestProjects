@@ -101,17 +101,17 @@ namespace AfterImage
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.White);
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, effect: shock);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, effect: pixelShader);
 
             pixelShader.Parameters["pixelsX"].SetValue((float)1920);
             pixelShader.Parameters["pixelsY"].SetValue((float)1080);
             pixelShader.Parameters["pixelation"].SetValue((float)8);
             pixelShader.CurrentTechnique.Passes[0].Apply();
 
-            shock.Parameters["UpperFeather"].SetValue((float)0.1);
-            shock.Parameters["BottomFeather"].SetValue((float)0.1);
-            shock.Parameters["time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
-            shock.CurrentTechnique.Passes[0].Apply();
+            //shock.Parameters["UpperFeather"].SetValue((float)0.1);
+            //shock.Parameters["BottomFeather"].SetValue((float)0.1);
+            //shock.Parameters["time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+            //shock.CurrentTechnique.Passes[0].Apply();
 
             _spriteBatch.Draw(renderTarget2D, new Rectangle(0, 0, 1920, 1080), Color.White);
             _spriteBatch.End();
