@@ -1,3 +1,3 @@
 ﻿
-using var game = new CSGOesc_Case_Opening.Game1();
+using var game = new ClickerSlots.Game1();
 game.Run();

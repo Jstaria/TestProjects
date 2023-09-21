@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class PointManager
     {
@@ -29,10 +29,15 @@ namespace CSGOesc_Case_Opening
         private Button Achievements;
         private ParticleSystem ps;
 
+        /// <summary>
+        /// Manages points, clicks, and spins, as well as spawning the Click Gamemode
+        /// </summary>
         public PointManager()
         {
             clickParticles = new List<Particle>();
 
+            ///////////////////////////////////////
+            // Info being used for achievements
             List<String> info = FileIO.ReadFrom("Clicker");
 
             CurrentPoints = int.Parse(info[0]);
@@ -40,6 +45,7 @@ namespace CSGOesc_Case_Opening
             TotalClicks = int.Parse(info[2]);
             SlotUI.TotalSpins = int.Parse(info[3]);
             TotalPoints = int.Parse(info[4]);
+            ////////////////////////////////////////
 
             items = new Dictionary<String, int>();
             ClickMe = new Button(new Texture2D[]
@@ -51,6 +57,8 @@ namespace CSGOesc_Case_Opening
 
             ClickMe.OnLeftClick += AddPoint;
             ClickMe.OnLeftClick += SpawnParticle;
+
+            // Particle system that is interacted with number of clicks per time period
             ps = new ParticleSystem(0, Color.Yellow, Color.Red, .98f, Game1.assets["triangle"], new Rectangle(0, 530, 1240, 0), 1, true, 0);
         }
 
@@ -65,6 +73,8 @@ namespace CSGOesc_Case_Opening
                 ClicksPerScene = 0;
             }
 
+            /////////////////////////////////////////
+            // Particle System Determinants
             ps.ParticleAmount =
                 ClicksPerScene < 10 ? 0 :
                 ClicksPerScene < 30 ? 100 :
@@ -79,7 +89,10 @@ namespace CSGOesc_Case_Opening
                 ClicksPerScene < 120 ? 3 :
                 ClicksPerScene < 200 ? 5 :
                 7;
+            /////////////////////////////////////////
 
+            // Standard "Particle System" before Particle system class existed,
+            // displays points gained form clicking the button
             for (int i = 0; i < clickParticles.Count; i++)
             {
                 clickParticles[i].Update();
@@ -119,6 +132,9 @@ namespace CSGOesc_Case_Opening
             sb.DrawString(Game1.ReadOut, CurrentPoints.ToString(), pos, Color.White);
         }
 
+        /// <summary>
+        /// Saves current achievement information for later launch
+        /// </summary>
         public static void Save()
         {
             List<string> list = new List<string>
@@ -133,6 +149,9 @@ namespace CSGOesc_Case_Opening
             FileIO.WriteTo("Clicker", list);
         }
 
+        /// <summary>
+        /// Adds single point to total points, and single click to total clicks
+        /// </summary>
         public void AddPoint()
         {
             lastClickTime = gameTime.TotalGameTime.TotalSeconds;
@@ -142,22 +161,36 @@ namespace CSGOesc_Case_Opening
             TotalClicks++;
         }
 
+        /// <summary>
+        /// Removes certain amount of points from current point amount only
+        /// </summary>
+        /// <param name="amount"></param>
         public static void SubtractPoints(int amount)
         {
             CurrentPoints -= amount;
         }
 
+        /// <summary>
+        /// Adds certain amount of points to both total and current
+        /// </summary>
+        /// <param name="amount"></param>
         public static void AddPoints(int amount)
         {
             CurrentPoints += amount;
             TotalPoints += amount;
         }
 
+        /// <summary>
+        /// Spawns particle randomly on button
+        /// </summary>
         public void SpawnParticle()
         {
             clickParticles.Add(new Particle(new Vector2(rng.Next(520, 721), rng.Next(160, 361)), .95f, string.Format("+" + ClickAmount.ToString()), Game1.ReadOut));
         }
 
+        /// <summary>
+        /// Clears save data for point manager
+        /// </summary>
         public static void Clear()
         {
             ClickAmount = 1;

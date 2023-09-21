@@ -9,11 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     /// <summary>
     /// SlotsUI is the spin interface, 
     /// WinUI is after spinning when object is pulled into a bigger window
+    /// Inventory is self explanatory
     /// </summary>
     public enum SlotState
     {
@@ -56,6 +57,13 @@ namespace CSGOesc_Case_Opening
         public static Item WonItem { get; private set; }
         public static string[] OneOfEach { get { return oneOfEach; } }
 
+        /// <summary>
+        /// Actual interface of the slots experience
+        /// </summary>
+        /// <param name="assets"></param>
+        /// <param name="position"></param>
+        /// <param name="menuActive">Get's rid of unnecesary interface for menu</param>
+        /// <param name="idleSpeed"></param>
         public SlotMachine(Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
             this.expand = 0;
@@ -88,6 +96,7 @@ namespace CSGOesc_Case_Opening
 
             pSystems = new List<ParticleSystem>();
 
+            // Setup for each item rarity's particle system
             for (int i = 0; i < SlotUI.Items.Count; i++)
             {
                 Texture2D asset =
@@ -126,6 +135,7 @@ namespace CSGOesc_Case_Opening
                     {
                         SlotUI.AutoSpin();
 
+                        // sets up if it can continue spinning after it has auto spun
                         autoSpin = PointManager.CurrentPoints < 15 ? false : true; 
                     }
 
@@ -140,6 +150,7 @@ namespace CSGOesc_Case_Opening
                         }
                     }
 
+                    // Like I said in SlotsUI, wonItems[1] is never in use
                     wonItems = SlotUI.Update(gameTime);
 
                     if (wonItems[0] != prevWonItem && wonItems[0] != null)
@@ -183,6 +194,7 @@ namespace CSGOesc_Case_Opening
 
                     break;
 
+                // Just calculates the menu opening and closing, also updating the picked particles system
                 case SlotState.WinUI:
 
                     time = gameTime.TotalGameTime.TotalSeconds - timeOfWin;
@@ -330,6 +342,12 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        // Timer for buttons since souble clicking on accident is a problem
+        /// <summary>
+        /// Timer for buttons
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <returns></returns>
         private bool CanUseButtons(GameTime gameTime)
         {
             bool canUse = false;
@@ -339,38 +357,60 @@ namespace CSGOesc_Case_Opening
             return canUse;
         }
 
+        /// <summary>
+        /// Changes state to Inventory
+        /// </summary>
         private void OpenInventory()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = SlotState.Inventory;
         }
 
+        /// <summary>
+        /// Spawns particle containing text
+        /// </summary>
+        /// <param name="text"></param>
         private void SpawnParticle(string text)
         {
             particles.Add(new Particle(Mouse.GetState().Position.ToVector2(), .985f, text, Game1.regular));
         }
 
+        /// <summary>
+        /// Bool switch for autospin
+        /// </summary>
         private void AutoSpin()
         {
             autoSpin = !autoSpin;
         }
 
+        /// <summary>
+        /// Changes state to slotsui
+        /// </summary>
         public void Slots()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = SlotState.SlotsUI;
         }
 
+        /// <summary>
+        /// Items volume increase
+        /// </summary>
         public void VolumeUp()
         {
             SlotUI.VolumeUp();
         }
 
+        /// <summary>
+        /// Items volume decrease
+        /// </summary>
         public void VolumeDown()
         {
             SlotUI.VolumeDown();
         }
 
+        /// <summary>
+        /// Clears inventory and resets oneOfEach list
+        /// </summary>
         public void Clear()
         {
             inventory.Clear();
@@ -378,6 +418,9 @@ namespace CSGOesc_Case_Opening
             oneOfEach = new string[7];
         }
 
+        /// <summary>
+        /// Sets up buttons
+        /// </summary>
         private void CreateButtons()
         {
             buttons.Add("SlotUI", new List<Button>());

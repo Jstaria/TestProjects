@@ -13,7 +13,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class SlotUI
     {
@@ -43,24 +43,23 @@ namespace CSGOesc_Case_Opening
 
         private StreamReader itemReader;
         private Random rng;
-        private float rand;
+        private float randDeceleration;
 
         private int numItems;
 
         public bool HasSpun { get; private set; }
-
         public static int TotalSpins { get; set; }
-
-        public bool Idle
-        {
-            get { return idle; }
-            set { idle = value; }
-        }
-
+        public bool Idle { get { return idle; } set { idle = value; } }
         public List<Item> Items { get; private set; }
-
         public Particle spinParticle { get; set; }
 
+        /// <summary>
+        /// Base slot machine activity
+        /// </summary>
+        /// <param name="assets"></param>
+        /// <param name="position">Position of the slot machine</param>
+        /// <param name="menuActive">Strips slot machine of unnecessary bloat to be a display on the menu</param>
+        /// <param name="idleSpeed"></param>
         public SlotUI (Dictionary<string, Texture2D> assets, Vector2 position, bool menuActive, float idleSpeed)
         {
             this.menuActive = menuActive;
@@ -120,15 +119,17 @@ namespace CSGOesc_Case_Opening
                     float timeSinceLastSpin = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastSpin;
                     //System.Diagnostics.Debug.WriteLine(timeSinceLastSpin);
 
+                    // From future me, I honestly cannot remember what this was for, so I shall keep it only as a reminder to all that dead code out there
                     // if (num > 0)
                     // {
                     //     num = (float)Math.Pow(2, 30 * ((rng.Next(10, 26) / 10) * timeSinceLastSpin + 3) / rng.Next(14,17)) - .05f;
                     // }
 
+                    // Just learned about this type of if statement conditional, you'll notice I started to use it often elsewhere
                     // condition ? value_if_true : value_if_false
 
                     // condition ? value_if_true : (condition ? value_if_true : value_if_false)
-                    num *= (float)(num > 5 ? 0.992 : (num > 0.005 ? rand : 0));
+                    num *= (float)(num > 5 ? 0.992 : (num > 0.005 ? randDeceleration : 0));
 
                     if (num == 0)
                     {
@@ -141,19 +142,24 @@ namespace CSGOesc_Case_Opening
             { 
                 int randNum = rng.Next(totalWeight);
 
+                //////////////////////////////////////////
+                // Creation of unique id for each item, kind of expensive to do for EACH item when its just being rotated in slots
                 string randString = null;
 
                 for (int j = 0; j < 20; j++)
                 {
                     randString += (char)rng.Next(65, 123);
                 }
-
+                //////////////////////////////////////////
+                
+                // Counter Clock-Wise spinning which grabs a new item when an old one is out of frame to the left
                 if (activeItemsPos[i].X < -itemBoxWidth && num > 0)
                 {
                     activeItems[i] = GrabItem(randNum, randString);
                     activeItemsPos[i] = new Vector2(activeItemsPos[activeItems.Count - 1].X + i * itemBoxWidth, position.Y);
                 }
 
+                // Clock-Wise spinning which grabs a new item when an old one is out of frame to the right
                 else if (activeItemsPos[i].X > 1340 && num < 0)
                 {
                     activeItems[i] = GrabItem(randNum, randString);
@@ -163,6 +169,7 @@ namespace CSGOesc_Case_Opening
                 activeItems[i].Update(idle);               
                 activeItemsPos[i] -= new Vector2(num, 0);
 
+                // Item that is centered is hovered over
                 if (new Rectangle((int)activeItemsPos[i].X, (int)activeItemsPos[i].Y, itemBoxWidth, itemBoxHeight).Intersects(
                 new Rectangle(1240 / 2 - 1, 0, 2, 720)))
                 {
@@ -171,8 +178,12 @@ namespace CSGOesc_Case_Opening
                         activeItems[i].HoveredOver = true;
                     }
 
+                    // I honestly don't remember why I had to do this, it technically isn't a won item,
+                    // if I remember correctly, this second item is actually just a place holder for a null exception
+                    // since I didn't want to code a catch statement I believe. Since no one would be changing this code but me
                     wonItems[1] = activeItems[i];
 
+                    // True winning item
                     if (num == 0)
                     {
                         wonItems[0] = activeItems[i];
@@ -222,6 +233,9 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        /// <summary>
+        /// Fills slot machine with first set of items
+        /// </summary>
         private void SetUpItems()
         {
             for (int i = 0; i < numItems; i++)
@@ -240,10 +254,14 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        /// <summary>
+        /// Spins slot machine
+        /// </summary>
         public void Spin()
         {
             prevSpinCount = spinCount;
 
+            // Wrote this button interaction before I added button class, this was within the first 24 hour sprint of this hyperfixation
             MouseState currentMouseState = Mouse.GetState();
             if (new Rectangle(0, 0, 1240, 720).Intersects(new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1)) &&
                 currentMouseState.LeftButton == ButtonState.Pressed && canSpin && PointManager.CurrentPoints >= spinCost && idle)
@@ -252,8 +270,8 @@ namespace CSGOesc_Case_Opening
 
                 num = rng.Next(70,100);
 
-                rand = rng.Next(974, 986) * .001f;
-                System.Diagnostics.Debug.WriteLine(rand);
+                randDeceleration = rng.Next(974, 986) * .001f;
+                //System.Diagnostics.Debug.WriteLine(rand);
 
                 spinCount++;
 
@@ -263,12 +281,16 @@ namespace CSGOesc_Case_Opening
 
                 HasSpun = true;
 
+                // Another pre particle system particle
                 spinParticle = new Particle(Mouse.GetState().Position.ToVector2(), .975f, string.Format("-" + spinCost.ToString()), Game1.ReadOut);
 
                 PointManager.SubtractPoints(spinCost);
             }
         }
 
+        /// <summary>
+        /// Spins whenever the slot machine goes into idle and you have the necessary points
+        /// </summary>
         public void AutoSpin()
         {
             prevSpinCount = spinCount;
@@ -281,8 +303,8 @@ namespace CSGOesc_Case_Opening
 
                 num = rng.Next(70, 100);
 
-                rand = rng.Next(974, 986) * .001f;
-                System.Diagnostics.Debug.WriteLine(rand);
+                randDeceleration = rng.Next(974, 986) * .001f;
+                System.Diagnostics.Debug.WriteLine(randDeceleration);
 
                 spinCount++;
 
@@ -322,6 +344,9 @@ namespace CSGOesc_Case_Opening
             return newItem;
         }
 
+        /// <summary>
+        /// Volume up for active item sound
+        /// </summary>
         public void VolumeUp()
         {
             List<string> newVolumes = FileIO.ReadFrom("Volume");
@@ -336,6 +361,9 @@ namespace CSGOesc_Case_Opening
             FileIO.WriteTo("Volume", newVolumes);
         }
 
+        /// <summary>
+        /// Volume down for active item sound
+        /// </summary>
         public void VolumeDown()
         {
             List<string> newVolumes = FileIO.ReadFrom("Volume");

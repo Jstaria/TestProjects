@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class Achievement
     {
@@ -20,6 +20,15 @@ namespace CSGOesc_Case_Opening
 
         public Rectangle Position { get; set; }
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Two types of achievements
+        /// <summary>
+        /// Basic is completed or not achievement
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="completed"></param>
+        /// <param name="type"></param>
         public Achievement(string name, string description, bool completed, string type)
         {
             this.Type = type;
@@ -30,6 +39,14 @@ namespace CSGOesc_Case_Opening
             this.NeededAmount = 0;
         }
 
+        /// <summary>
+        /// Needs a certain amount of something to be completed
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="neededAmount"></param>
+        /// <param name="completed"></param>
+        /// <param name="type"></param>
         public Achievement(string name, string description, int neededAmount, bool completed, string type)
         {
             this.Type = type;
@@ -39,6 +56,7 @@ namespace CSGOesc_Case_Opening
             this.Progress = this.Completed ? 1 : 0;
             this.NeededAmount = neededAmount;
         }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Achievement progress based on an amount

@@ -5,14 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGOesc_Case_Opening
+// FileIO class that allows the saving to and freading from documents created in or out of project
+
+namespace ClickerSlots
 {
     internal static class FileIO
     {
+        // Not particularly useful for this project
         /// <summary>
-        /// Initializes file path for writing
+        /// Initializes file path for writing, useful for created save files
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Name of document</param>
         public static void CreateTxtFile(string name)
         {
             string stream = "../../../Content/Saved Files/" + name + ".txt";
@@ -22,6 +25,11 @@ namespace CSGOesc_Case_Opening
             fileWriter.Close();
         }
 
+        /// <summary>
+        /// Overwrites document (string data)
+        /// </summary>
+        /// <param name="name">Name of document</param>
+        /// <param name="data">List of strings</param>
         public static void WriteTo(string name, List<string> data)
         {
             string stream = "../../../Content/Saved Files/" + name + ".txt";
@@ -39,10 +47,18 @@ namespace CSGOesc_Case_Opening
             }
             catch
             {
-                //oh well
+                // oh well
+                // This catch is specifically for the problem that I kept having with it not closing a document from what I assume is
+                // too-fast of reading and writing and then opening before it can close, I haven't experienced any loss of save data since
+                // implementing this, so I see it as a win
             }
         }
 
+        /// <summary>
+        /// Writes to the end of a document
+        /// </summary>
+        /// <param name="name">Name of document</param>
+        /// <param name="data">Data being written to document</param>
         public static void AppendTo(string name, List<string> data)
         {
             string stream = "../../../Content/Saved Files/" + name + ".txt";
@@ -57,6 +73,11 @@ namespace CSGOesc_Case_Opening
             fileWriter.Close();
         }
 
+        /// <summary>
+        /// Overwrites a document entirely (floats only)
+        /// </summary>
+        /// <param name="name">Name of document</param>
+        /// <param name="data">Float Data being written to document</param>
         public static void WriteTo(string name, List<float> data)
         {
             string stream = "../../../Content/Saved Files/" + name + ".txt";
@@ -71,6 +92,11 @@ namespace CSGOesc_Case_Opening
             fileWriter.Close();
         }
 
+        /// <summary>
+        /// Returns a list of string information from document 
+        /// </summary>
+        /// <param name="name">Name of document</param>
+        /// <returns></returns>
         public static List<String> ReadFrom(string name)
         {
             List<String> data = new List<String>();
@@ -93,6 +119,11 @@ namespace CSGOesc_Case_Opening
             return data;
         }
 
+        /// <summary>
+        /// Returns a documents information that is trusted to be all floats
+        /// </summary>
+        /// <param name="name">name of document</param>
+        /// <returns></returns>
         public static List<float> NumReadFrom(string name)
         {
             List<float> data = new List<float>();

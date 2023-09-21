@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class Soundtrack
     {
@@ -18,6 +18,10 @@ namespace CSGOesc_Case_Opening
         private int prevCount;
         private int count;
 
+        /// <summary>
+        /// Manages songs
+        /// </summary>
+        /// <param name="songs">List of songs</param>
         public Soundtrack(Song[] songs)
         {
             this.songs = songs;
@@ -37,6 +41,9 @@ namespace CSGOesc_Case_Opening
             count = rng.Next(songs.Length);
         }
 
+        /// <summary>
+        /// Plays the next song in queue
+        /// </summary>
         public void Play()
         {
             if (MediaPlayer.State != MediaState.Playing)
@@ -61,6 +68,9 @@ namespace CSGOesc_Case_Opening
             MediaPlayer.Play(songs[count]);
         }
 
+        /// <summary>
+        /// Turns only the current songs volume up 
+        /// </summary>
         public void VolumeUp()
         {
             MediaPlayer.Pause();
@@ -77,6 +87,9 @@ namespace CSGOesc_Case_Opening
             MediaPlayer.Resume();
         }
 
+        /// <summary>
+        /// Turns only the current songs volume down 
+        /// </summary>
         public void VolumeDown()
         {
             MediaPlayer.Pause();
@@ -93,6 +106,9 @@ namespace CSGOesc_Case_Opening
             MediaPlayer.Resume();
         }
 
+        /// <summary>
+        /// Changes to the previously played song, Prev song is updated only after another is played
+        /// </summary>
         public void Previous()
         {
             MediaPlayer.Stop();
@@ -100,6 +116,9 @@ namespace CSGOesc_Case_Opening
             MediaPlayer.Play(songs[prevCount]);
         }
 
+        /// <summary>
+        /// Mutes media player
+        /// </summary>
         public void Mute()
         {
             List<string> newVolumes = FileIO.ReadFrom("Volume");

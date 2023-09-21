@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class ParticleSystem
     {
@@ -31,6 +31,18 @@ namespace CSGOesc_Case_Opening
         public Color StartColor { get { return startColor; } set { startColor = value; } }
         public int Speed { get { return speed; } set { speed = value; } }
 
+        /// <summary>
+        /// Simple particle system
+        /// </summary>
+        /// <param name="particleAmount"></param>
+        /// <param name="startColor"></param>
+        /// <param name="endColor"></param>
+        /// <param name="decaySpeed">The speed the particles will fade away at</param>
+        /// <param name="asset">Particle texture</param>
+        /// <param name="position">Position of the system</param>
+        /// <param name="speed">Speed of the particles from their source</param>
+        /// <param name="doesRotate">Do the particles rotate as they move</param>
+        /// <param name="spreadAngle">Currently only supports 0 degrees or 360 degrees</param>
         public ParticleSystem(int particleAmount, Color startColor, Color endColor, float decaySpeed, Texture2D asset, Rectangle position, int speed, bool doesRotate, float spreadAngle)
         {
             this.particleAmount = particleAmount;
@@ -46,11 +58,17 @@ namespace CSGOesc_Case_Opening
             this.doesRotate = doesRotate;
             this.rotationSpeed = 0;
             this.spreadAngle = spreadAngle;
+
+            // Spawning amount is based on how many particles are allowed in the system
+            // Even with this simple formula, the higher numbers will never fill a list
+            // but it will get pretty laggy past 100,000 particles allowed (this is with a Ryzen 7 3700X) considering this is all CPU bound
+            // and that I couldn't offload anything to the GPU bc HLSL is outdated and not even chat gpt can help me with it, well... sort of
             this.spawnAmount = particleAmount * .005f;
         }
 
         public void Update()
         {
+            // Basic update information to cull list of non relevant particles
             for (int i = 0; i < particles.Count; i++)
             {
                 particles[i].Update();
@@ -63,6 +81,7 @@ namespace CSGOesc_Case_Opening
                 }
             }
 
+            // If list is not full, another will be spawned
             if (particles.Count < particleAmount)
             {
                 if (doesRotate)
@@ -89,7 +108,10 @@ namespace CSGOesc_Case_Opening
                 particle.DrawAsset(sb);
             }
         }
-
+        
+        /// <summary>
+        /// Resets particle list
+        /// </summary>
         public void Reset()
         {
             particles.Clear();

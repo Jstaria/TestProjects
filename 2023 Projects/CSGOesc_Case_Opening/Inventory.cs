@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     internal class Inventory
     {
@@ -25,6 +25,9 @@ namespace CSGOesc_Case_Opening
         public int NumItems { get; private set; }
         public int InventoryValue { get; private set; }
 
+        /// <summary>
+        /// Manages all collected items
+        /// </summary>
         public Inventory(List<Item> items)
         {
             this.itemNumber = 0;
@@ -73,6 +76,9 @@ namespace CSGOesc_Case_Opening
             sb.DrawString(Game1.ReadOut, PointManager.CurrentPoints.ToString(), pos, Color.White);
         }
 
+        /// <summary>
+        /// Sells all current items
+        /// </summary>
         public void SellAll()
         {
             int points = 0;
@@ -85,6 +91,7 @@ namespace CSGOesc_Case_Opening
 
                     RemoveItem(inventory.ElementAt(i).Value[inventory.ElementAt(i).Value.Values.ToList()[j].UniqueID]);
 
+                    // I totally could have made it so each item has a currency amount when it spawns
                     points += (
                     name == "Common" ? 5 :
                     name == "Uncommon" ? 10 :
@@ -102,6 +109,9 @@ namespace CSGOesc_Case_Opening
             PointManager.AddPoints(points);
         }
 
+        /// <summary>
+        /// Sells recently won item
+        /// </summary>
         public void SellWonItem()
         {
             string name = SlotMachine.WonItem.Name;
@@ -122,6 +132,10 @@ namespace CSGOesc_Case_Opening
             InventoryValue -= points;
         }
 
+        /// <summary>
+        /// Sells one item
+        /// </summary>
+        /// <param name="name">Basic name of item</param>
         public void SellOne(string name)
         {
             if (inventory[name].Count > 0)
@@ -145,6 +159,10 @@ namespace CSGOesc_Case_Opening
             // condition ? value_if_true : value_if_false
         }
 
+        /// <summary>
+        /// All this does right now is removes an item from the inventory, is meant to be a lootbox system, thinkn cookie clicker but more gambling
+        /// </summary>
+        /// <param name="name"></param>
         public void OpenOne(string name)
         {
             if (inventory[name].Count > 0)
@@ -153,23 +171,28 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        /// <summary>
+        /// Sets up item dictionaries
+        /// </summary>
+        /// <param name="setup">Determines if the inventory buttons need to be setup again</param>
         public void SetupInv(bool setup)
         {
             for (int i = 0; i < items.Count; i++)
             {
-                Rectangle rect = new Rectangle();
-                if (i < 4)
-                {
-                    rect = new Rectangle(i * 200 + i * 60 + 130, 30, 200, 200);
-                }
-                else
-                {
-                    rect = new Rectangle((i - 4) * 200 + (i - 4) * 60 + 260, 260, 200, 200);
-                }
-
                 inventory.Add(items[i].Name, new Dictionary<string, Item>());
+
                 if (setup)
                 {
+                    Rectangle rect = new Rectangle();
+                    if (i < 4)
+                    {
+                        rect = new Rectangle(i * 200 + i * 60 + 130, 30, 200, 200);
+                    }
+                    else
+                    {
+                        rect = new Rectangle((i - 4) * 200 + (i - 4) * 60 + 260, 260, 200, 200);
+                    }
+
                     itemButtons["Rarity"].Add(items[i].Name, new Button(buttonAssets, rect, items[i].Name, Game1.ReadOut, Color.Black, items[i].Color, .1f));
                     itemButtons["Rarity"][items[i].Name].OnRightClickString += SellOne;
                     //itemButtons["Rarity"][items[i].Name].OnLeftClickString += OpenOne;
@@ -177,6 +200,9 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        /// <summary>
+        /// Loads items from save file
+        /// </summary>
         private void LoadItems()
         {
             List<string> itemInfo = FileIO.ReadFrom("SavedInventory");
@@ -295,6 +321,9 @@ namespace CSGOesc_Case_Opening
             // remove item at item.ItemNumber
         }
 
+        /// <summary>
+        /// Clears save file of all inventory, and clears internal lists of all items
+        /// </summary>
         public void Clear()
         {
             FileIO.WriteTo("SavedInventory", new List<string>());
@@ -304,6 +333,7 @@ namespace CSGOesc_Case_Opening
             inventory.Clear();
             itemsInInv.Clear();
 
+            // Only sets up the lists, basically clearing them
             SetupInv(false);
             LoadItems();
         }

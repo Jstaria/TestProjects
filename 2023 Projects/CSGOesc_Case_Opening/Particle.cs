@@ -6,7 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGOesc_Case_Opening
+// Simple particle for particle systems or one off text
+
+namespace ClickerSlots
 {
     internal class Particle
     {
@@ -31,6 +33,7 @@ namespace CSGOesc_Case_Opening
 
         public float LifeSpan { get; private set; }
 
+        // Because it is only me using this particular particle system, I will not comment out each ad every one of these
         public Particle(Vector2 postiion, float decayRate, string amount, SpriteFont particleFont)
         {
             this.particleFont = particleFont;

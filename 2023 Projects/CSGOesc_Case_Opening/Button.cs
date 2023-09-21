@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     // Called by reference when button is clicked on
     public delegate void OnRightButtonClick();

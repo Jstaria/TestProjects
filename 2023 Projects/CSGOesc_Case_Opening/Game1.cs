@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace CSGOesc_Case_Opening
+namespace ClickerSlots
 {
     public enum GameState
     {
@@ -91,8 +91,6 @@ namespace CSGOesc_Case_Opening
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             time = 0;
 
             rng = new Random();
@@ -115,6 +113,9 @@ namespace CSGOesc_Case_Opening
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            ///////////////////////////////////////////////////////////////////////////////
+            // Loads song info from folder, first time doing somehting like this
+            // Did this after loading in all the content texture files
             DirectoryInfo di = new DirectoryInfo("../../../Content/Music");
             FileInfo[] files = di.GetFiles("*.mp3");
 
@@ -128,6 +129,7 @@ namespace CSGOesc_Case_Opening
             }
 
             this.playlist = new Soundtrack(songs);
+            ///////////////////////////////////////////////////////////////////////////////
 
             ReadOut = Content.Load<SpriteFont>("ReadOut");
             regular = Content.Load<SpriteFont>("regular");
@@ -155,6 +157,7 @@ namespace CSGOesc_Case_Opening
             {
                 int randNum = 0;
 
+                // generates random idle speed for menu slot machines that cannot be still or the same as the main menu slots
                 do
                 {
                     randNum = rng.Next(-10, 10);
@@ -468,6 +471,9 @@ namespace CSGOesc_Case_Opening
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Reads in achievements from file
+        /// </summary>
         public void SetupAchievements()
         {
             AchievementManager.GenerateAchievements();
@@ -512,6 +518,9 @@ namespace CSGOesc_Case_Opening
             }
         }
 
+        /// <summary>
+        /// Clears and sets up achievements
+        /// </summary>
         public void SetupAchievementsClear()
         {
             AchievementManager.Clear();
@@ -614,6 +623,9 @@ namespace CSGOesc_Case_Opening
 
         #region Button Functions
 
+        /// <summary>
+        /// Resets everything data driven
+        /// </summary>
         private void Reset()
         {
             PointManager.Clear();
@@ -621,6 +633,9 @@ namespace CSGOesc_Case_Opening
             SetupAchievementsClear();
         }
 
+        /// <summary>
+        /// Saves everything and quits
+        /// </summary>
         private void Quit()
         {
             PointManager.Save();
@@ -629,6 +644,11 @@ namespace CSGOesc_Case_Opening
             Exit();
         }
 
+        /// <summary>
+        /// Button timer
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <returns></returns>
         private bool CanUseButtons(GameTime gameTime)
         {
             bool canUse = false;
@@ -638,47 +658,71 @@ namespace CSGOesc_Case_Opening
             return canUse;
         }
 
+        /// <summary>
+        /// Saves prev game state
+        /// </summary>
         private void SavePrevState()
         {
             prevState = currentState;
         }
 
+        /// <summary>
+        /// Changes state to Menu, within menu
+        /// </summary>
         private void ReturnToMenu()
         {
             sceneSwitchTime = currentSceneTime;
             currentMenuState = MenuState.Menu;
         }
 
+        /// <summary>
+        /// Not used, but changes state to credits
+        /// </summary>
         private void Credits()
         {
             sceneSwitchTime = currentSceneTime;
             currentMenuState = MenuState.Credit;
         }
 
+        /// <summary>
+        /// Changes state to achievements
+        /// </summary>
         private void Achievements()
         {
             sceneSwitchTime = currentSceneTime;
             currentMenuState = MenuState.Achievements;
         }
 
+        /// <summary>
+        /// Changes state to paused
+        /// </summary>
         private void Pause()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Pause;
         }
 
+        /// <summary>
+        /// Changes state to menu
+        /// </summary>
         private void Menu()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Menu;
         }
 
+        /// <summary>
+        /// Changes state to game
+        /// </summary>
         private void Game()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = GameState.Game;
         }
 
+        /// <summary>
+        /// Changes state to slots
+        /// </summary>
         private void Slots()
         {
             sceneSwitchTime = currentSceneTime;
@@ -686,12 +730,16 @@ namespace CSGOesc_Case_Opening
             slot.Slots();
         }
 
+        /// <summary>
+        /// Changes current state to prev state
+        /// </summary>
         private void PrevState()
         {
             sceneSwitchTime = currentSceneTime;
             currentState = prevState;
         }
 
+        // This doesnt need explanation, its just bc I didnt want to put this code in 3 places
         private void ReduceFade()
         {
             if (fade > 0)
@@ -702,6 +750,9 @@ namespace CSGOesc_Case_Opening
 
         #endregion
 
+        /// <summary>
+        /// Generates all buttons in use
+        /// </summary>
         private void CreateButtons()
         {
             Texture2D[] buttonAssets = new Texture2D[]
@@ -755,6 +806,7 @@ namespace CSGOesc_Case_Opening
             buttons["Pause"].Add(new Button(buttonAssets, new Rectangle(465, 225, 90, 30), "Sound \\/", Game1.regular, Color.Black, Color.White, pressTimer));
             buttons["Pause"][8].OnLeftClick += slot.VolumeDown;
 
+            // This isn't perfect, I spent way too much time on it for it to not be perfect xD
             //                   Screen height - spacing on top / how many buttons
             int numButtons = 4;
             int buttonHeight = 75;
