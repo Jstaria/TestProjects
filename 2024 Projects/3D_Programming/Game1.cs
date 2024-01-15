@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace _3D_Programming
 {
@@ -15,14 +17,17 @@ namespace _3D_Programming
         private BasicEffect basicEffect; // Tells XNA how to draw object
 
         // Geometric Info
-        private VertexPositionColor[] triangleVertices; // For color, VertexPositionTexture for texture mapping
+        private List<VertexPositionColor> triangleVertices; // For color, VertexPositionTexture for texture mapping
         private VertexBuffer vertexBuffer; // Graphics buffer
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
         }
 
         protected override void Initialize()
@@ -38,14 +43,90 @@ namespace _3D_Programming
             basicEffect.LightingEnabled = false;
 
             // Create triangle
-            triangleVertices = new VertexPositionColor[3];
-            triangleVertices[0] = new VertexPositionColor(new Vector3(0, 20, 0), Color.Red);
-            triangleVertices[1] = new VertexPositionColor(new Vector3(-20, -20, 0), Color.Orange);
-            triangleVertices[2] = new VertexPositionColor(new Vector3(20, -20, 0), Color.Yellow);
+            triangleVertices = new List<VertexPositionColor>();
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                    int length = 10;
+                    int width = 10;
+
+                    Color color = Color.Wheat;
+
+                    switch(j * i % 18)
+                    {
+                        case 0:
+                            color = Color.Red;
+                            break;
+
+                        case 1:
+                            color = Color.Orange;
+                            break;
+
+                        case 2:
+                            color = Color.Yellow;
+                            break;
+
+                        case 3:
+                            color = Color.Green;
+                            break;
+
+                        case 4:
+                            color = Color.Blue;
+                            break;
+
+                        case 5: 
+                            color = Color.Purple;
+                            break;
+                    }
+
+                    // Create 2 triangles to make a square
+                    // Triangle 1
+
+                    Random ng = new Random();
+                    int num = ng.Next(20, 20);
+
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 0 * length), 
+                            color));
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 1 * length),
+                            color));
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 0 * length),
+                            color));
+
+                    // Triangle 2
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 0 * length),
+                            color));
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 1 * length),
+                            color));
+                    triangleVertices.Add(
+                        new VertexPositionColor(
+                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 1 * length),
+                            color));
+                }
+            }
+
+            VertexPositionColor[] vertices = new VertexPositionColor[triangleVertices.Count];
+
+            for (int i = 0; i < triangleVertices.Count; i++)
+            {
+                vertices[i] = triangleVertices[i];
+            }
 
             // An array of drawables we will give to the GPU
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 3, BufferUsage.WriteOnly);
-            vertexBuffer.SetData<VertexPositionColor>(triangleVertices);
+            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), triangleVertices.Count, BufferUsage.WriteOnly);
+            vertexBuffer.SetData<VertexPositionColor>(vertices);
 
             base.Initialize();
         }
@@ -89,7 +170,7 @@ namespace _3D_Programming
             foreach(EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangleVertices.Count);
             }
 
             base.Draw(gameTime);

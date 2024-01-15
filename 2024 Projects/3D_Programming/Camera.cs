@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,15 +24,20 @@ namespace _3D_Programming
         private Matrix viewMatrix; // The camera's physical position
         private Matrix worldMatrix; // Projects object into world
 
-        // Orbit
-        private bool orbit;
-
         // Camera speed
         private float moveSpeed;
+
+        // Camera Rotation
+        private float rotationY = 0;
+        private float rotationX = 0;
+        private Vector2 mouseSens = new Vector2(.01f, .01f);
+
         // ==================================================================================================
 
         // Previous input
         private KeyboardState prevKBState;
+        private MouseState mouseNow;
+        private Vector2 mouseDefault = new Vector2(1280/2, 720/2);
 
         // Public Get Variables
         public Matrix ProjectionMatrix { get { return projectionMatrix; } }
@@ -51,8 +57,6 @@ namespace _3D_Programming
             this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fieldOfView), aspectRatio, nearPlane, farPlane);
             this.viewMatrix = Matrix.CreateLookAt(position, target, Vector3.Up); // Vector3.Up = Vector3(0,1,0). Up and down can be any axis you want, this is just the norm. If a model is rotated, the Up vector needs to be rotated
             this.worldMatrix = Matrix.CreateWorld(target, Vector3.Forward, Vector3.Up); // Origin is at Vector3.Zero
-
-            this.orbit = false;
         }
 
         public void Update(GameTime gameTime)
@@ -66,8 +70,8 @@ namespace _3D_Programming
             Vector3 backward = Vector3.Normalize(camPosition - camTarget);
 
             // Using cross products, we can find the left and right of the camera position
-            Vector3 left = Vector3.Normalize(Vector3.Cross(viewMatrix.Up, camTarget - camPosition));
-            Vector3 right = Vector3.Normalize(Vector3.Cross(camTarget - camPosition, viewMatrix.Up));
+            Vector3 left = Vector3.Normalize(Vector3.Cross(Vector3.Up, camTarget - camPosition));
+            Vector3 right = Vector3.Normalize(Vector3.Cross(camTarget - camPosition, Vector3.Up));
 
             // ================================
             // Movement
@@ -115,16 +119,18 @@ namespace _3D_Programming
             }
             if (kbState.IsKeyDown(Keys.Up))
             {
-                camTarget = RotateAround(camPosition, camTarget, new Vector3(-1, 0, 0), moveSpeed * multiplier);
+                camTarget = RotateAround(camPosition, camTarget, right, moveSpeed * multiplier);
             }
             if (kbState.IsKeyDown(Keys.Down))
             {
-                camTarget = RotateAround(camPosition, camTarget, new Vector3(1, 0, 0), moveSpeed * multiplier);
+                camTarget = RotateAround(camPosition, camTarget, left, moveSpeed * multiplier);
             }
+
+            UpdateAll();
 
             // ================================
 
-            UpdateAll();
+            //UpdateAll();
             prevKBState = kbState;
         }
 
@@ -132,6 +138,37 @@ namespace _3D_Programming
         {
             this.viewMatrix = Matrix.CreateLookAt(camPosition, camTarget, Vector3.Up); // Vector3.Up = Vector3(0,1,0). Up and down can be any axis you want, this is just the norm. If a model is rotated, the Up vector needs to be rotated
         }
+
+        #region NotDone
+        private void UpdateViewMatrix()
+        {
+            Matrix cameraRotation = Matrix.CreateRotationX(rotationX) * Matrix.CreateRotationY(rotationY);
+
+            Vector3 cameraRotatedTarget = Vector3.Transform(camTarget, cameraRotation);
+            //Vector3 rotatedUpVector = Vector3.Transform(cameraUp, cameraRotation);
+
+            viewMatrix = Matrix.CreateLookAt(camPosition, cameraRotatedTarget, Vector3.Up);
+        }
+
+        private void MouseMovement()
+        {
+            Vector2 mouseOffset;
+            mouseNow = Mouse.GetState();
+
+            Vector2 MAXDELTA = new Vector2(6, 6);
+            
+            if (mouseNow.X != mouseDefault.X || mouseNow.Y != mouseDefault.Y)
+            {
+                mouseOffset = Vector2.Min(MAXDELTA, mouseDefault - new Vector2(mouseNow.X, mouseNow.Y));
+
+                rotationX += mouseOffset.Y * mouseSens.X;
+                rotationY += mouseOffset.X * mouseSens.Y;
+
+                Mouse.SetPosition((int)mouseDefault.X, (int)mouseDefault.Y);
+            }
+        }
+
+        #endregion
 
         public static Vector3 RotateAround(Vector3 pivot, Vector3 point, Vector3 direction, float angle)
         {
