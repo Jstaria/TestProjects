@@ -14,11 +14,10 @@ namespace _3D_Programming
         // Camera
         private Camera mainCamera;
 
-        private BasicEffect basicEffect; // Tells XNA how to draw object
+        // Marching Cubes
+        private CubeMarching cube;
 
-        // Geometric Info
-        private List<VertexPositionColor> triangleVertices; // For color, VertexPositionTexture for texture mapping
-        private VertexBuffer vertexBuffer; // Graphics buffer
+        private BasicEffect basicEffect; // Tells XNA how to draw object
 
         public Game1()
         {
@@ -40,93 +39,11 @@ namespace _3D_Programming
             basicEffect = new BasicEffect(GraphicsDevice);
             basicEffect.Alpha = 1.0f;
             basicEffect.VertexColorEnabled = true;
-            basicEffect.LightingEnabled = false;
+            basicEffect.LightingEnabled = true;
+            basicEffect.EnableDefaultLighting();
 
-            // Create triangle
-            triangleVertices = new List<VertexPositionColor>();
-
-
-            for (int i = 0; i < 100; i++)
-            {
-                for (int j = 0; j < 100; j++)
-                {
-                    int length = 10;
-                    int width = 10;
-
-                    Color color = Color.Wheat;
-
-                    switch(j * i % 18)
-                    {
-                        case 0:
-                            color = Color.Red;
-                            break;
-
-                        case 1:
-                            color = Color.Orange;
-                            break;
-
-                        case 2:
-                            color = Color.Yellow;
-                            break;
-
-                        case 3:
-                            color = Color.Green;
-                            break;
-
-                        case 4:
-                            color = Color.Blue;
-                            break;
-
-                        case 5: 
-                            color = Color.Purple;
-                            break;
-                    }
-
-                    // Create 2 triangles to make a square
-                    // Triangle 1
-
-                    Random ng = new Random();
-                    int num = ng.Next(20, 20);
-
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 0 * length), 
-                            color));
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 1 * length),
-                            color));
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 0 * length),
-                            color));
-
-                    // Triangle 2
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 0 * length),
-                            color));
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 0 * width, num, -10 * length + j * length + 1 * length),
-                            color));
-                    triangleVertices.Add(
-                        new VertexPositionColor(
-                            new Vector3(-10 * width + i * width + 1 * width, num, -10 * length + j * length + 1 * length),
-                            color));
-                }
-            }
-
-            VertexPositionColor[] vertices = new VertexPositionColor[triangleVertices.Count];
-
-            for (int i = 0; i < triangleVertices.Count; i++)
-            {
-                vertices[i] = triangleVertices[i];
-            }
-
-            // An array of drawables we will give to the GPU
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), triangleVertices.Count, BufferUsage.WriteOnly);
-            vertexBuffer.SetData<VertexPositionColor>(vertices);
+            cube = new CubeMarching(25,10,25,.25f, 50);
+            cube.UpdateAll();
 
             base.Initialize();
         }
@@ -148,6 +65,8 @@ namespace _3D_Programming
 
         protected override void Draw(GameTime gameTime)
         {
+            VertexBuffer vertexBuffer = cube.VertexBuffer;
+
             // Pass in camera matrices
             basicEffect.Projection = mainCamera.ProjectionMatrix;
             basicEffect.View = mainCamera.ViewMatrix;
@@ -170,7 +89,7 @@ namespace _3D_Programming
             foreach(EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangleVertices.Count);
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount);
             }
 
             base.Draw(gameTime);

@@ -47,7 +47,7 @@ namespace _3D_Programming
         // Public Get/Set Variables
         public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
-        public Camera() : this(Vector3.Zero, new Vector3(0f, 0f, -100f), 60f, Game1._graphics.GraphicsDevice.DisplayMode.AspectRatio, .1f, 1000f) { }
+        public Camera() : this(Vector3.Zero, new Vector3(0f, 0f, -100f), 60f, Game1._graphics.GraphicsDevice.DisplayMode.AspectRatio, .1f, 10000f) { }
 
         public Camera(Vector3 target, Vector3 position, float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
         {
