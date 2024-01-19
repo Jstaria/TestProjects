@@ -4,9 +4,14 @@ My name is Joseph Staria and From here I will be implementing any ideas I have d
 
 My current list of Projects from most impressive/best portfolio pieces to still pretty good, just not my magnum opus
 
-1. being the best
+#1 Being my personal best
 
-1. Clicker Slots (2023 Projects)
+1. 3D Programming (2024 Projects)
+    - 3D in Monogame achieved using matrix math and more. 
+    - In this project I implemented a camera class and the marching cubes algorithm
+    - Mesh generation in the palm of my hands, starting with marching cubes, I had to generate face normals for all triangles, so it was quite the fun experiment.
+
+1.25. Clicker Slots (2023 Projects)
     - My first personal game, complete with data structures galore and beautifully and elegantly picked visuals, especially the particle systems
 
 1.5. Puzzle Golf (2023 Projects) (School Project)
