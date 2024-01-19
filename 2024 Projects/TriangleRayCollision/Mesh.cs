@@ -18,8 +18,7 @@ namespace TriangleRayCollision
     internal class Mesh
     {
         // Geometric Info
-        private List<VertexBuffer> vertexBuffers; // Graphics buffers
-        private GraphicsDevice GraphicsDevice = Game1._graphics.GraphicsDevice;
+        private List<VertexBuffer> vertexBuffers = new List<VertexBuffer>(); // Graphics buffers
 
         //private List<List<Triangle>> triangles = new List<List<Triangle>>();
 
@@ -48,7 +47,7 @@ namespace TriangleRayCollision
             }
 
             // An array of drawables we will give to the GPU
-            vertexBuffers.Add(new VertexBuffer(GraphicsDevice, typeof(VertexPositionColorNormal), vertices.Count, BufferUsage.WriteOnly));
+            vertexBuffers.Add(new VertexBuffer(Game1._graphics.GraphicsDevice, typeof(VertexPositionColorNormal), vertices.Count, BufferUsage.WriteOnly));
             vertexBuffers[vertexBuffers.Count - 1].SetData<VertexPositionColorNormal>(vertices.ToArray());
         }
     }
