@@ -19,13 +19,14 @@ namespace TriangleRayCollision
     {
         // Geometric Info
         private List<VertexBuffer> vertexBuffers = new List<VertexBuffer>(); // Graphics buffers
-
-        //private List<List<Triangle>> triangles = new List<List<Triangle>>();
+        private List<Triangle> triangles = new List<Triangle>();
 
         public List<VertexBuffer> VertexBuffers { get { return vertexBuffers; } }
+        public List<Triangle> Triangles { get { return triangles; } }
 
-        public void AddMeshColor(List<Triangle> triangles, Color color)
+public void AddMeshColor(List<Triangle> triangles, Color color)
         {
+            this.triangles = triangles;
             List<VertexPositionColorNormal> vertices = new List<VertexPositionColorNormal>();
 
             // Loop through each triangle, if a triangle just so happens to not have a face, it will be deleted
