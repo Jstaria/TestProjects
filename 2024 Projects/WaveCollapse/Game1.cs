@@ -14,7 +14,7 @@ namespace WaveCollapse
 
         private CellMap cellMap;
 
-        public static Dictionary<string, Texture2D> tiles;
+        private Dictionary<string, Texture2D> tileAssets;
 
         public Game1()
         {
@@ -25,11 +25,7 @@ namespace WaveCollapse
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-            cellMap = new CellMap();
-
-            tiles = new Dictionary<string, Texture2D>();
+            tileAssets = new Dictionary<string, Texture2D>();
 
             base.Initialize();
         }
@@ -46,8 +42,12 @@ namespace WaveCollapse
             for (int i = 0; i < names.Length; i++)
             {
                 names[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
-                tiles.Add((i+1).ToString(), Content.Load<Texture2D>("tiles/0SelectedTiles/" + names[i]));
+                tileAssets.Add((i+1).ToString(), Content.Load<Texture2D>("tiles/0SelectedTiles/" + names[i]));
             }
+
+            Cells.GenerateCells(tileAssets);
+
+            cellMap = new CellMap(new Vector2(-100, -300), 10, 10, 100, Cells.CellDict);
         }
 
         protected override void Update(GameTime gameTime)
