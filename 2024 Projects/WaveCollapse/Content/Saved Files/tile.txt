@@ -1,0 +1,1 @@
+﻿S:tile165,R:tile166,R:tile167,R:tile170,R:tile215,R:tile216,R:tile217,R:tile219,L:tile168,L:tile190,L:tile212,L:tile234,L:tile233,L:tile172,L:tile194,L:tile216,L:tile238,L:tile260,U:tile209,U:tile210,U:tile211,U:tile212,U:tile234,U:tile232,U:tile233,U:tile231,U:tile236,U:tile237,U:tile238,U:tile239,D:tile187,D:tile209,D:tile191,D:tile215,D:tile259,D:tile196,D:tile240,D:tile259

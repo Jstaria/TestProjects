@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using System.Collections.Generic;
+using System.IO;
 
 namespace WaveCollapse
 {
@@ -8,6 +11,10 @@ namespace WaveCollapse
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private CellMap cellMap;
+
+        public static Dictionary<string, Texture2D> tiles;
 
         public Game1()
         {
@@ -20,6 +27,10 @@ namespace WaveCollapse
         {
             // TODO: Add your initialization logic here
 
+            cellMap = new CellMap();
+
+            tiles = new Dictionary<string, Texture2D>();
+
             base.Initialize();
         }
 
@@ -27,7 +38,16 @@ namespace WaveCollapse
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            DirectoryInfo di = new DirectoryInfo("../../../Content/tiles/0SelectedTiles");
+            FileInfo[] files = di.GetFiles("*.png");
+
+            string[] names = new string[files.Length];
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                names[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
+                tiles.Add(names[i], Content.Load<Texture2D>("tiles/0SelectedTiles/" + names[i]));
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -37,6 +57,8 @@ namespace WaveCollapse
 
             // TODO: Add your update logic here
 
+            cellMap.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -45,7 +67,9 @@ namespace WaveCollapse
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            cellMap.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
