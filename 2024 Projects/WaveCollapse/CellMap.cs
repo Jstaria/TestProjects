@@ -57,35 +57,41 @@ namespace WaveCollapse
                 else { randomPos = new int[] { 5, 5 }; }
 
                 List<string> data = FileIO.ReadFrom("tile");
-                string[] line = data[0].Split(",");
+                string[] line = data[data.Count - 1].Split(",");
 
                 List<string> left = new List<string>();
                 List<string> right = new List<string>();
                 List<string> up = new List<string>();
                 List<string> down = new List<string>();
 
+                List<string> current = new List<string>();
+
                 for (int i = 0; i < line.Length; i++)
                 {
-                    string[] line2 = line[i].Split(":");
-
-                    switch (line2[0])
+                    switch (line[i])
                     {
-                        case "L":
-                            left.Add(line2[1]);
+                        case "Left":
+                            current = left;
                             break;
-                        case "R":
-                            right.Add(line2[1]);
+                        case "Right":
+                            current = right;
                             break;
-                        case "U":
-                            up.Add(line2[1]);
+                        case "Up":
+                            current = up;
                             break;
-                        case "D":
-                            down.Add(line2[1]);
+                        case "Down":
+                            current = down;
                             break;
 
                         case "S":
 
-                            cellArray[randomPos[0], randomPos[1]] = new Cell(Game1.tiles[line2[1]], new Vector2(randomPos[0] * scale + position.X, randomPos[1] * scale + position.Y));
+                            cellArray[randomPos[0], randomPos[1]] = new Cell(Game1.tiles[line[i+1]], new Vector2(randomPos[0] * scale + position.X, randomPos[1] * scale + position.Y));
+                            i++;
+                            break;
+
+                        default:
+
+                            current.Add(line[i]);
 
                             break;
                     }
@@ -94,7 +100,7 @@ namespace WaveCollapse
                 cellArray[5, 5].SetNeighbors(left, right, up, down);
             }
 
-            if (count % 120 == 0)
+            if (count % 60 == 0)
             {
                 Cell current = cellArray[5, 5];
 
@@ -105,10 +111,10 @@ namespace WaveCollapse
                 cellArray[4, 5] = new Cell(Game1.tiles[strin[random.Next(strin.Count)]], new Vector2(4 * scale + position.X, 5 * scale + position.Y));
 
                 strin = current.GetCompatibleNeighbors(new Vector2(0, 1));
-                cellArray[5, 6] = new Cell(Game1.tiles[strin[random.Next(strin.Count)]], new Vector2(5 * scale + position.X, 6 * scale + position.Y));
+                cellArray[5, 4] = new Cell(Game1.tiles[strin[random.Next(strin.Count)]], new Vector2(5 * scale + position.X, 4 * scale + position.Y));
 
                 strin = current.GetCompatibleNeighbors(new Vector2(0, -1));
-                cellArray[5, 4] = new Cell(Game1.tiles[strin[random.Next(strin.Count)]], new Vector2(5 * scale + position.X, 4 * scale + position.Y));
+                cellArray[5, 6] = new Cell(Game1.tiles[strin[random.Next(strin.Count)]], new Vector2(5 * scale + position.X, 6 * scale + position.Y));
             }
 
             count++;

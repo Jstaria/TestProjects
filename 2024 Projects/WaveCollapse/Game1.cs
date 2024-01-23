@@ -46,7 +46,7 @@ namespace WaveCollapse
             for (int i = 0; i < names.Length; i++)
             {
                 names[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
-                tiles.Add(names[i], Content.Load<Texture2D>("tiles/0SelectedTiles/" + names[i]));
+                tiles.Add((i+1).ToString(), Content.Load<Texture2D>("tiles/0SelectedTiles/" + names[i]));
             }
         }
 
