@@ -17,7 +17,7 @@ namespace WaveCollapse
         private Dictionary<Vector2, List<string>> compatibleDirections;
 
         public Texture2D Asset { get { return asset; } }
-        public Vector2 Position { get { return position; } }
+        public Vector2 Position { get { return position; } set { position = value; } }
         public bool HasCollapsed { get; set; }
 
         public Cell(Texture2D asset, Vector2 position)
@@ -41,8 +41,8 @@ namespace WaveCollapse
         {
             compatibleDirections[new Vector2(-1, 0)] = left;
             compatibleDirections[new Vector2(1, 0)] = right;
-            compatibleDirections[new Vector2(0, 1)] = up;
-            compatibleDirections[new Vector2(0, -1)] = down;
+            compatibleDirections[new Vector2(0, -1)] = up;
+            compatibleDirections[new Vector2(0, 1)] = down;
         }
     }
 }
