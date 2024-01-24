@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace WaveCollapse
 {
@@ -51,134 +52,122 @@ namespace WaveCollapse
 
             this.directions.Add(new Vector2(-1, 0));
             this.directions.Add(new Vector2(1, 0));
-            this.directions.Add(new Vector2(0, 1));
             this.directions.Add(new Vector2(0, -1));
+            this.directions.Add(new Vector2(0, 1));
 
             this.activeArrayPositions.Add(new int[] { width / 2, height / 2 });
         }
 
         public void Update(GameTime gameTime)
         {
-            if (doneGenerating) return;
-
-            if (activeArrayPositions[0] != new int[] {-1, -1})
-            {
-
-                #region firstSpace
-
-                if (!startGenerating)
-                {
-                    currentPos = activeArrayPositions[random.Next(activeArrayPositions.Count)];
-
-                    int num = random.Next(1, cellDict.Count + 1);
-
-                    while (cellDict[num.ToString()].GetCompatibleNeighbors(directions[0]).Count <= 0)
-                    {
-                        num = random.Next(1, cellDict.Count + 1);
-                    }
-
-                    cellArray[currentPos[0], currentPos[1]] = cellDict[num.ToString()];
-                    cellArray[currentPos[0], currentPos[1]].Position = new Vector2(position.X + currentPos[0] * scale, position.Y + currentPos[1] * scale);
-                    cellArray[currentPos[0], currentPos[1]].HasCollapsed = true;
-
-                    for (int i = 0; i < directions.Count; i++)
-                    {
-                        int[] temp = new int[] { currentPos[0] + (int)directions[i].X, currentPos[1] + (int)directions[i].Y };
-
-                        if (IsNeighbor(temp, cellArray) && !activeArrayPositions.Contains(temp))
-                        {
-                            activeArrayPositions.Add(temp);
-                        }
-                    }
-
-                    startGenerating = true;
-                }
-
-                #endregion
-
-                else
-                {
-                    // remove current space from active queue because we already set it
-                    activeArrayPositions.Remove(currentPos);
-
-                    // find new position to set
-                    currentPos = activeArrayPositions[0];
-
-                    Cell currentCell = cellArray[currentPos[0], currentPos[1]];
-
-                    List<List<string>> directionOfTiles = new List<List<string>>()
-                    {
-                        new List<string>(), // left
-                        new List<string>(), // right
-                        new List<string>(), // up
-                        new List<string>()  // down
-                    };
-
-
-                    // Check each directions from current to find next active positions to then collapse
-                    for (int i = 0; i < directions.Count; i++)
-                    {
-                        int[] temp = new int[] { currentPos[0] + (int)directions[i].X, currentPos[1] + (int)directions[i].Y };
-
-                        // If its a neighbor in the array, and it is not populated as well as not already being in the active list
-                        if (IsNeighbor(temp, cellArray) && cellArray[temp[0], temp[1]] == null && !activeArrayPositions.Contains(temp))
-                        {
-                            activeArrayPositions.Add(temp);
-                        }
-
-                        // Must be a neighbor, is not null, and has collapsed. We then get the opposite direction of available tiles for this tile
-                        // And add that range
-                        else if (IsNeighbor(temp, cellArray) && cellArray[temp[0], temp[1]] != null && cellArray[temp[0], temp[1]].HasCollapsed)
-                        {
-                            directionOfTiles[i].AddRange(cellArray[temp[0], temp[1]].GetCompatibleNeighbors(-directions[i]));
-                        }
-                    }
-
-                    // Create a master list that will store all the possible values
-                    List<string> masterList = new List<string>();
-
-                    for (int i = 0; i < directionOfTiles.Count; i++)
-                    {
-                        for (int j = 0; j < directionOfTiles[i].Count; j++)
-                        {
-                            // Check to make sure we don't add duplicates
-                            if (masterList.Contains(directionOfTiles[i][j])) continue;
-
-                            masterList.Add(directionOfTiles[i][j]);
-                        }
-                    }
-
-                    // Finally, we find out which of the available direction lists we have the ability to place
-                    for (int i = 0; i < directionOfTiles.Count; i++)
-                    {
-                        if (directionOfTiles[i].Count <= 0) continue;
-
-                        masterList = masterList.Intersect(directionOfTiles[i]).ToList();
-                    }
-
-                    if (masterList.Count > 0)
-                    {
-                        string key = masterList[random.Next(masterList.Count)].ToString();
-
-                        cellArray[currentPos[0], currentPos[1]] = cellDict[key];
-                        cellArray[currentPos[0], currentPos[1]].Position = new Vector2(position.X + currentPos[0] * scale, position.Y + currentPos[1] * scale);
-                        cellArray[currentPos[0], currentPos[1]].HasCollapsed = true;
-                    }
-                }
-            }
-
-            else
-            {
-                doneGenerating = true;
-            }
-            Thread.Sleep(60);
+            
         }
 
-        private bool IsNeighbor(int[] arrayPos, Cell[,] cellArray)
+        public void CreateBoard()
+        {
+            // Create random cell from cell dict and make sure it is a viable cell
+            int num = random.Next(1, cellDict.Count);
+
+            while (cellDict[num.ToString()].GetCompatibleNeighbors(new Vector2(0,1)).Count <= 0)
+            {
+                num = random.Next(cellDict.Count);
+            }
+
+            // Copy over first cell
+            cellArray[0, 0] = CreateCell(cellDict[num.ToString()], position);
+
+            // Loop through all vertices and create the board
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    Cell cell = cellArray[i,j];
+
+                    if (cell != null) continue;
+
+                    Dictionary<Vector2, List<string>> comDir = new Dictionary<Vector2, List<string>>();
+
+                    comDir.Add(new Vector2(-1, 0), new List<string>());
+                    comDir.Add(new Vector2(1, 0), new List<string>());
+                    comDir.Add(new Vector2(0, -1), new List<string>());
+                    comDir.Add(new Vector2(0, 1), new List<string>());
+
+                    // Get all compatible directions from neighbors
+                    for (int k = 0; k < directions.Count; k++)
+                    {
+                        int x = i + (int)directions[k].X;
+                        int y = j + (int)directions[k].Y;
+
+                        // Check if directions are in the array
+                        if (IsInArray(x, y, cellArray) && cellArray[x,y] != null)
+                        {
+                            Cell temp = cellArray[x, y];
+
+                            comDir[directions[k]] = temp.GetCompatibleNeighbors(-directions[k]);
+                        }
+                    }
+
+                    List<string> masterList = new List<string>();
+
+                    for (int k = 0; k < comDir.Count; k++)
+                    {
+                        masterList.AddRange(comDir.Values.ToArray()[k]);
+                    }
+
+                    for (int k = 0;k < comDir.Count; k++)
+                    {
+                        if (comDir.Values.ToArray()[k].Count <= 0) continue;
+
+                        masterList = masterList.Intersect(comDir.Values.ToArray()[k]).ToList();
+                    }
+
+                    if (masterList.Count <= 0) 
+                    { 
+
+
+                        continue; 
+                    }
+
+                    cellArray[i, j] = CreateCell(cellDict[masterList[random.Next(masterList.Count)]], new Vector2(i * scale, j * scale) + position);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Will return if a position is in the 2D array
+        /// </summary>
+        /// <param name="arrayPos"></param>
+        /// <param name="cellArray"></param>
+        /// <returns></returns>
+        private bool IsInArray(int[] arrayPos, Cell[,] cellArray)
         {
             return
                 arrayPos[0] < cellArray.GetLength(0) && arrayPos[1] < cellArray.GetLength(1) &&
                 arrayPos[0] >= 0 && arrayPos[1] >= 0;
+        }
+
+        private bool IsInArray(int x, int y, Cell[,] cellArray)
+        {
+            return
+                x < cellArray.GetLength(0) && y < cellArray.GetLength(1) &&
+                x >= 0 && y >= 0;
+        }
+
+        /// <summary>
+        /// Copies info from cell to create a new cell
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private Cell CreateCell(Cell cell, Vector2 pos)
+        {
+            Dictionary<Vector2,List<string>> comDir = cell.CompatibleDirections;
+
+            Cell temp = new Cell(cell.Asset, pos);
+            temp.SetNeighbors(comDir.ElementAt(0).Value, comDir.ElementAt(1).Value, comDir.ElementAt(2).Value, comDir.ElementAt(3).Value);
+            temp.HasCollapsed = true;
+
+            return temp;
         }
 
         public void Draw(SpriteBatch spriteBatch)

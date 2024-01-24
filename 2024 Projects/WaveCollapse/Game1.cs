@@ -47,7 +47,9 @@ namespace WaveCollapse
 
             Cells.GenerateCells(tileAssets);
 
-            cellMap = new CellMap(new Vector2(0, 0), 5, 5, 50, Cells.CellDict);
+            cellMap = new CellMap(new Vector2(0, 0), 10, 10, 50, Cells.CellDict);
+
+            cellMap.CreateBoard();
         }
 
         protected override void Update(GameTime gameTime)

@@ -19,6 +19,7 @@ namespace WaveCollapse
         public Texture2D Asset { get { return asset; } }
         public Vector2 Position { get { return position; } set { position = value; } }
         public bool HasCollapsed { get; set; }
+        public Dictionary<Vector2, List<string>> CompatibleDirections { get { return compatibleDirections; } }
 
         public Cell(Texture2D asset, Vector2 position)
         {
@@ -28,8 +29,8 @@ namespace WaveCollapse
 
             this.compatibleDirections.Add(new Vector2(-1, 0), new List<string>());
             this.compatibleDirections.Add(new Vector2(1, 0), new List<string>());
-            this.compatibleDirections.Add(new Vector2(0, 1), new List<string>());
             this.compatibleDirections.Add(new Vector2(0, -1), new List<string>());
+            this.compatibleDirections.Add(new Vector2(0, 1), new List<string>());
         }
 
         public List<string> GetCompatibleNeighbors(Vector2 direction)
