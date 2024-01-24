@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,8 @@ namespace WaveCollapse
         public Cell[,] CellArray { get { return cellArray; } }
         public Vector2 Position { get { return position; } }
 
+        private float timeOfLastFrame = 0;
+
         public CellMap(Vector2 position, int width, int height, int scale, Dictionary<string, Cell> cellDict)
         {
             this.cellArray = new Cell[width, height];
@@ -60,11 +63,18 @@ namespace WaveCollapse
 
         public void Update(GameTime gameTime)
         {
-            
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                CreateBoard(gameTime);
+            }
+
+            timeOfLastFrame = (float)gameTime.TotalGameTime.TotalSeconds;
         }
 
-        public void CreateBoard()
+        public void CreateBoard(GameTime gameTime)
         {
+            cellArray = new Cell[width, height];
+
             // Create random cell from cell dict and make sure it is a viable cell
             int num = random.Next(1, cellDict.Count);
 
@@ -121,9 +131,12 @@ namespace WaveCollapse
                         masterList = masterList.Intersect(comDir.Values.ToArray()[k]).ToList();
                     }
 
-                    if (masterList.Count <= 0) 
-                    { 
-
+                    if (masterList.Count <= 0 || (masterList.Contains("0"))) 
+                    {
+                        cellArray = new Cell[width, height];
+                        cellArray[0, 0] = CreateCell(cellDict[num.ToString()], position);
+                        i = 0;
+                        j = 0;
 
                         continue; 
                     }
