@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.IO;
 
 namespace WaveCollapse___After
@@ -12,7 +13,7 @@ namespace WaveCollapse___After
 
         private CellGrid cellGrid;
 
-        private Texture2D[] assets;
+        private Dictionary<int, Texture2D> assets;
 
         public Game1()
         {
@@ -24,10 +25,7 @@ namespace WaveCollapse___After
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            cellGrid = new CellGrid(5,5,assets, Point.Zero, 50);
-
-            cellGrid.CreateGrid();
-            cellGrid.CreateCellOptionList();
+            
 
             base.Initialize();
         }
@@ -38,14 +36,19 @@ namespace WaveCollapse___After
 
             FileInfo[] files = FileIO.GetFiles(".png");
 
-            assets = new Texture2D[files.Length];
+            assets = new Dictionary<int, Texture2D>();
             string[] names = new string[files.Length];
 
             for (int i = 0; i < names.Length; i++)
             {
                 names[i] = files[i].Name.Remove(files[i].Name.Length - 4, 4);
-                assets[i] = Content.Load<Texture2D>("../../../Content/tiles/" + names[i]);
+                assets.Add(i+1, Content.Load<Texture2D>("../../../Content/tiles/" + names[i]));
             }
+
+            cellGrid = new CellGrid(3, 3, assets, Point.Zero, 50);
+            cellGrid.CreateCellOptionList();
+            cellGrid.CreateGrid();
+            cellGrid.Collapse();
 
             // TODO: use this.Content to load your game content here
         }
@@ -65,7 +68,7 @@ namespace WaveCollapse___After
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            //cellMap.Draw(_spriteBatch);
+            cellGrid.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
