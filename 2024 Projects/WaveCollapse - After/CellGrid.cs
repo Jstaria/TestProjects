@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WaveCollapse___After
@@ -59,6 +60,7 @@ namespace WaveCollapse___After
         {
             if (numCollapsed >= cellGrid.Length)
             {
+                Thread.Sleep(2000);
                 CreateGrid();
                 return;
             }
