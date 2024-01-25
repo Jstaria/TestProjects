@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +13,6 @@ namespace WaveCollapse___After
     internal class CellGrid
     {
         private Cell[,] cellGrid;
-        private Cell[] cellArray;
         private Point position;
         private Dictionary<int, Texture2D> assets;
 
@@ -25,10 +26,12 @@ namespace WaveCollapse___After
         private List<List<int>>[] allCellOptions;
         private List<Point> directions;
 
+        private Cell currentCell;
+        private int numCollapsed = 0;
+
         public CellGrid(int width, int height, Dictionary<int, Texture2D> assets, Point position, int scale)
         {
             this.cellGrid = new Cell[width, height];
-            this.cellArray = new Cell[cellGrid.Length];
             this.assets = assets;
             this.position = position;
 
@@ -40,9 +43,11 @@ namespace WaveCollapse___After
 
             this.directions = new List<Point>();
             this.directions.Add(new Point(-1, 0));
-            this.directions.Add(new Point(1, 0));
             this.directions.Add(new Point(0, -1));
+            this.directions.Add(new Point(1, 0));
             this.directions.Add(new Point(0, 1));
+
+            this.currentCell = cellGrid[0, 0];
         }
 
         public void Update()
@@ -50,43 +55,121 @@ namespace WaveCollapse___After
 
         }
 
+        public void Collapse1By1()
+        {
+            if (numCollapsed >= cellGrid.Length)
+            {
+                CreateGrid();
+                return;
+            }
+
+            foreach (Cell cell in cellGrid)
+            {
+                if (cell.HasCollapsed) continue;
+
+                currentCell = cell;
+            }
+
+            List<int> optionsList = new List<int>();
+
+            for (int i = 0; i < cellGrid.GetLength(0); i++)
+            {
+                for (int j = 0; j < cellGrid.GetLength(1); j++)
+                {
+                    Cell cell = cellGrid[i, j];
+                    
+                    if (cell.HasCollapsed) continue;
+
+                    if (cell.Options.Count < currentCell.Options.Count)
+                    {
+                        currentCell = cell;
+                    }
+                }
+            }
+
+            if (currentCell.Options.Count == 0)
+            {
+                CreateGrid();
+                return;
+            }
+
+            int randomOption = currentCell.Options[random.Next(currentCell.Options.Count)];
+            optionsList.Add(randomOption);
+            currentCell.Options = optionsList;
+            currentCell.HasCollapsed = true;
+            currentCell.Asset = assets[optionsList[0]];
+            //Debug.WriteLine(currentCell.ArrayPosition[0] + "," + currentCell.ArrayPosition[1]);
+
+            numCollapsed++;
+
+            for (int k = 0; k < directions.Count; k++)
+            {
+                int tempX = currentCell.ArrayPosition[0] + directions[k].X;
+                int tempY = currentCell.ArrayPosition[1] + directions[k].Y;
+
+                //Debug.WriteLine("temp: " + tempX + "," + tempY);
+
+                if (IsInArray(tempX, tempY, cellGrid) && !cellGrid[tempX, tempY].HasCollapsed)
+                {
+                    int cellNum = currentCell.Options[0] - 1;
+                    int dirNum = (k) % directions.Count;
+                    cellGrid[tempX, tempY].Options = cellGrid[tempX, tempY].Options.Intersect(allCellOptions[cellNum][dirNum]).ToList();
+                }
+            }
+        }
+
         public void Collapse()
         {
-            for (int i = 0; i < cellArray.Length; i++)
+            int numCollapsed = 0;
+            Cell currentCell = cellGrid[0, 0];
+
+            do
             {
-                Cell currentCell = cellArray[0];
-                int[] options = new int[0];
+                foreach (Cell cell in cellGrid)
+                {
+                    if (cell.HasCollapsed) continue;
+
+                    currentCell = cell;
+                }
+
                 List<int> optionsList = new List<int>();
 
-                for (int j = 0; j < cellArray.Length; j++)
+                foreach (Cell cell in cellGrid)
                 {
-                    if ((cellArray[j].HasCollapsed || cellArray[j].Options.Count == this.options.Count) && i > 0) continue;
+                    if (cell.HasCollapsed) continue;
 
-                    if (cellArray[j].Options.Count < currentCell.Options.Count)
+                    if (cell.Options.Count <= currentCell.Options.Count)
                     {
-                        currentCell = cellArray[j];
+                        currentCell = cell;
                     }
                 }
 
-                options = currentCell.Options.ToArray();
-                optionsList.Add(options[random.Next(options.Length)]);
+                int randomOption = currentCell.Options[random.Next(currentCell.Options.Count)];
+                optionsList.Add(randomOption);
                 currentCell.Options = optionsList;
                 currentCell.HasCollapsed = true;
                 currentCell.Asset = assets[optionsList[0]];
+                Debug.WriteLine(currentCell.ArrayPosition[0] + "," + currentCell.ArrayPosition[1]);
+
+                numCollapsed++;
 
                 for (int k = 0; k < directions.Count; k++)
                 {
                     int tempX = currentCell.ArrayPosition[0] + directions[k].X;
                     int tempY = currentCell.ArrayPosition[1] + directions[k].Y;
 
-                    if (IsInArray(tempX,tempY, cellGrid) && !cellGrid[tempX,tempY].HasCollapsed)
+                    Debug.WriteLine("temp: " + tempX + "," + tempY);
+
+                    if (IsInArray(tempX, tempY, cellGrid) && !cellGrid[tempX, tempY].HasCollapsed)
                     {
                         int cellNum = currentCell.Options[0] - 1;
-                        int dirNum = (k + 2) % directions.Count;
-                        cellGrid[tempX, tempY].Options.Intersect(allCellOptions[cellNum][dirNum]).ToList(); 
+                        int dirNum = (k) % directions.Count;
+                        cellGrid[tempX, tempY].Options = cellGrid[tempX, tempY].Options.Intersect(allCellOptions[cellNum][dirNum]).ToList();
                     }
                 }
-            }
+
+
+            } while (numCollapsed < cellGrid.Length);
         }
 
         private bool IsInArray(int x, int y, Cell[,] cellArray)
@@ -99,9 +182,8 @@ namespace WaveCollapse___After
         // Set generic variables for the grid cells
         public void CreateGrid()
         {
+            numCollapsed = 0;
             cellGrid = new Cell[width, height];
-
-            int index = 0;
 
             for (int i = 0; i < width; i++)
             {
@@ -109,8 +191,6 @@ namespace WaveCollapse___After
                 {
                     cellGrid[i, j] = new Cell(options, new Point(i * scale + position.X, j * scale + position.Y));
                     cellGrid[i, j].ArrayPosition = new int[] { i, j };
-
-                    cellArray[index++] = cellGrid[i, j];
                 }
             }
         }
@@ -145,19 +225,19 @@ namespace WaveCollapse___After
                 for (int j = 1; j < cellData.Length; j++)
                 {
 
-                    switch(cellData[j])
+                    switch (cellData[j])
                     {
                         case "Left":
 
                             currentList = allCellOptions[i][0];
                             break;
 
-                        case "Right":
+                        case "Up":
 
                             currentList = allCellOptions[i][1];
                             break;
 
-                        case "Up":
+                        case "Right":
 
                             currentList = allCellOptions[i][2];
                             break;

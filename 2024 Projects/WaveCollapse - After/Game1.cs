@@ -20,6 +20,9 @@ namespace WaveCollapse___After
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = 1000;
+            _graphics.PreferredBackBufferHeight = 1000;
         }
 
         protected override void Initialize()
@@ -45,10 +48,10 @@ namespace WaveCollapse___After
                 assets.Add(i+1, Content.Load<Texture2D>("../../../Content/tiles/" + names[i]));
             }
 
-            cellGrid = new CellGrid(3, 3, assets, Point.Zero, 50);
+            cellGrid = new CellGrid(20, 20, assets, Point.Zero, 50);
             cellGrid.CreateCellOptionList();
             cellGrid.CreateGrid();
-            cellGrid.Collapse();
+            //cellGrid.Collapse();
 
             // TODO: use this.Content to load your game content here
         }
@@ -58,7 +61,7 @@ namespace WaveCollapse___After
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            cellGrid.Collapse1By1();
 
             base.Update(gameTime);
         }
