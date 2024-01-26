@@ -48,7 +48,7 @@ namespace WaveCollapse___After
                 assets.Add(i+1, Content.Load<Texture2D>("../../../Content/tiles/" + names[i]));
             }
 
-            cellGrid = new CellGrid(33, 33, assets, Point.Zero, 33);
+            cellGrid = new CellGrid(20, 20, assets, Point.Zero, 50);
             cellGrid.CreateCellOptionList();
             cellGrid.CreateGrid();
             //cellGrid.Collapse();
@@ -62,6 +62,8 @@ namespace WaveCollapse___After
                 Exit();
 
             cellGrid.Collapse1By1();
+            
+            //cellGrid.Collapse1By1Listed();
 
             base.Update(gameTime);
         }

@@ -30,6 +30,8 @@ namespace WaveCollapse___After
         private Cell currentCell;
         private int numCollapsed = 0;
 
+        private List<Cell> nextCells;
+
         public CellGrid(int width, int height, Dictionary<int, Texture2D> assets, Point position, int scale)
         {
             this.cellGrid = new Cell[width, height];
@@ -49,11 +51,65 @@ namespace WaveCollapse___After
             this.directions.Add(new Point(0, 1));
 
             this.currentCell = cellGrid[0, 0];
+            this.nextCells = new List<Cell>();
         }
 
-        public void Update()
+        public void Collapse1By1Listed()
         {
+            if (nextCells.Count == 0)
+            {
+                Thread.Sleep(2000);
+                CreateGrid();
+                return;
+            }
 
+            currentCell = nextCells[0];
+
+            List<int> optionsList = new List<int>();
+
+            for (int i = 0; i < nextCells.Count; i++)
+            {
+                Cell cell = nextCells[i];
+
+                if (cell.HasCollapsed) continue;
+
+                if (cell.Options.Count < currentCell.Options.Count)
+                {
+                    currentCell = cell;
+                }
+            }
+
+            if (currentCell.Options.Count == 0)
+            {
+                CreateGrid();
+                return;
+            }
+
+            int randomOption = currentCell.Options[random.Next(currentCell.Options.Count)];
+            optionsList.Add(randomOption);
+            currentCell.Options = optionsList;
+            currentCell.HasCollapsed = true;
+            nextCells.Remove(currentCell);
+            currentCell.Asset = assets[optionsList[0]];
+            //Debug.WriteLine(currentCell.ArrayPosition[0] + "," + currentCell.ArrayPosition[1]);
+
+            numCollapsed++;
+
+            for (int k = 0; k < directions.Count; k++)
+            {
+                int tempX = currentCell.ArrayPosition[0] + directions[k].X;
+                int tempY = currentCell.ArrayPosition[1] + directions[k].Y;
+
+                //Debug.WriteLine("temp: " + tempX + "," + tempY);
+
+                if (IsInArray(tempX, tempY, cellGrid) && !cellGrid[tempX, tempY].HasCollapsed)
+                {
+                    int cellNum = currentCell.Options[0] - 1;
+                    int dirNum = (k) % directions.Count;
+                    cellGrid[tempX, tempY].Options = cellGrid[tempX, tempY].Options.Intersect(allCellOptions[cellNum][dirNum]).ToList();
+                    nextCells.Add(cellGrid[tempX,tempY]);
+                }
+            }
         }
 
         public void Collapse1By1()
@@ -79,7 +135,7 @@ namespace WaveCollapse___After
                 for (int j = 0; j < cellGrid.GetLength(1); j++)
                 {
                     Cell cell = cellGrid[i, j];
-                    
+
                     if (cell.HasCollapsed) continue;
 
                     if (cell.Options.Count < currentCell.Options.Count)
@@ -186,6 +242,7 @@ namespace WaveCollapse___After
         {
             numCollapsed = 0;
             cellGrid = new Cell[width, height];
+            nextCells = new List<Cell>();
 
             for (int i = 0; i < width; i++)
             {
@@ -195,6 +252,8 @@ namespace WaveCollapse___After
                     cellGrid[i, j].ArrayPosition = new int[] { i, j };
                 }
             }
+
+            nextCells.Add(cellGrid[0, 0]);
         }
 
         public void CreateCellOptionList()
