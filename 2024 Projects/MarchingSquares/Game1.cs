@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AfterImage;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,11 +10,18 @@ namespace MarchingSquares
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Texture2D circleAsset;
+
+        private MarchingSquares squares;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = 1000;
+            _graphics.PreferredBackBufferHeight = 1000;
         }
 
         protected override void Initialize()
@@ -26,6 +34,11 @@ namespace MarchingSquares
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            circleAsset = Content.Load<Texture2D>("circle");
+
+            squares = new MarchingSquares(10, 10, 99, circleAsset);
+            squares.SetValuesRandomly();
 
             // TODO: use this.Content to load your game content here
         }
@@ -42,9 +55,14 @@ namespace MarchingSquares
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
 
+            ShapeBatch.Begin(_graphics.GraphicsDevice);
+
+            squares.Draw();
             // TODO: Add your drawing code here
+
+            ShapeBatch.End();
 
             base.Draw(gameTime);
         }
