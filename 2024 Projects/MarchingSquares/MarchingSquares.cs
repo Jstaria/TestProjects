@@ -30,7 +30,7 @@ namespace MarchingSquares
 
             this.squareArray = new int[width + 1, height + 1];
 
-            this.random = new Random(0);
+            this.random = new Random();
 
             this.circleAsset = circleAsset;
             this.scale = scale;
@@ -53,7 +53,7 @@ namespace MarchingSquares
         {
             Vector2 a = new Vector2(scale * .5f, 0); // top edge
             Vector2 b = new Vector2(scale, scale * .5f);   // right edge
-            Vector2 c = new Vector2(scale, scale * .5f);  // bottom edge
+            Vector2 c = new Vector2(scale * .5f, scale);  // bottom edge
             Vector2 d = new Vector2(0, scale * .5f);  // left edge
 
             Lines = new Dictionary<string, Vector2>()
@@ -72,22 +72,34 @@ namespace MarchingSquares
 
         public void Draw()
         {
-            for (int i = 0; i < squareArray.GetLength(0) - 1; i++)
+            for (int i = 0; i < width; i++)
             {
-                for (int j = 0; j < squareArray.GetLength(1) - 1; j++)
+                for (int j = 0; j < height; j++)
                 {
                     Vector2 position = new Vector2(i * scale, j * scale);
 
                     ShapeBatch.Circle(position, scale / 10, new Color(255 * squareArray[i, j], 255 * squareArray[i, j], 255 * squareArray[i, j]));
 
-                    int aa = squareArray[i, j];
-                    int ab = squareArray[i + 1, j];
-                    int ba = squareArray[i, j + 1];
-                    int bb = squareArray[i + 1, j + 1];
+                    int a = squareArray[i, j];
+                    int b = squareArray[i + 1, j];
+                    int c = squareArray[i + 1, j + 1];
+                    int d = squareArray[i, j + 1];
 
-                    int triangleNum = aa * 8 + ab * 4 + ba * 2 + bb * 1;
+                    int triangleNum = GetState(a, b, c, d);
+
+                    //position += new Vector2(scale / 2, scale / 2);
 
                     DrawLine(triangleNum, scale / 10, Color.White, position);
+                }
+            }
+
+            for (int i = 0; i < width + 1; i++)
+            {
+                for (int j = 0; j < height + 1; j++)
+                {
+                    Vector2 position = new Vector2(i * scale, j * scale);
+
+                    ShapeBatch.Circle(position, scale / 10, new Color(255 * squareArray[i, j], 255 * squareArray[i, j], 255 * squareArray[i, j]));
                 }
             }
         }

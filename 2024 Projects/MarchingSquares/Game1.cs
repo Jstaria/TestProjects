@@ -37,7 +37,7 @@ namespace MarchingSquares
 
             circleAsset = Content.Load<Texture2D>("circle");
 
-            squares = new MarchingSquares(10, 10, 99, circleAsset);
+            squares = new MarchingSquares(200, 200, 5, circleAsset);
             squares.SetValuesRandomly();
 
             // TODO: use this.Content to load your game content here
@@ -55,7 +55,7 @@ namespace MarchingSquares
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Gray);
+            GraphicsDevice.Clear(Color.Black);
 
             ShapeBatch.Begin(_graphics.GraphicsDevice);
 
