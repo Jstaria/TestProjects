@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace AfterImage
+namespace MarchingSquares
 {
 	/// <summary>
 	/// Allows simple shapes to be drawn in MonoGame.  These shapes

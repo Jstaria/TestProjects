@@ -1,10 +1,15 @@
-﻿using AfterImage;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace MarchingSquares
 {
+    public enum Smoothing
+    {
+        None,
+        Smoothed
+    }
+
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -14,13 +19,16 @@ namespace MarchingSquares
 
         private MarchingSquares squares;
 
+        private Smoothing smoothState;
+        private KeyboardState prevKB;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferWidth = 1000;
+            _graphics.PreferredBackBufferWidth = 1500;
             _graphics.PreferredBackBufferHeight = 1000;
         }
 
@@ -37,9 +45,8 @@ namespace MarchingSquares
 
             circleAsset = Content.Load<Texture2D>("circle");
 
-            squares = new MarchingSquares(250, 250, 4, circleAsset);
-            squares.SetValuesRandomly();
-
+            squares = new MarchingSquares(150, 100, _graphics.PreferredBackBufferHeight, circleAsset, .1f, .005f);
+            //squares.SetValuesRandomly();
             // TODO: use this.Content to load your game content here
         }
 
@@ -48,7 +55,16 @@ namespace MarchingSquares
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            KeyboardState kb = Keyboard.GetState();
+
+            squares.Update();
+
+            if (kb.IsKeyDown(Keys.Space) && prevKB.IsKeyUp(Keys.Space))
+            {
+                smoothState = (Smoothing)(((int)smoothState + 1) % 2);
+            }
+
+            prevKB = kb;
 
             base.Update(gameTime);
         }
@@ -59,7 +75,18 @@ namespace MarchingSquares
 
             ShapeBatch.Begin(_graphics.GraphicsDevice);
 
-            squares.Draw();
+            switch(smoothState)
+            {
+                case Smoothing.None:
+                    squares.Draw();
+                    break;
+
+                case Smoothing.Smoothed:
+                    squares.DrawSmooth();
+                    break;
+            }
+
+            
             // TODO: Add your drawing code here
 
             ShapeBatch.End();
