@@ -148,7 +148,7 @@ namespace FallingSand
                     int sandX = (int)MathF.Floor(mouse.X / scale);
                     int sandY = (int)MathF.Floor(mouse.Y / scale);
 
-                    if (strokeSize > 2)
+                    if (strokeSize > 1)
                     {
                         for (int i = -strokeSize / 2; i < strokeSize / 2; i++)
                         {
@@ -160,7 +160,10 @@ namespace FallingSand
                         }
                     }
 
-                    else { }
+                    else
+                    {
+                        sandBox[sandX, sandY] = new SandParticle(getRGB(HueValue, .95f, 1f), 1);
+                    }
 
                     
                     HueValue = (HueValue + 1) % 360;

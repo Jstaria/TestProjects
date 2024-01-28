@@ -25,7 +25,7 @@ namespace FallingSand
         {
             // TODO: Add your initialization logic here
 
-            box = new SandBox(250, 250, _graphics.PreferredBackBufferHeight,1);
+            box = new SandBox(250, 250, _graphics.PreferredBackBufferHeight,6);
 
             base.Initialize();
         }
@@ -51,7 +51,7 @@ namespace FallingSand
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
