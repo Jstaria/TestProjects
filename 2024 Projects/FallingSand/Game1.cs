@@ -25,7 +25,7 @@ namespace FallingSand
         {
             // TODO: Add your initialization logic here
 
-            box = new SandBox(100, 100, _graphics.PreferredBackBufferHeight);
+            box = new SandBox(250, 250, _graphics.PreferredBackBufferHeight,1);
 
             base.Initialize();
         }
