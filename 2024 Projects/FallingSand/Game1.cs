@@ -11,6 +11,8 @@ namespace FallingSand
 
         private SandBox box;
 
+        public static SpriteFont basicFont;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -25,7 +27,7 @@ namespace FallingSand
         {
             // TODO: Add your initialization logic here
 
-            box = new SandBox(250, 250, _graphics.PreferredBackBufferHeight,6);
+            box = new SandBox(250, 250, _graphics.PreferredBackBufferHeight,15, 6);
 
             base.Initialize();
         }
@@ -33,6 +35,8 @@ namespace FallingSand
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            basicFont = Content.Load<SpriteFont>("basicFont");
 
             // TODO: use this.Content to load your game content here
         }
@@ -59,7 +63,17 @@ namespace FallingSand
 
             box.Draw();
 
+            ShapeBatch.Box(new Rectangle(10, 10, 400, 80), Color.DarkGray * .25f);
+
             ShapeBatch.End();
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.DrawString(basicFont, "Brush: " + box.CurrentState.ToString(), new Vector2(20, 20), Color.White);
+            _spriteBatch.DrawString(basicFont, "Press RMB to change brush", new Vector2(20, 50), Color.White);
+
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

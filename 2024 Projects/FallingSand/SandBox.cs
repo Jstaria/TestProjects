@@ -10,6 +10,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FallingSand
 {
+    public enum BrushState
+    {
+        Sand,
+        Barrier,
+        Dupe,
+        Erase
+    }
+
     internal class SandBox
     {
         private SandParticle[,] sandBox;
@@ -19,10 +27,17 @@ namespace FallingSand
         private Random random = new Random();
 
         private int HueValue = 0;
+        private int DupeHue = 0;
 
         private int strokeSize;
+        private int rightStrokeSize;
 
-        public SandBox(int width, int height, int screenHeight, int strokeSize)
+        private BrushState currentBrush = BrushState.Sand;
+        private MouseState prevMouse;
+
+        public BrushState CurrentState { get { return currentBrush; } }
+
+        public SandBox(int width, int height, int screenHeight, int strokeSize, int rightStrokeSize)
         {
             this.width = width;
             this.height = height;
@@ -40,17 +55,20 @@ namespace FallingSand
             sandBox[width / 2, 0] = new SandParticle(Color.White, 1);
 
             this.strokeSize = strokeSize;
+            this.rightStrokeSize = rightStrokeSize;
         }
 
         public void Update()
         {
             SandParticle[,] newSandBox = new SandParticle[width, height];
 
+            DupeHue = (DupeHue + 1) % 360;
+
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    newSandBox[i, j] = new SandParticle(sandBox[i,j].Color, 0);
+                    newSandBox[i, j] = new SandParticle(sandBox[i, j].Color, 0);
                 }
             }
 
@@ -60,12 +78,37 @@ namespace FallingSand
                 {
                     if (sandBox[i, j].State == 0)
                         continue;
+                    else if (sandBox[i, j].State == 2)
+                    {
+                        newSandBox[i, j] = sandBox[i, j];
+                        continue;
+                    }
+                    else if (sandBox[i, j].State == 3)
+                    {
+                        newSandBox[i, j] = sandBox[i, j];
+
+                        if (IsInArray(i, j + 1, sandBox))
+                        {
+                            newSandBox[i, j + 1].Color = getRGB();
+                            newSandBox[i, j + 1].State = 1;
+                        }
+
+                        continue;
+                    }
 
                     int RandomDir = random.Next(2);
 
-                    if (!IsInArray(i, j + 1, sandBox) || sandBox[i, j + 1].State == 1)
+                    if (!IsInArray(i, j + 1, sandBox) || sandBox[i, j + 1].State > 0)
                     {
                         newSandBox[i, j].State = 1;
+
+                        if (RandomDir == 1 && IsInArray(i - 1, j + 1, sandBox) && sandBox[i, j + 1].State == 1 && sandBox[i - 1, j + 1].State == 0 && newSandBox[i - 1, j + 1].State == 0)
+                        {
+                            newSandBox[i - 1, j + 1] = sandBox[i, j];
+                            newSandBox[i, j].State = 0;
+                            newSandBox[i - 1, j + 1].Color = sandBox[i, j].Color;
+                            newSandBox[i - 1, j + 1].State = 1;
+                        }
 
                         if (RandomDir == 0 && IsInArray(i + 1, j + 1, sandBox) && sandBox[i, j + 1].State == 1 && sandBox[i + 1, j + 1].State == 0 && newSandBox[i + 1, j + 1].State == 0)
                         {
@@ -75,21 +118,15 @@ namespace FallingSand
                             newSandBox[i + 1, j + 1].State = 1;
                         }
 
-                        else if (RandomDir == 1 && IsInArray(i - 1, j + 1, sandBox) && sandBox[i, j + 1].State == 1 && sandBox[i - 1, j + 1].State == 0 && newSandBox[i - 1, j + 1].State == 0)
-                        {
-                            newSandBox[i - 1, j + 1] = sandBox[i, j];
-                            newSandBox[i, j].State = 0;
-                            newSandBox[i - 1, j + 1].Color = sandBox[i, j].Color;
-                            newSandBox[i - 1, j + 1].State = 1;
-                        }
+
                     }
-                    else if (newSandBox[i, j + 1].State == 0)
+                    else if (newSandBox[i, j + 1].State == 0 && sandBox[i, j + 1].State == 0)
                     {
                         newSandBox[i, j + 1] = sandBox[i, j];
                         newSandBox[i, j + 1].Color = sandBox[i, j].Color;
                         newSandBox[i, j].State = 0;
                         newSandBox[i, j + 1].State = 1;
-                        
+
                     }
                 }
             }
@@ -137,38 +174,102 @@ namespace FallingSand
             return new Color(0, 0, 0);
         }
 
+        public Color getRGB()
+        {
+            return getRGB(DupeHue, .95f, 1f);
+        }
+
         private void CheckMouse()
         {
             MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
 
-            if (mouse.X > 0 && mouse.Y > 0 && mouse.X < width * scale && mouse.Y < height * scale)
+            if (mouse.RightButton == ButtonState.Pressed && prevMouse.RightButton == ButtonState.Released)
             {
-                if (mouse.LeftButton == ButtonState.Pressed)
-                {
-                    int sandX = (int)MathF.Floor(mouse.X / scale);
-                    int sandY = (int)MathF.Floor(mouse.Y / scale);
+                currentBrush = (BrushState)(((int)currentBrush + 1) % 4);
+            }
 
-                    if (strokeSize > 1)
-                    {
-                        for (int i = -strokeSize / 2; i < strokeSize / 2; i++)
+            if (mouse.X > 0 && mouse.Y > 0 && mouse.X < width * scale && mouse.Y < height * scale && mouse.LeftButton == ButtonState.Pressed)
+            {
+                int sandX = (int)MathF.Floor(mouse.X / scale);
+                int sandY = (int)MathF.Floor(mouse.Y / scale);
+
+                switch (currentBrush)
+                {
+                    case BrushState.Sand:
+
+                        if (strokeSize > 1)
                         {
-                            for (int j = -strokeSize / 2; j < strokeSize / 2; j++)
+                            for (int i = -strokeSize / 2; i < strokeSize / 2; i++)
                             {
-                                if (!IsInArray(sandX + i, sandY + j, sandBox) || random.NextDouble() < .5) continue;
-                                sandBox[sandX + i, sandY + j] = new SandParticle(getRGB(HueValue, .95f, 1f), 1);
+                                for (int j = -strokeSize / 2; j < strokeSize / 2; j++)
+                                {
+                                    if (!IsInArray(sandX + i, sandY + j, sandBox) || random.NextDouble() < .75) continue;
+                                    sandBox[sandX + i, sandY + j] = new SandParticle(getRGB((HueValue + random.Next(-10, 10)) % 360, .95f, 1f), 1);
+                                }
                             }
                         }
-                    }
 
-                    else
-                    {
-                        sandBox[sandX, sandY] = new SandParticle(getRGB(HueValue, .95f, 1f), 1);
-                    }
+                        else
+                        {
+                            sandBox[sandX, sandY] = new SandParticle(getRGB((HueValue + random.Next(-10, 10)) % 360, .95f, 1f), 1);
+                        }
 
-                    
-                    HueValue = (HueValue + 1) % 360;
+
+                        HueValue = (HueValue + 1) % 360;
+
+                        break;
+
+                    case BrushState.Barrier:
+
+                        if (rightStrokeSize > 1)
+                        {
+                            for (int i = -rightStrokeSize / 2; i < rightStrokeSize / 2; i++)
+                            {
+                                for (int j = -rightStrokeSize / 2; j < rightStrokeSize / 2; j++)
+                                {
+                                    if (!IsInArray(sandX + i, sandY + j, sandBox)) continue;
+                                    sandBox[sandX + i, sandY + j] = new SandParticle(Color.DarkGray, 2);
+                                }
+                            }
+                        }
+
+                        else
+                        {
+                            sandBox[sandX, sandY] = new SandParticle(Color.DarkGray, 2);
+                        }
+
+                        break;
+
+                    case BrushState.Dupe:
+
+                        sandBox[sandX, sandY] = new SandParticle(Color.Brown, 3);
+
+                        break;
+
+                    case BrushState.Erase:
+
+                        if (strokeSize > 1)
+                        {
+                            for (int i = -strokeSize / 3; i < strokeSize / 3; i++)
+                            {
+                                for (int j = -strokeSize / 3; j < strokeSize / 3; j++)
+                                {
+                                    if (!IsInArray(sandX + i, sandY + j, sandBox)) continue;
+                                    sandBox[sandX + i, sandY + j].State = 0;
+                                }
+                            }
+                        }
+
+                        else
+                        {
+                            sandBox[sandX, sandY].State = 0;
+                        }
+
+                        break;
                 }
             }
+            prevMouse = mouse;
         }
 
         private bool IsInArray(int x, int y, SandParticle[,] cellArray)
