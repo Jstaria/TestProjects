@@ -15,15 +15,20 @@ void LoadContent() {
     sprite.setTexture(texture);
 }
 
-void Draw(RenderTarget& target) {
+void Draw(RenderTexture& target) {
     player->Draw(target);
 }
 
 int main()
 {
+    LoadContent();
+
+    sf::RenderTexture renderTexture;
+    renderTexture.create(1280, 720);
+
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
 
-    player = new Player(sprite, Vector2f(720,360));
+    player = new Player(texture, Vector2f(640,360));
 
     while (window.isOpen())
     {
@@ -33,11 +38,17 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-
-
-        window.clear();
         
+        renderTexture.clear(Color::White);
+
+        Draw(renderTexture);
+
+        renderTexture.display();
+
+        Sprite renderSprite(renderTexture.getTexture());
+
+        window.clear(Color::White);
+        window.draw(renderSprite);
         window.display();
     }  
 

@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
@@ -7,14 +10,21 @@ using namespace std;
 
 class Entity {
 
-private:
+protected:
 
-	Sprite& sprite;
+	Texture& texture;
 	Vector2f position;
 
 public:
 
-	Entity(Sprite& sprite, Vector2f position);
+	Entity(Texture& texture, Vector2f position)
+		: texture(texture), position(position) {
+	}
 
-	void Draw(RenderTexture& target);
+	void Draw(RenderTexture& target);/* {
+		sprite.setPosition(position);
+		target.draw(sprite);
+	}*/
 };
+
+#endif

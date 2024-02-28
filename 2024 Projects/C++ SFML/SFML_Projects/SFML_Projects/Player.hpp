@@ -1,13 +1,14 @@
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
+
 #include <../../SFML_Projects/Entity.hpp>
 
-class Player : Entity {
-
-private:
-	Sprite& sprite;
-	Vector2f position;
+class Player : public Entity {
 
 public:
-	Player(Sprite& sprite, Vector2f position);
+	Player(Texture& texture, Vector2f position);
 
-	void Draw(RenderTarget& target);
+	virtual void Draw(RenderTexture& target);
 };
+
+#endif
