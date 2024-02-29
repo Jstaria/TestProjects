@@ -25,6 +25,8 @@ public:
 		sprite.setPosition(position);
 		target.draw(sprite);
 	}*/
+
+	void Update();
 };
 
 #endif

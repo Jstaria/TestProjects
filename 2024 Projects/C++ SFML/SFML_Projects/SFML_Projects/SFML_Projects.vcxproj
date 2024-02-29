@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="InputController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SFML_Projects.cpp" />
   </ItemGroup>

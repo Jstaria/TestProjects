@@ -5,6 +5,9 @@ unsigned int frameIndex = 0;
 unsigned int rowIndex = 0;
 unsigned int Count = 0;
 
+const int rowCount = 4;
+const int colCount = 4;
+
 Player::Player(Texture& texture, Vector2f position) : Entity(texture, position) {
 	this->texture = texture;
 
@@ -13,6 +16,10 @@ Player::Player(Texture& texture, Vector2f position) : Entity(texture, position) 
 
 IntRect FrameRect(int rowIndex, int frameWidth, int frameHeight) {
 	return IntRect(frameIndex * frameWidth, rowIndex * frameHeight, frameWidth, frameHeight);
+}
+
+void Player::Entity::Update() {
+	position += inputCon->GetDirection();
 }
 
 void Player::Draw(RenderTexture& target) {
@@ -25,8 +32,8 @@ void Player::Draw(RenderTexture& target) {
 
 	target.draw(sprite);
 
-	if (Count % 600 == 0) {
-		frameIndex = (frameIndex + 1) % 4;
+	if (Count % 15 == 0) {
+		frameIndex = (frameIndex + 1) % colCount;
 		Count = 0;
 	}
 	

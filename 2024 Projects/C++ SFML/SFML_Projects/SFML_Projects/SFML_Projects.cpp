@@ -13,6 +13,7 @@ Player* player;
 void LoadContent() {
     texture.loadFromFile("../Images/playerScaled.png");
     sprite.setTexture(texture);
+
 }
 
 void Draw(RenderTexture& target) {
@@ -27,6 +28,8 @@ int main()
     renderTexture.create(1280, 720);
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
+
+    window.setFramerateLimit(60);
 
     player = new Player(texture, Vector2f(640,360));
 
