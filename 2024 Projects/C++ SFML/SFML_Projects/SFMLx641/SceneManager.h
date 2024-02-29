@@ -12,4 +12,6 @@ public:
 	SceneManager();
 
 	static SceneManager* Instance();
+
+	void ChangeState(GameState state);
 };
