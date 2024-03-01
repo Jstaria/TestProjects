@@ -19,18 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="TileData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="HelperFunctions.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="TileData.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

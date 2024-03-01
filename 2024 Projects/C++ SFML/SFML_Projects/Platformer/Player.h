@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <functional>
+#include "HelperFunctions.h"
 
 class Player :
     public Entity
@@ -15,10 +16,9 @@ public:
 
 private:
 
-    int speed;
+    int speedMultiplier;
+    sf::Vector2f direction;
 
-    void SetKeyMap();
     void Move(sf::Vector2f speed);
-    sf::Vector2f Normalize(sf::Vector2f& vector, int multiplier);
 };
 
