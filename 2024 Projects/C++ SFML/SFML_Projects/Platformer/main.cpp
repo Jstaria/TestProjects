@@ -1,210 +1,97 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-using namespace sf;
-using namespace std;
+#include "SceneManager.h"
+#include "FileIO.h"
+#include "Player.h"
 
-const int ROWS = 20;
-const int COLS = 20;
-const int BLOCK_SIZE = 50; // Size of each block in pixels
-char maze[ROWS][COLS] = {
-	// Maze initialization remains the same
-	{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-	{'#', 'P', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-	{'#', ' ', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', ' ', '#', ' ', '#'},
-	{'#', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#', ' ', '#', ' ', '#'},
-	{'#', ' ', '#', '#', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', ' ', '#', ' ', '#', ' ', '#'},
-	{'#', ' ', ' ', ' ', '#', ' ', '#', ' ', '#', ' ', ' ', ' ', '#', ' ', '#', '#', ' ', '#', 'X', '#'},
-	{'#', ' ', '#', ' ', '#', ' ', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', ' ', '#', ' ', '#'},
-	{'#', ' ', '#', 'X', '#', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', '#', '#', ' ', '#'},
-	{'#', ' ', '#', '#', '#', ' ', '#', '#', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', ' ', '#'},
-	{'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', '#', '#'},
-	{'#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '#', ' ', '#', ' ', '#', ' ', ' ', '#'},
-	{'#', ' ', ' ', ' ', ' ', '#', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', '#', ' ', '#', '#'},
-	{'#', ' ', '#', '#', ' ', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', '#', ' ', '#', ' ', '#', '#'},
-	{'#', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-	{'#', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', '#', '#', '#', '#', '#', '#', ' ', '#'},
-	{'#', ' ', ' ', 'X', ' ', '#', ' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-	{'#', ' ', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', ' ', '#'},
-	{'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#'},
-	{'#', 'E', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-	{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
-};
+std::vector<std::string> data;
+sf::Texture texture;
+sf::Texture texture1;
 
-int playerX = 1;
-int playerY = 1;
-bool isGameOver = false;
+Player* player;
 
-void drawRect(Color color, sf::RenderWindow& window, RectangleShape rectangle, int i, int j) {
-	rectangle.setFillColor(color); // Set the rectangle's color
-	rectangle.setPosition(j * BLOCK_SIZE, i * BLOCK_SIZE); // Set the position of the rectangle
-	window.draw(rectangle); // Draw the rectangle
+/// <summary>
+/// Will load content so that it is useable in main
+/// </summary>
+void LoadContent() {
+    data = FileIO::Instance()->ReadFromFile("File.txt");
+
+    texture1.loadFromFile("Images/protoPlayer.png");
+    player = new Player(sf::Sprite(texture1), sf::Vector2f(640, 360));
+
+    texture.loadFromFile("Images/prototypeBlock.png");
 }
 
-// Function to draw the maze
-void drawMaze(sf::RenderWindow& window) {
-	for (size_t i = 0; i < ROWS; i++)
-	{
-		for (size_t j = 0; j < COLS; j++)
-		{
-			RectangleShape rectangle(Vector2f(BLOCK_SIZE, BLOCK_SIZE)); // Size of rectangle
+void Draw(sf::RenderTexture& target) {
+    for (size_t i = 0; i < data.size(); i++)
+    {
+        std::string line = data[i];
 
-			Color color = Color::White;
+        std::vector<std::string> lineData = FileIO::Split(',', line);
 
-			switch (maze[i][j])
-			{
-				case '#':
-					color = Color::Black;
+        for (size_t j = 0; j < lineData.size(); j++)
+        {
+            if (lineData[j] == "o") {
 
-					drawRect(color, window, rectangle, i, j);
-
-					break;
-
-				case ' ':
-					color = Color::White;
-
-					drawRect(color, window, rectangle, i, j);
-
-					break;
-
-				case 'E':
-					color = Color::Blue;
-
-					drawRect(color, window, rectangle, i, j);
-
-					break;
-
-				case 'X':
-					color = Color::Red;
-
-					drawRect(color, window, rectangle, i, j);
-
-					break;
-
-				case 'P':
-
-					drawRect(color, window, rectangle, i, j);
-
-					color = Color::Green;
-
-					RectangleShape square(Vector2f(10,20));
-					square.setFillColor(color);
-					square.setPosition(j * BLOCK_SIZE + (BLOCK_SIZE / 2) - 5, i * BLOCK_SIZE + 30);
-					window.draw(square);
-
-					color = Color::Yellow;
-
-					int radius = 10;
-
-					CircleShape circle(radius);
-					circle.setFillColor(color);
-					circle.setPosition(j * BLOCK_SIZE + (BLOCK_SIZE / 2) - radius, i * BLOCK_SIZE + (BLOCK_SIZE / 2) - radius);
-					window.draw(circle);
-
-					break;
-			}
-		}
-	}
+                sf::Sprite shape(texture);
+                shape.setScale(4, 4);
+                shape.setPosition(j * shape.getLocalBounds().width * shape.getScale().x, i * shape.getLocalBounds().height * shape.getScale().y);
+                target.draw(shape);
+            }
+        }
+    }
 }
 
-// Updated movePlayer function with SFML logic here
-bool movePlayer(char input) {
-	int newX = 0;
-	int newY = 0;
-
-	switch (input) {
-	case 'w':
-
-		newX = playerX - 1;
-		newY = playerY;
-		break;
-
-	case 'a':
-
-		newX = playerX;
-		newY = playerY - 1;
-		break;
-
-	case 's':
-
-		newX = playerX + 1;
-		newY = playerY;
-		break;
-
-	case 'd':
-
-		newX = playerX;
-		newY = playerY + 1;
-		break;
-	}
-
-	// 2. Check if the new position is within the bounds of the maze and not blocked by a wall ('#').
-	//    - If the move is invalid (out of bounds or into a wall), do not update the player's position.
-
-	if (newX < 0 || newY < 0 || newX >= ROWS || newY >= COLS || maze[newX][newY] == '#') return false;
-
-	// 3. Update the player's position on the maze map:
-	//    - Clear the current position of the player by setting it to ' ' (space).
-	//    - Mark the new position with 'P' to represent the player.
-
-	char v = maze[newX][newY];
-
-	maze[playerX][playerY] = ' ';
-	maze[newX][newY] = 'P';
-
-	playerX = newX;
-	playerY = newY;
-
-	// 4. Check the new position for an enemy ('X') or the exit ('E'):
-	//    - If the player reaches the enemy ('X'), display a message indicating the game is over due to encountering an enemy and set `isGameOver` to true.
-	//    - If the player reaches the exit ('E'), display a congratulatory message indicating the player has escaped the maze and set `isGameOver` to true.
-	// Note: The game's main loop checks the `isGameOver` flag to determine if the game should end.
-
-	if (v == 'X') {
-		printf("You've run into an enemy! GAME OVER\n");
-		isGameOver = true;
-	}
-	else if (v == 'E') {
-		printf("You've escaped! GAME WON\n");
-		isGameOver = true;
-	}
-
-
-	return true;
-	// End your implementation above this comment  
+void Update() {
+    player->Update();
 }
 
-int main() {
-	sf::RenderWindow window(sf::VideoMode(COLS * BLOCK_SIZE, ROWS * BLOCK_SIZE), "Maze Game");
-	window.setFramerateLimit(60);
+int main()
+{
+    // Load our main content
+    LoadContent();
 
-	while (window.isOpen()) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
-				window.close();
+    sf::RenderTexture renderTexture;
+    renderTexture.create(1280, 720);
 
-			if (event.type == sf::Event::KeyPressed && !isGameOver) {
-				// Handle player movement
-				if (event.key.code == sf::Keyboard::W) movePlayer('w');
-				else if (event.key.code == sf::Keyboard::S) movePlayer('s');
-				else if (event.key.code == sf::Keyboard::A) movePlayer('a');
-				else if (event.key.code == sf::Keyboard::D) movePlayer('d');
-			}
-		}
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
 
-		window.clear();
-		drawMaze(window);
-		window.display();
+    window.setFramerateLimit(60);
 
-		if (isGameOver) {
-			// Handle game over state
-			// For simplicity, we'll just close the window
-			window.close();
-		}
-	}
 
-	system("pause");
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
-	return 0;
+        // Update our main gameloop
+        Update();
+
+        // Draw everything to a render texture
+        renderTexture.clear(sf::Color::Blue);
+
+        Draw(renderTexture);
+
+        renderTexture.display();
+
+        sf::Sprite renderSprite(renderTexture.getTexture());
+
+        // Then draw that texture to the window
+        window.clear(sf::Color::White);
+        window.draw(renderSprite);
+        player->Draw(window);
+        window.display();
+    }
+
+    return 0;
 }
+
+
+
+
+

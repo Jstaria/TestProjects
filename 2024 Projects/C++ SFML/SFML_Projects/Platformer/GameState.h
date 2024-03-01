@@ -3,6 +3,6 @@
 enum GameState {
 	Playing,
 	Paused,
-	EndState,
-	Menu
+	Menu,
+	End
 };

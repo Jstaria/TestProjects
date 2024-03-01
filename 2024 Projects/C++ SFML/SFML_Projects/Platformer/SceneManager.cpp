@@ -4,7 +4,7 @@
 
 SceneManager* SceneManager::s_instance = 0;
 
-GameState SceneManager::currentState = Menu;
+GameState SceneManager::currentState;
 
 SceneManager::SceneManager() {
 	s_instance = this;
