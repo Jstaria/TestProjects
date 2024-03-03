@@ -1,5 +1,5 @@
-21,15,
-
+21,12,
+10,5,
 
 
 
@@ -8,7 +8,6 @@
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
-o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,

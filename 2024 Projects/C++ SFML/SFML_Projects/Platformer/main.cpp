@@ -5,6 +5,9 @@
 #include "FileIO.h"
 #include "Player.h"
 #include "Level.h"
+#include "GlobalVariables.h"
+
+#include "GameManager.h"
 
 std::vector<std::string> data;
 
@@ -19,6 +22,8 @@ sf::Texture texture;
 Player* player;
 
 Level* testLevel;
+
+GameManager* game;
 
 /// <summary>
 /// Will load content so that it is useable in main
@@ -40,20 +45,25 @@ void LoadContent() {
         playerSprites.emplace(pair.first,sprite);
     }
 
-    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
-
     texture.loadFromFile("Images/prototypeBlock.png");
 
     levelTextures.emplace(0, texture);
-    testLevel = new Level("Levels/File", 4, levelTextures);
+
+    GlobalVariables::setTextureScaler(4);
+    GlobalVariables::setTextures(levelTextures);
+
+    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
+
+    game = new GameManager(player);
+    game->SetLevel("Levels/File");
 }
 
-void Draw(sf::RenderTexture& target) {
-    testLevel->Draw(target);
+void Draw(sf::RenderWindow& window) {
+    game->Draw(window);
 }
 
 void Update() {
-    player->Update();
+    game->Update();
 }
 
 int main()
@@ -81,19 +91,21 @@ int main()
         // Update our main gameloop
         Update();
 
-        // Draw everything to a render texture
-        renderTexture.clear(sf::Color::Blue);
+        //// Draw everything to a render texture
+        //renderTexture.clear(sf::Color::Blue);
 
-        Draw(renderTexture);
+        //
 
-        renderTexture.display();
+        //renderTexture.display();
 
-        sf::Sprite renderSprite(renderTexture.getTexture());
+        //sf::Sprite renderSprite(renderTexture.getTexture());
 
         // Then draw that texture to the window
         window.clear(sf::Color::White);
-        window.draw(renderSprite);
-        player->Draw(window);
+        //window.draw(renderSprite);
+
+        Draw(window);
+
         window.display();
     }
 

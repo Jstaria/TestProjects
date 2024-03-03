@@ -19,7 +19,7 @@ public:
 	TileData(sf::Texture* texture, sf::Vector2f position, int scaler, int tileID, sf::Vector2f arrayPos);
 	TileData();
 
-	void Draw(sf::RenderTexture& target);
+	void Draw(sf::RenderWindow& window);
 
 	int getID();
 

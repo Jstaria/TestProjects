@@ -14,9 +14,9 @@ TileData::TileData() {
 	isActive = false;
 }
 
-void TileData::Draw(sf::RenderTexture& target)
+void TileData::Draw(sf::RenderWindow& window)
 {
-	target.draw(sprite);
+	window.draw(sprite);
 }
 
 int TileData::getID() {

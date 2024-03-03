@@ -1,9 +1,13 @@
 #include "Level.h"
 #include "BoundingBox.h"
+#include "GlobalVariables.h"
 
-Level::Level(std::string levelPath, int textureScaler, std::map<int, sf::Texture> textures) :
-	levelPath(levelPath), textureScaler(textureScaler), textures(textures)
+Level::Level(std::string levelPath) :
+	levelPath(levelPath)
 {
+    textureScaler = GlobalVariables::getTextureScaler();
+    textures = GlobalVariables::getTextures();
+
     LoadTileData(levelPath);
     CreateBB(levelPath);
 }
@@ -29,8 +33,11 @@ void Level::LoadTileData(std::string filePath)
     arrayWidth = std::stoi(dimensions[0]);
     arrayHeight = std::stoi(dimensions[1]);
     
-    //arrayWidth = 25;
-    //arrayHeight = 25;
+    sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+
+    std::vector<std::string> playerPos = FileIO::Split(',', data[1]);
+
+    playerStartPos = sf::Vector2f(std::stoi(playerPos[0]) * scaler.x, std::stoi(playerPos[1]) * scaler.y);
 
     std::cout << "Loaded Level Dimensions" << std::endl;
 
@@ -40,7 +47,7 @@ void Level::LoadTileData(std::string filePath)
 
     std::cout << "Set Array height" << std::endl;
 
-    for (size_t i = 1; i < data.size(); i++)
+    for (size_t i = 2; i < data.size(); i++)
     {
         std::string line = data[i];
 
@@ -59,7 +66,7 @@ void Level::LoadTileData(std::string filePath)
 
                 TileData tile(texture, position, 4, 0, sf::Vector2f(i, j));
 
-                tileArray[i][j] = tile;
+                tileArray[i-2][j] = tile;
                 std::cout << "Created Tile" << std::endl;
             }
         }
@@ -74,25 +81,27 @@ void Level::CreateBB(std::string filePath)
 {
     std::vector<std::string> data = FileIO::ReadFromFile(filePath + "BB.txt");
 
+    std::cout << "Read File" << std::endl;
+
     for (size_t i = 0; i < data.size(); i++)
     {
         std::string line = data[i];
 
         std::vector<std::string> lineData = FileIO::Split(',', line);
 
-        std::cout << "Read File" << std::endl;
+        sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
 
         std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
-        sf::Vector2f pos1(std::stoi(pos1Data[0]) * textureScaler, std::stoi(pos1Data[1]) * textureScaler);
+        sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
         
         std::cout << "Position 1 Created" << std::endl;
 
         std::vector<std::string> pos2Data = FileIO::Split(':', lineData[1]);
-        sf::Vector2f pos2(std::stoi(pos2Data[0]) * textureScaler, std::stoi(pos2Data[1]) * textureScaler);
+        sf::Vector2f pos2(std::stoi(pos2Data[0]) * scaler.x, std::stoi(pos2Data[1]) * scaler.y);
 
         std::cout << "Position 2 Created" << std::endl;
 
-        BoundingBox bb(pos1, pos2);
+        BoundingBox bb(pos1, pos2, sf::Color::Cyan);
 
         bbArray.push_back(bb);
 
@@ -100,7 +109,7 @@ void Level::CreateBB(std::string filePath)
     }
 }
 
-void Level::Draw(sf::RenderTexture& target)
+void Level::Draw(sf::RenderWindow& window)
 {
     //std::cout << "Got to draw" << std::endl;
     for (size_t i = 0; i < arrayWidth; i++)
@@ -109,9 +118,23 @@ void Level::Draw(sf::RenderTexture& target)
         {
             if (!tileArray[j][i].IsActive()) continue;
 
-            tileArray[j][i].Draw(target);
+            tileArray[j][i].Draw(window);
             
             //std::cout << "Drew Tile: {" << i << "," << j << "}" << std::endl;
         }
     }
+
+    for (auto it = bbArray.begin(); it != bbArray.end(); ++it) {
+        it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
+    }
+}
+
+std::list<BoundingBox> Level::getBBArray()
+{
+    return bbArray;
+}
+
+sf::Vector2f Level::getPlayerPos()
+{
+    return playerStartPos;
 }

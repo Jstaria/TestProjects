@@ -18,20 +18,24 @@ private:
 	int arrayWidth;
 	int arrayHeight;
 
+	sf::Vector2f playerStartPos;
+
 	/*std::vector<std::vector<TileData>>*/
 	std::vector<std::vector<TileData>> tileArray;
 	std::list<BoundingBox> bbArray;
 	std::map<int, sf::Texture> textures;
 
 public:
-	Level(std::string levelPath, int textureScaler, std::map<int,sf::Texture> textures);
-
+	Level(std::string levelPath);
 	~Level();
 
 	void LoadTileData(std::string filePath);
 
 	void CreateBB(std::string filePath);
 
-	void Draw(sf::RenderTexture& target);
+	void Draw(sf::RenderWindow& window);
+
+	std::list<BoundingBox> getBBArray();
+	sf::Vector2f getPlayerPos();
 };
 
