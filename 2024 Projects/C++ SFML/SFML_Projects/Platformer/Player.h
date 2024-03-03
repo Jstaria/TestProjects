@@ -10,15 +10,20 @@ class Player :
     public Entity
 {
 public:
-    Player(sf::Sprite sprite, sf::Vector2f position);
+    Player(std::map<std::string,sf::Sprite>* sprites, sf::Vector2f position, int maxFrames);
 
+    void Draw(sf::RenderWindow& window);
     void Update();
 
 private:
 
+    int count;
     int speedMultiplier;
     sf::Vector2f direction;
+    int lastFacedDirectionX;
 
+    sf::Sprite GetCurrentSprite(sf::Sprite& currentSprite, int xDirection);
+    
     void Move(sf::Vector2f speed);
 };
 

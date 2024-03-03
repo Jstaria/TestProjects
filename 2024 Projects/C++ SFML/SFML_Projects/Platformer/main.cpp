@@ -4,43 +4,52 @@
 #include "SceneManager.h"
 #include "FileIO.h"
 #include "Player.h"
+#include "Level.h"
 
 std::vector<std::string> data;
+
+std::map<std::string, sf::Texture> playerTextures;
+std::map<int, sf::Texture> levelTextures;
+
+std::map<std::string, sf::Sprite> playerSprites;
+std::map<std::string, sf::Sprite>* playerSprites_ptr = &playerSprites;
+
 sf::Texture texture;
-sf::Texture texture1;
 
 Player* player;
+
+Level* testLevel;
 
 /// <summary>
 /// Will load content so that it is useable in main
 /// </summary>
 void LoadContent() {
-    data = FileIO::Instance()->ReadFromFile("File.txt");
+    //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
 
-    texture1.loadFromFile("Images/protoPlayer.png");
-    player = new Player(sf::Sprite(texture1), sf::Vector2f(640, 360));
+    sf::Texture idle;
+    idle.loadFromFile("Images/character_idle.png");
+    playerTextures.emplace("idle", idle);
+    sf::Texture walk;
+    walk.loadFromFile("Images/character_walk.png");
+    playerTextures.emplace("walk", walk);
+
+    for (auto& pair : playerTextures) {
+        sf::Sprite sprite;
+        sprite.setTexture(pair.second);
+
+        playerSprites.emplace(pair.first,sprite);
+    }
+
+    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
 
     texture.loadFromFile("Images/prototypeBlock.png");
+
+    levelTextures.emplace(0, texture);
+    testLevel = new Level("Levels/File", 4, levelTextures);
 }
 
 void Draw(sf::RenderTexture& target) {
-    for (size_t i = 0; i < data.size(); i++)
-    {
-        std::string line = data[i];
-
-        std::vector<std::string> lineData = FileIO::Split(',', line);
-
-        for (size_t j = 0; j < lineData.size(); j++)
-        {
-            if (lineData[j] == "o") {
-
-                sf::Sprite shape(texture);
-                shape.setScale(4, 4);
-                shape.setPosition(j * shape.getLocalBounds().width * shape.getScale().x, i * shape.getLocalBounds().height * shape.getScale().y);
-                target.draw(shape);
-            }
-        }
-    }
+    testLevel->Draw(target);
 }
 
 void Update() {
@@ -55,7 +64,7 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
 
     window.setFramerateLimit(60);
 

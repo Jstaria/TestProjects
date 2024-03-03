@@ -1,12 +1,11 @@
 #include "Entity.h"
 
-Entity::Entity(sf::Sprite sprite, sf::Vector2f position)
-    : sprite(sprite), position(position) {}
+Entity::Entity(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames)
+    : sprites(sprites), position(position), maxFrames(maxFrames) {}
 
 void Entity::Draw(sf::RenderWindow& window)
 {
     // Draw the sprite on the window
-    window.draw(sprite);
 }
 
 void Entity::Update()
