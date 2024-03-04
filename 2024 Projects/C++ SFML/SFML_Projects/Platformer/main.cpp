@@ -101,7 +101,7 @@ int main()
         //sf::Sprite renderSprite(renderTexture.getTexture());
 
         // Then draw that texture to the window
-        window.clear(sf::Color::White);
+        window.clear(sf::Color::Color(180, 243, 255));
         //window.draw(renderSprite);
 
         Draw(window);

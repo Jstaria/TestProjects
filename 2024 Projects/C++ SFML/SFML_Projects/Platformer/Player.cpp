@@ -41,7 +41,8 @@ void Player::Update() {
 
 	currentSprite = (*sprites)["idle"];
 
-	bool canMove = true;
+	bool canMoveRight = true;
+	bool canMoveLeft = true;
 	bool isMoving = false;
 
 	if (!isGrounded) {
@@ -54,27 +55,29 @@ void Player::Update() {
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		//boundingBoxes["futureHitBox"].SetRect(GetFutureRect())
+		//boundingBoxes["futureHitbox"].setRect(GetFutureRect())
 
-		if (bb.CheckCollision(boundingBoxes["futureHitbox"].SetRect(GetFutureRect()))) {
+		if (bb.CheckCollision(boundingBoxes["Hitbox"])) {
 
-			std::cout << "isInCollision" << std::endl;
+			//std::cout << "isInCollision" << std::endl;
 
 			// Adjust position based on intersection
 			if (velocity.x > 0) {
 				position.x -= intersection.width;
+				canMoveRight = false;
 			}
 			else if (velocity.x < 0) {
 				position.x += intersection.width;
+				canMoveLeft = false;
 			}
+
 			// Stop horizontal movement
 			velocity.x = 0;
-			canMove = false;
 		}
 
 		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
 			velocity.y = 0;
-			position.y = bb.GetRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
+			position.y = bb.getRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
 			isGrounded = true;
 			timeOfGrounded = clock.getElapsedTime();
 			anyCollision = true;
@@ -102,7 +105,7 @@ void Player::Update() {
 			velocity.x -= deceleration * 2;
 		}
 
-		if (canMove) {
+		if (canMoveLeft) {
 			velocity.x -= acceleration;
 			velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
 			currentSprite = (*sprites)["walk"];
@@ -115,7 +118,7 @@ void Player::Update() {
 			velocity.x += deceleration * 2;
 		}
 
-		if (canMove) {
+		if (canMoveRight) {
 			velocity.x += acceleration;
 			velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
 			currentSprite = (*sprites)["walk"];
@@ -215,8 +218,8 @@ void Player::MoveTo(sf::Vector2f pos)
 
 sf::FloatRect Player::GetFutureRect()
 {
-	sf::Vector2f tempVelocity(velocity.x * 4, velocity.y * 4);
-	return sf::FloatRect(position + tempVelocity, boundingBoxes["Hitbox"].GetRect().getSize());
+	sf::Vector2f tempVelocity(velocity.x * 4, 0);
+	return sf::FloatRect(position + tempVelocity + boundingBoxes["Hitbox"].getOffset(), boundingBoxes["Hitbox"].getRect().getSize());
 }
 
 void Player::CreateBB()
@@ -224,7 +227,7 @@ void Player::CreateBB()
 	int scaler = GlobalVariables::getTextureScaler();
 	BoundingBox box(
 		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 10),
 		sf::Color::Yellow,
 		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
 
@@ -238,11 +241,11 @@ void Player::CreateBB()
 
 	boundingBoxes.emplace("GroundBox", ground);
 
-	BoundingBox fbox(
-		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 50),
-		sf::Color::Red,
-		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
+	//BoundingBox fbox(
+	//	position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
+	//	position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 50),
+	//	sf::Color::Red,
+	//	-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
 
-	boundingBoxes.emplace("futureHitbox", fbox);
+	//boundingBoxes.emplace("futureHitbox", fbox);
 }

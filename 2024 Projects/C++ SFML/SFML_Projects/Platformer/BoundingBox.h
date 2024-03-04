@@ -14,9 +14,10 @@ public:
 	BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, sf::Vector2f offset);
 	BoundingBox();
 
-	sf::FloatRect GetRect();
+	sf::FloatRect getRect();
+	sf::Vector2f getOffset();
 
-	sf::FloatRect SetRect(sf::FloatRect newPosition);
+	sf::FloatRect setRect(sf::FloatRect newPosition);
 
 	void Draw(sf::RenderWindow& window);
 	void Move(sf::Vector2f direction);

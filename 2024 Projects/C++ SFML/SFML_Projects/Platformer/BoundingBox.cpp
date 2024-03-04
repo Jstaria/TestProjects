@@ -38,16 +38,19 @@ BoundingBox::BoundingBox()
 {
 }
 
-sf::FloatRect BoundingBox::GetRect()
+sf::FloatRect BoundingBox::getRect()
 {
 	return position;
 }
 
-sf::FloatRect BoundingBox::SetRect(sf::FloatRect newPosition)
+sf::Vector2f BoundingBox::getOffset()
+{
+	return offset;
+}
+
+sf::FloatRect BoundingBox::setRect(sf::FloatRect newPosition)
 {
 	position = newPosition;
-
-	// so work here, set the position plus offset
 	
 	boundingBox.setPosition(position.getPosition());
 	return position;
@@ -84,7 +87,7 @@ void BoundingBox::MoveTo(sf::Vector2f pos)
 
 bool BoundingBox::CheckCollision(BoundingBox bb)
 {
-	sf::FloatRect rect = bb.GetRect();
+	sf::FloatRect rect = bb.getRect();
 
 	/*bool isColliding = rect.top > position.top + position.height && rect.top + rect.height < position.top &&
 		rect.left < position.left + position.width && rect.left + rect.width > position.left;*/
@@ -102,7 +105,7 @@ bool BoundingBox::CheckCollision(sf::FloatRect rect)
 bool BoundingBox::isEqual(BoundingBox& bb)
 {
 	return
-		position == bb.GetRect();
+		position == bb.getRect();
 		
 }
 
