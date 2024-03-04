@@ -52,12 +52,12 @@ sf::FloatRect BoundingBox::SetRect(sf::FloatRect newPosition)
 void BoundingBox::Draw(sf::RenderWindow& window)
 {
 	window.draw(boundingBox);
-	int radius = 10;
+	/*int radius = 10;
 	sf::CircleShape origin(radius);
 	origin.setOrigin(radius, radius);
 	origin.setPosition(boundingBox.getPosition());
 	origin.setFillColor(sf::Color::Red);
-	window.draw(origin);
+	window.draw(origin);*/
 }
 
 void BoundingBox::Move(sf::Vector2f direction)

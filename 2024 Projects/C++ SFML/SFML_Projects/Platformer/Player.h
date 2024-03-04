@@ -23,9 +23,22 @@ private:
 
     int count;
     int speedMultiplier;
-    sf::Vector2f direction;
+
+    sf::Vector2f velocity;
+    sf::Vector2f maxVelocity;
+    float jumpVelocity;
+    float gravity;
+    float acceleration;
+    float deceleration;
+    bool isGrounded;
+
+
     int lastFacedDirectionX;
     Level* currentLevel;
+
+    sf::Clock clock;
+    sf::Time timeOfGrounded;
+    sf::Time coyoteTime;
 
     std::map<std::string, BoundingBox> boundingBoxes;
 

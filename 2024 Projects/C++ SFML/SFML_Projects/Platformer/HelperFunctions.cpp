@@ -16,7 +16,7 @@ sf::Vector2f Normalize(sf::Vector2f& vector, int multiplier) {
 	}
 }
 
-int sign(int x){
+int sign(float x){
 	if (x > 0) return 1;
 	if (x < 0) return -1;
 	return 0;

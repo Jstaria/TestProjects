@@ -17,7 +17,18 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 	this->frameHeight = (*this->sprites)[key].getLocalBounds().height;
 
 	this->speedMultiplier = 10;
-	this->direction = sf::Vector2f(0, 0);
+	this->velocity = sf::Vector2f(0, 0);
+	this->maxVelocity = sf::Vector2f(speedMultiplier, 30);
+
+	this->gravity = 1.f;
+	this->jumpVelocity = -20.f;
+	this->isGrounded = false;
+
+	this->acceleration = .5f;
+	this->deceleration = .75f;
+
+	this->clock = sf::Clock();
+	this->coyoteTime = sf::seconds(.5f);
 
 	lastFacedDirectionX = 1;
 	currentSprite = (*this->sprites)[key];
@@ -27,47 +38,88 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 }
 
 void Player::Update() {
-	sf::Vector2f direction(0, 2);
-	float lerpSpeed = .25f;
-	float movementLerp = .1f;
 
-	currentSprite = (*sprites)[std::string("idle")];
+	currentSprite = (*sprites)["idle"];
+
+	bool isMoving = false;
+
+	if (!isGrounded) {
+		velocity.y += gravity;
+		velocity.y = velocity.y < -maxVelocity.y ? -maxVelocity.y : velocity.y;
+	}
+
+	bool anyCollision = false; 
 
 	for (auto& bb : currentLevel->getBBArray()) {
 		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
-			direction.y = 0;
-			lerpSpeed = 1;
-			//std::cout << "In collision" << std::endl;
+			velocity.y = 0;
+			position.y = bb.GetRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
+			isGrounded = true;
+			timeOfGrounded = clock.getElapsedTime();
+			anyCollision = true; 
+			// std::cout << "In collision" << std::endl;
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		direction.y -= 2;
+
+	if (!anyCollision) {
+		isGrounded = false;
+	}
+
+	sf::Time timeSinceBeingGrounded = clock.getElapsedTime() - timeOfGrounded;
+
+	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGrounded) {
+		velocity.y += jumpVelocity;
+		isGrounded = false;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		direction.x -= 1;
-		lerpSpeed = movementLerp;
-		currentSprite = (*sprites)[std::string("walk")];
+		if (velocity.x > 0) {
+			velocity.x -= deceleration * 2;
+		}
+		
+		velocity.x -= acceleration;
+		velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
+		currentSprite = (*sprites)["walk"];
+
+		isMoving = true;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		direction.x += 1;
-		lerpSpeed = movementLerp;
-		currentSprite = (*sprites)[std::string("walk")];
+		if (velocity.x < 0) {
+			velocity.x += deceleration * 2;
+		}
+		
+		velocity.x += acceleration;
+		velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
+		currentSprite = (*sprites)["walk"];
+
+		isMoving = true;
 	}
 
-	direction = Normalize(direction, speedMultiplier);
+	if (!isMoving) {
+		if (velocity.x > 0) {
+			velocity.x -= deceleration;
+			velocity.x = velocity.x < 0 ? 0 : velocity.x;
+		}
+		else if (velocity.x < 0) {
+			velocity.x += deceleration;
+			velocity.x = velocity.x > 0 ? 0 : velocity.x;
+		}
+	}
 
-	Player::direction = lerp(Player::direction, direction, lerpSpeed);
+	//Player::direction = lerp(Player::direction, direction, lerpSpeed);
 
-	Move(Player::direction);
+	Move(velocity);
 
 	drawnSprite = Player::GetCurrentSprite(currentSprite, lastFacedDirectionX);
 
-	if (direction.x != 0) {
-		lastFacedDirectionX = direction.x;
+	if (velocity.x != 0) {
+		lastFacedDirectionX = sign(velocity.x);
 	}
+
 }
 
 void Player::setCurrentLevel(Level* level)
@@ -145,7 +197,7 @@ void Player::CreateBB()
 
 	BoundingBox ground(
 		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 8 * scaler, 0),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 8 * scaler, 1),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 8 * scaler, 10),
 		sf::Color::Magenta,
 		sf::Vector2f(0, drawnSprite.getLocalBounds().height / 2 * scaler));
 
