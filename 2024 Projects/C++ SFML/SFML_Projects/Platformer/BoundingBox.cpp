@@ -10,12 +10,12 @@ BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color) 
 	boundingBox = sf::RectangleShape(sf::Vector2f(position.width, position.height));
 	boundingBox.setFillColor(sf::Color::Transparent);
 	boundingBox.setOutlineColor(color);
-	boundingBox.setOutlineThickness(-4.f);
+	boundingBox.setOutlineThickness(-2.f);
 
 	sf::Vector2f origin(position.width / 2, position.height / 2);
 
-	boundingBox.setOrigin(origin);
-	boundingBox.setPosition(pos1 + origin);
+	//boundingBox.setOrigin(origin);
+	boundingBox.setPosition(pos1 );
 }
 
 BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, sf::Vector2f offset) :
@@ -26,12 +26,12 @@ BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, 
 	boundingBox = sf::RectangleShape(sf::Vector2f(position.width, position.height));
 	boundingBox.setFillColor(sf::Color::Transparent);
 	boundingBox.setOutlineColor(color);
-	boundingBox.setOutlineThickness(-4.f);
+	boundingBox.setOutlineThickness(-2.f);
 
 	sf::Vector2f origin(position.width / 2, position.height / 2);
 
-	boundingBox.setOrigin(origin);
-	boundingBox.setPosition(pos1 + origin);
+	//boundingBox.setOrigin(origin);
+	boundingBox.setPosition(pos1);
 }
 
 BoundingBox::BoundingBox()
@@ -52,12 +52,12 @@ sf::FloatRect BoundingBox::SetRect(sf::FloatRect newPosition)
 void BoundingBox::Draw(sf::RenderWindow& window)
 {
 	window.draw(boundingBox);
-	/*int radius = 10;
+	int radius = 10;
 	sf::CircleShape origin(radius);
 	origin.setOrigin(radius, radius);
-	origin.setPosition(boundingBox.getPosition());
+	origin.setPosition(position.getPosition());
 	origin.setFillColor(sf::Color::Red);
-	window.draw(origin);*/
+	window.draw(origin);
 }
 
 void BoundingBox::Move(sf::Vector2f direction)
@@ -88,6 +88,18 @@ bool BoundingBox::CheckCollision(BoundingBox bb)
 	//isColliding = bb.GetRect().contains(boundingBox.getPosition());
 
 	return position.intersects(rect);
+}
+
+bool BoundingBox::CheckCollision(sf::FloatRect rect)
+{
+	return position.intersects(rect);
+}
+
+bool BoundingBox::isEqual(BoundingBox& bb)
+{
+	return
+		position == bb.GetRect();
+		
 }
 
 

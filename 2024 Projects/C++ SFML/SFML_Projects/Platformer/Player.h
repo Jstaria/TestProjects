@@ -47,6 +47,7 @@ private:
     void Move(sf::Vector2f speed);
     void MoveTo(sf::Vector2f pos);
 
+    sf::FloatRect GetFutureRect();
     void CreateBB();
 };
 

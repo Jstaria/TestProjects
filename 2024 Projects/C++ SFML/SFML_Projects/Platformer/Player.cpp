@@ -2,9 +2,9 @@
 #include <iostream>
 #include "GlobalVariables.h"
 
-Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames) 
+Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames)
 	: Entity(sprites, position, maxFrames) {
-	
+
 	for (const auto& pair : *Player::sprites) {
 		sf::Sprite& sprite = (*Player::sprites)[pair.first];
 
@@ -41,6 +41,7 @@ void Player::Update() {
 
 	currentSprite = (*sprites)["idle"];
 
+	bool canMove = true;
 	bool isMoving = false;
 
 	if (!isGrounded) {
@@ -48,15 +49,33 @@ void Player::Update() {
 		velocity.y = velocity.y < -maxVelocity.y ? -maxVelocity.y : velocity.y;
 	}
 
-	bool anyCollision = false; 
+	bool anyCollision = false;
 
 	for (auto& bb : currentLevel->getBBArray()) {
+		sf::FloatRect intersection;
+
+		//if (bb.CheckCollision(boundingBoxes["futureHitBox"].SetRect(GetFutureRect()))) {
+
+		//	std::cout << "isInCollision" << std::endl;
+
+		//	// Adjust position based on intersection
+		//	if (velocity.x > 0) {
+		//		position.x -= intersection.width;
+		//	}
+		//	else if (velocity.x < 0) {
+		//		position.x += intersection.width;
+		//	}
+		//	// Stop horizontal movement
+		//	velocity.x = 0;
+		//	canMove = false;
+		//}
+
 		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
 			velocity.y = 0;
 			position.y = bb.GetRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
 			isGrounded = true;
 			timeOfGrounded = clock.getElapsedTime();
-			anyCollision = true; 
+			anyCollision = true;
 			// std::cout << "In collision" << std::endl;
 		}
 	}
@@ -75,15 +94,17 @@ void Player::Update() {
 		isGrounded = false;
 	}
 
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		if (velocity.x > 0) {
 			velocity.x -= deceleration * 2;
 		}
-		
-		velocity.x -= acceleration;
-		velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
-		currentSprite = (*sprites)["walk"];
 
+		if (canMove) {
+			velocity.x -= acceleration;
+			velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
+			currentSprite = (*sprites)["walk"];
+		}
 		isMoving = true;
 	}
 
@@ -91,13 +112,16 @@ void Player::Update() {
 		if (velocity.x < 0) {
 			velocity.x += deceleration * 2;
 		}
-		
-		velocity.x += acceleration;
-		velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
-		currentSprite = (*sprites)["walk"];
 
+		if (canMove) {
+			velocity.x += acceleration;
+			velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
+			currentSprite = (*sprites)["walk"];
+		}
 		isMoving = true;
 	}
+
+
 
 	if (!isMoving) {
 		if (velocity.x > 0) {
@@ -149,7 +173,7 @@ sf::Sprite Player::GetCurrentSprite(sf::Sprite& currentSprite, int xDirection) {
 		frameNum = (frameNum + 1) % maxFrames;
 		count = 0;
 	}
-	
+
 	count++;
 	return newSprite;
 }
@@ -185,22 +209,30 @@ void Player::MoveTo(sf::Vector2f pos)
 	}
 }
 
+sf::FloatRect Player::GetFutureRect()
+{
+	sf::Vector2f tempVelocity(velocity.x * 4, velocity.y * 4);
+	return sf::FloatRect(position + tempVelocity, boundingBoxes["HitBox"].GetRect().getSize());
+}
+
 void Player::CreateBB()
 {
 	int scaler = GlobalVariables::getTextureScaler();
 	BoundingBox box(
 		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
 		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		sf::Color::Yellow);
+		sf::Color::Yellow,
+		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
 
 	boundingBoxes.emplace("Hitbox", box);
 
 	BoundingBox ground(
-		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 8 * scaler, 0),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 8 * scaler, 10),
+		position - sf::Vector2f(16, 0),
+		position + sf::Vector2f(16, 10),
 		sf::Color::Magenta,
-		sf::Vector2f(0, drawnSprite.getLocalBounds().height / 2 * scaler));
+		sf::Vector2f(-16, drawnSprite.getLocalBounds().height / 2 * scaler));
 
 	boundingBoxes.emplace("GroundBox", ground);
 
+	
 }
