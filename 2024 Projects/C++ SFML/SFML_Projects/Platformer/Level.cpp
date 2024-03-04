@@ -19,7 +19,8 @@ Level::~Level() {
     //}
     //delete[] tileArray;
 
-    bbArray.clear();
+    bbArray->clear();
+    delete bbArray;
 }
 
 void Level::LoadTileData(std::string filePath)
@@ -83,6 +84,9 @@ void Level::CreateBB(std::string filePath)
 
     std::cout << "Read File" << std::endl;
 
+    bbArray = new std::list<BoundingBox>();
+
+
     for (size_t i = 0; i < data.size(); i++)
     {
         std::string line = data[i];
@@ -103,7 +107,7 @@ void Level::CreateBB(std::string filePath)
 
         BoundingBox bb(pos1, pos2, sf::Color::Cyan);
 
-        bbArray.push_back(bb);
+        bbArray->push_back(bb);
 
         std::cout << "Bounding Box Created" << std::endl;
     }
@@ -124,12 +128,12 @@ void Level::Draw(sf::RenderWindow& window)
         }
     }
 
-    for (auto it = bbArray.begin(); it != bbArray.end(); ++it) {
+    for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
         it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
     }
 }
 
-std::list<BoundingBox> Level::getBBArray()
+std::list<BoundingBox>* Level::getBBArray()
 {
     return bbArray;
 }

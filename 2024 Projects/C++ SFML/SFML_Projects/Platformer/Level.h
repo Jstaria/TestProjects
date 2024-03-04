@@ -22,7 +22,7 @@ private:
 
 	/*std::vector<std::vector<TileData>>*/
 	std::vector<std::vector<TileData>> tileArray;
-	std::list<BoundingBox> bbArray;
+	std::list<BoundingBox>* bbArray;
 	std::map<int, sf::Texture> textures;
 
 public:
@@ -35,7 +35,7 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 
-	std::list<BoundingBox> getBBArray();
+	std::list<BoundingBox>* getBBArray();
 	sf::Vector2f getPlayerPos();
 };
 

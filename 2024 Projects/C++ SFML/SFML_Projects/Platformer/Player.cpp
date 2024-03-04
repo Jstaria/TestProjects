@@ -51,24 +51,26 @@ void Player::Update() {
 
 	bool anyCollision = false;
 
-	for (auto& bb : currentLevel->getBBArray()) {
+	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		//if (bb.CheckCollision(boundingBoxes["futureHitBox"].SetRect(GetFutureRect()))) {
+		//boundingBoxes["futureHitBox"].SetRect(GetFutureRect())
 
-		//	std::cout << "isInCollision" << std::endl;
+		if (bb.CheckCollision(boundingBoxes["futureHitbox"].SetRect(GetFutureRect()))) {
 
-		//	// Adjust position based on intersection
-		//	if (velocity.x > 0) {
-		//		position.x -= intersection.width;
-		//	}
-		//	else if (velocity.x < 0) {
-		//		position.x += intersection.width;
-		//	}
-		//	// Stop horizontal movement
-		//	velocity.x = 0;
-		//	canMove = false;
-		//}
+			std::cout << "isInCollision" << std::endl;
+
+			// Adjust position based on intersection
+			if (velocity.x > 0) {
+				position.x -= intersection.width;
+			}
+			else if (velocity.x < 0) {
+				position.x += intersection.width;
+			}
+			// Stop horizontal movement
+			velocity.x = 0;
+			canMove = false;
+		}
 
 		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
 			velocity.y = 0;
@@ -186,6 +188,8 @@ void Player::Move(sf::Vector2f speed) {
 	for (auto& pair : boundingBoxes) {
 		BoundingBox bb = pair.second;
 
+		if (pair.first == "futureHitbox") continue;
+
 		bb.Move(speed);
 
 		boundingBoxes[pair.first] = bb;
@@ -212,7 +216,7 @@ void Player::MoveTo(sf::Vector2f pos)
 sf::FloatRect Player::GetFutureRect()
 {
 	sf::Vector2f tempVelocity(velocity.x * 4, velocity.y * 4);
-	return sf::FloatRect(position + tempVelocity, boundingBoxes["HitBox"].GetRect().getSize());
+	return sf::FloatRect(position + tempVelocity, boundingBoxes["Hitbox"].GetRect().getSize());
 }
 
 void Player::CreateBB()
@@ -234,5 +238,11 @@ void Player::CreateBB()
 
 	boundingBoxes.emplace("GroundBox", ground);
 
-	
+	BoundingBox fbox(
+		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 50),
+		sf::Color::Red,
+		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
+
+	boundingBoxes.emplace("futureHitbox", fbox);
 }

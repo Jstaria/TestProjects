@@ -46,6 +46,10 @@ sf::FloatRect BoundingBox::GetRect()
 sf::FloatRect BoundingBox::SetRect(sf::FloatRect newPosition)
 {
 	position = newPosition;
+
+	// so work here, set the position plus offset
+	
+	boundingBox.setPosition(position.getPosition());
 	return position;
 }
 
