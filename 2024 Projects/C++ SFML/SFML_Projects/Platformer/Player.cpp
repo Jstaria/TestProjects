@@ -55,24 +55,8 @@ void Player::Update() {
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		//boundingBoxes["futureHitbox"].setRect(GetFutureRect())
-
-		if (bb.CheckCollision(boundingBoxes["Hitbox"])) {
-
-			//std::cout << "isInCollision" << std::endl;
-
-			// Adjust position based on intersection
-			if (velocity.x > 0) {
-				position.x -= intersection.width;
-				canMoveRight = false;
-			}
-			else if (velocity.x < 0) {
-				position.x += intersection.width;
-				canMoveLeft = false;
-			}
-
-			// Stop horizontal movement
-			velocity.x = 0;
+		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2  && bb.CheckCollision(GetFutureRect())) {
+			velocity.y = 0;
 		}
 
 		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
@@ -126,7 +110,27 @@ void Player::Update() {
 		isMoving = true;
 	}
 
+	for (auto& bb : *currentLevel->getBBArray()) {
+		sf::FloatRect intersection;
 
+		//boundingBoxes["futureHitbox"].setRect(GetFutureRect())
+
+		if (bb.CheckCollision(GetFutureRect())) {
+
+			//std::cout << "isInCollision" << std::endl;
+
+			// Adjust position based on intersection
+			if (velocity.x > 0) {
+				position.x -= intersection.width;
+			}
+			else if (velocity.x < 0) {
+				position.x += intersection.width;
+			}
+
+			// Stop horizontal movement
+			velocity.x = 0;
+		}
+	}
 
 	if (!isMoving) {
 		if (velocity.x > 0) {
@@ -218,7 +222,7 @@ void Player::MoveTo(sf::Vector2f pos)
 
 sf::FloatRect Player::GetFutureRect()
 {
-	sf::Vector2f tempVelocity(velocity.x * 4, 0);
+	sf::Vector2f tempVelocity(velocity.x, velocity.y);
 	return sf::FloatRect(position + tempVelocity + boundingBoxes["Hitbox"].getOffset(), boundingBoxes["Hitbox"].getRect().getSize());
 }
 
@@ -227,17 +231,17 @@ void Player::CreateBB()
 	int scaler = GlobalVariables::getTextureScaler();
 	BoundingBox box(
 		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 10),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 25),
 		sf::Color::Yellow,
-		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler));
+		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 20));
 
 	boundingBoxes.emplace("Hitbox", box);
 
 	BoundingBox ground(
-		position - sf::Vector2f(16, 0),
-		position + sf::Vector2f(16, 10),
+		position - sf::Vector2f(32, 0),
+		position + sf::Vector2f(32, 10),
 		sf::Color::Magenta,
-		sf::Vector2f(-16, drawnSprite.getLocalBounds().height / 2 * scaler));
+		sf::Vector2f(-32, drawnSprite.getLocalBounds().height / 2 * scaler));
 
 	boundingBoxes.emplace("GroundBox", ground);
 
