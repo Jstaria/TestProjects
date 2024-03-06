@@ -40,13 +40,14 @@ private:
     float deceleration;
     bool isGrounded;
     bool canJump;
-
+    bool wasPressingKey;
 
     int lastFacedDirectionX;
     Level* currentLevel;
 
     sf::Clock clock;
     sf::Time timeOfGrounded;
+    sf::Time timeOfJumpPress;
     sf::Time coyoteTime;
 
     std::map<std::string, BoundingBox> boundingBoxes;

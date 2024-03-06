@@ -91,6 +91,19 @@ void Player::Update() {
 		canJump = false;
 	}
 
+	/*	bool isPressingKey = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		isPressingKey = true;
+		timeOfJumpPress = clock.getElapsedTime();
+	}
+
+	if (wasPressingKey && !isPressingKey && ((isGrounded && canJump) || (canJump && wasGrounded))) {
+		velocity.y = 0;
+		velocity.y += jumpVelocity * (clock.getElapsedTime() / timeOfJumpPress);
+		isGrounded = false;
+		canJump = false;
+	}*/
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		if (velocity.x > 0) {
