@@ -37,6 +37,9 @@ void LoadContent() {
     sf::Texture walk;
     walk.loadFromFile("Images/character_walk.png");
     playerTextures.emplace("walk", walk);
+    sf::Texture jump;
+    jump.loadFromFile("Images/character_jump.png");
+    playerTextures.emplace("jump", jump);
 
     for (auto& pair : playerTextures) {
         sf::Sprite sprite;
@@ -49,7 +52,7 @@ void LoadContent() {
 
     levelTextures.emplace(0, texture);
 
-    GlobalVariables::setTextureScaler(4);
+    GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);

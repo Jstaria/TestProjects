@@ -65,7 +65,7 @@ void Level::LoadTileData(std::string filePath)
 
                 sf::Vector2f position(j * texture->getSize().x * textureScaler, i * texture->getSize().y * textureScaler);
 
-                TileData tile(texture, position, 4, 0, sf::Vector2f(i, j));
+                TileData tile(texture, position, GlobalVariables::getTextureScaler() , 0, sf::Vector2f(i, j));
 
                 tileArray[i-2][j] = tile;
                 std::cout << "Created Tile" << std::endl;

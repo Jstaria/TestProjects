@@ -8,6 +8,12 @@
 #include "BoundingBox.h"
 #include "Level.h"
 
+enum PlayerState {
+    Idle,
+    Walk,
+    Jump
+};
+
 class Player :
     public Entity
 {
@@ -21,6 +27,8 @@ public:
 
 private:
 
+    PlayerState currentState;
+
     int count;
     int speedMultiplier;
 
@@ -31,6 +39,7 @@ private:
     float acceleration;
     float deceleration;
     bool isGrounded;
+    bool canJump;
 
 
     int lastFacedDirectionX;
@@ -42,12 +51,14 @@ private:
 
     std::map<std::string, BoundingBox> boundingBoxes;
 
-    sf::Sprite GetCurrentSprite(sf::Sprite& currentSprite, int xDirection);
+    void GetCurrentSprite();
+    void IncrementFrameNum(int modulus);
+    sf::Sprite CreateSprite(const sf::Texture* texture);
     
     void Move(sf::Vector2f speed);
     void MoveTo(sf::Vector2f pos);
 
-    sf::FloatRect GetFutureRect();
+    sf::FloatRect GetFutureRect(bool useX, bool useY);
     void CreateBB();
 };
 

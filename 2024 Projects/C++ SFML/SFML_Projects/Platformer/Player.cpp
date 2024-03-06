@@ -18,10 +18,10 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 
 	this->speedMultiplier = 10;
 	this->velocity = sf::Vector2f(0, 0);
-	this->maxVelocity = sf::Vector2f(speedMultiplier, 30);
+	this->maxVelocity = sf::Vector2f(speedMultiplier, 60 / GlobalVariables::getTextureScaler());
 
 	this->gravity = 1.f;
-	this->jumpVelocity = -20.f;
+	this->jumpVelocity = -maxVelocity.y;
 	this->isGrounded = false;
 
 	this->acceleration = .5f;
@@ -32,55 +32,63 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 
 	lastFacedDirectionX = 1;
 	currentSprite = (*this->sprites)[key];
-	drawnSprite = GetCurrentSprite(currentSprite, lastFacedDirectionX);
+	GetCurrentSprite();
 
 	CreateBB();
+
+	currentState = PlayerState::Idle;
 }
 
 void Player::Update() {
 
-	currentSprite = (*sprites)["idle"];
+	currentState = PlayerState::Idle;
 
 	bool canMoveRight = true;
 	bool canMoveLeft = true;
 	bool isMoving = false;
-
-	if (!isGrounded) {
-		velocity.y += gravity;
-		velocity.y = velocity.y < -maxVelocity.y ? -maxVelocity.y : velocity.y;
-	}
 
 	bool anyCollision = false;
 
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2  && bb.CheckCollision(GetFutureRect())) {
+		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2 && bb.CheckCollision(GetFutureRect(true,true))) {
 			velocity.y = 0;
 		}
 
-		if (boundingBoxes["GroundBox"].CheckCollision(bb)) {
+		if (bb.CheckCollision(boundingBoxes["GroundBox"])) {
 			velocity.y = 0;
+
+			//std::cout << velocity.y << std::endl;
 			position.y = bb.getRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
 			isGrounded = true;
 			timeOfGrounded = clock.getElapsedTime();
 			anyCollision = true;
+			canJump = true;
 			// std::cout << "In collision" << std::endl;
 		}
 	}
-
+	
 
 	if (!anyCollision) {
 		isGrounded = false;
+		currentState = PlayerState::Jump;
+	}
+
+	if (!isGrounded && !anyCollision) {
+		velocity.y += gravity;
+		velocity.y = velocity.y > maxVelocity.y ? maxVelocity.y : velocity.y;
 	}
 
 	sf::Time timeSinceBeingGrounded = clock.getElapsedTime() - timeOfGrounded;
 
 	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGrounded) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && ((isGrounded && canJump) || (canJump && wasGrounded))) {
+		velocity.y = 0;
 		velocity.y += jumpVelocity;
 		isGrounded = false;
+		canJump = false;
 	}
 
 
@@ -92,7 +100,6 @@ void Player::Update() {
 		if (canMoveLeft) {
 			velocity.x -= acceleration;
 			velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
-			currentSprite = (*sprites)["walk"];
 		}
 		isMoving = true;
 	}
@@ -105,7 +112,6 @@ void Player::Update() {
 		if (canMoveRight) {
 			velocity.x += acceleration;
 			velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
-			currentSprite = (*sprites)["walk"];
 		}
 		isMoving = true;
 	}
@@ -115,7 +121,7 @@ void Player::Update() {
 
 		//boundingBoxes["futureHitbox"].setRect(GetFutureRect())
 
-		if (bb.CheckCollision(GetFutureRect())) {
+		if (bb.CheckCollision(GetFutureRect(true, true))) {
 
 			//std::cout << "isInCollision" << std::endl;
 
@@ -143,16 +149,19 @@ void Player::Update() {
 		}
 	}
 
+	if (isMoving && isGrounded) {
+		currentState = PlayerState::Walk;
+	}
+
 	//Player::direction = lerp(Player::direction, direction, lerpSpeed);
 
 	Move(velocity);
 
-	drawnSprite = Player::GetCurrentSprite(currentSprite, lastFacedDirectionX);
+	Player::GetCurrentSprite();
 
 	if (velocity.x != 0) {
 		lastFacedDirectionX = sign(velocity.x);
 	}
-
 }
 
 void Player::setCurrentLevel(Level* level)
@@ -169,21 +178,58 @@ void Player::Draw(sf::RenderWindow& window) {
 	}
 }
 
-sf::Sprite Player::GetCurrentSprite(sf::Sprite& currentSprite, int xDirection) {
+void Player::GetCurrentSprite() {
 
-	const sf::Texture* texture = currentSprite.getTexture();
+	switch (currentState) {
+	case PlayerState::Idle: {
 
-	sf::Sprite newSprite(*texture, sf::IntRect(frameWidth * frameNum, 0, frameWidth, frameHeight));
-	newSprite.setScale(GlobalVariables::getTextureScaler() * sign(xDirection), GlobalVariables::getTextureScaler());
-	newSprite.setOrigin(newSprite.getLocalBounds().width / 2, newSprite.getLocalBounds().height / 2);
-	newSprite.setPosition(position);
+		drawnSprite = CreateSprite((*sprites)["idle"].getTexture());
 
-	if (count % (6) == 0) {
-		frameNum = (frameNum + 1) % maxFrames;
-		count = 0;
+		IncrementFrameNum(6);
+	}
+						  break;
+
+	case PlayerState::Walk: {
+		drawnSprite = CreateSprite((*sprites)["walk"].getTexture());
+
+		IncrementFrameNum(6);
+	}
+						  break;
+
+	case PlayerState::Jump: {
+		frameNum = 1;
+
+		if (velocity.y > 10) {
+			frameNum = 2;
+		}
+		else if (velocity.y < -5) {
+			frameNum = 0;
+		}
+
+		drawnSprite = CreateSprite((*sprites)["jump"].getTexture());
+	}
+						  break;
 	}
 
 	count++;
+}
+
+void Player::IncrementFrameNum(int modulus)
+{
+	if (count % (modulus) == 0) {
+		frameNum = (frameNum + 1) % maxFrames;
+		count = 0;
+	}
+}
+
+sf::Sprite Player::CreateSprite(const sf::Texture *texture)
+{
+
+	sf::Sprite newSprite(*texture, sf::IntRect(frameWidth * frameNum, 0, frameWidth, frameHeight));
+	newSprite.setScale(GlobalVariables::getTextureScaler() * sign(lastFacedDirectionX), GlobalVariables::getTextureScaler());
+	newSprite.setOrigin(newSprite.getLocalBounds().width / 2, newSprite.getLocalBounds().height / 2);
+	newSprite.setPosition(position);
+
 	return newSprite;
 }
 
@@ -220,9 +266,9 @@ void Player::MoveTo(sf::Vector2f pos)
 	}
 }
 
-sf::FloatRect Player::GetFutureRect()
+sf::FloatRect Player::GetFutureRect(bool useX, bool useY)
 {
-	sf::Vector2f tempVelocity(velocity.x, velocity.y);
+	sf::Vector2f tempVelocity(useX ? velocity.x : 0, useY ? velocity.y : 0);
 	return sf::FloatRect(position + tempVelocity + boundingBoxes["Hitbox"].getOffset(), boundingBoxes["Hitbox"].getRect().getSize());
 }
 
@@ -230,18 +276,20 @@ void Player::CreateBB()
 {
 	int scaler = GlobalVariables::getTextureScaler();
 	BoundingBox box(
-		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 25),
+		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 40),
 		sf::Color::Yellow,
-		-sf::Vector2f(drawnSprite.getLocalBounds().width / 4 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 20));
+		-sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 30));
 
 	boundingBoxes.emplace("Hitbox", box);
 
+	float boxWidth = box.getRect().width / 2;
+
 	BoundingBox ground(
-		position - sf::Vector2f(32, 0),
-		position + sf::Vector2f(32, 10),
+		position - sf::Vector2f(boxWidth, 0),
+		position + sf::Vector2f(boxWidth, 10),
 		sf::Color::Magenta,
-		sf::Vector2f(-32, drawnSprite.getLocalBounds().height / 2 * scaler));
+		sf::Vector2f(-boxWidth, drawnSprite.getLocalBounds().height / 2 * scaler));
 
 	boundingBoxes.emplace("GroundBox", ground);
 
