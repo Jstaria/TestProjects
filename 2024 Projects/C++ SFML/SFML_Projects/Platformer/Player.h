@@ -34,6 +34,7 @@ private:
 
     sf::Vector2f velocity;
     sf::Vector2f maxVelocity;
+
     float jumpVelocity;
     float currentGravity;
     float defaultGravity;
@@ -41,6 +42,7 @@ private:
     float deceleration;
     bool isGrounded;
     bool canJump;
+    bool wantsToJump;
     bool wasPressingKey;
 
     int lastFacedDirectionX;
@@ -50,6 +52,8 @@ private:
     sf::Time timeOfGrounded;
     sf::Time timeOfJumpPress;
     sf::Time coyoteTime;
+    sf::Time jumpBufferTime;
+    sf::Time jumpBufferCounter;
 
     std::map<std::string, BoundingBox> boundingBoxes;
 
@@ -66,7 +70,7 @@ private:
     void SetGravityScale(float newGravity);
     void ResetGravity();
 
-    sf::FloatRect GetFutureRect(bool useX, bool useY);
+    sf::FloatRect GetFutureRect(bool useX, bool useY, int scale);
     void CreateBB();
 };
 

@@ -30,6 +30,7 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 
 	this->clock = sf::Clock();
 	this->coyoteTime = sf::seconds(.5f);
+	this->jumpBufferTime = sf::seconds(.1f);
 
 	lastFacedDirectionX = 1;
 	currentSprite = (*this->sprites)[key];
@@ -53,7 +54,8 @@ void Player::Update() {
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2 && bb.CheckCollision(GetFutureRect(true, true)) && velocity.y < 0) {
+		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2 && 
+			bb.CheckCollision(GetFutureRect(true, true, 1)) && velocity.y < 0) {
 			velocity.y = 0;
 		}
 
@@ -67,6 +69,7 @@ void Player::Update() {
 				isGrounded = true;
 				timeOfGrounded = clock.getElapsedTime();
 				anyCollision = true;
+				wantsToJump = false;
 				canJump = true;
 			}
 		}
@@ -81,7 +84,7 @@ void Player::Update() {
 
 		//boundingBoxes["futureHitbox"].setRect(GetFutureRect())
 
-		if (bb.CheckCollision(GetFutureRect(true, true))) {
+		if (bb.CheckCollision(GetFutureRect(true, true, 1))) {
 
 			//std::cout << "isInCollision" << std::endl;
 
@@ -244,14 +247,28 @@ void Player::UpdateJump(bool anyCollision)
 	bool isPressingKey = false;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		wantsToJump = true;
+
+		if (!wasPressingKey) {
+			jumpBufferCounter = jumpBufferTime;
+		}
+		
 		isPressingKey = true;
+	}
+	else {
+		jumpBufferCounter -= sf::seconds(.0166666f);
+	}
+
+	if (wantsToJump || jumpBufferCounter > sf::seconds(0)) {
 
 		if (!wasPressingKey && ((isGrounded && canJump) || (canJump && wasGrounded))) {
+			jumpBufferCounter = sf::seconds(0);
 			timeOfJumpPress = clock.getElapsedTime();
 			velocity.y = 0;
 			velocity.y += jumpVelocity;
 			isGrounded = false;
 			canJump = false;
+			isPressingKey = true;
 		}
 	}
 
@@ -317,9 +334,9 @@ void Player::ResetGravity()
 	currentGravity = defaultGravity;
 }
 
-sf::FloatRect Player::GetFutureRect(bool useX, bool useY)
+sf::FloatRect Player::GetFutureRect(bool useX, bool useY, int scale)
 {
-	sf::Vector2f tempVelocity(useX ? velocity.x : 0, useY ? velocity.y : 0);
+	sf::Vector2f tempVelocity(useX ? velocity.x * scale : 0, useY ? velocity.y * scale: 0);
 	return sf::FloatRect(position + tempVelocity + boundingBoxes["Hitbox"].getOffset(), boundingBoxes["Hitbox"].getRect().getSize());
 }
 
