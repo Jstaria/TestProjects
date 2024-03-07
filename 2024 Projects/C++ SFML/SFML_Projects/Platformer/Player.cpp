@@ -18,9 +18,10 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 
 	this->speedMultiplier = 10;
 	this->velocity = sf::Vector2f(0, 0);
-	this->maxVelocity = sf::Vector2f(speedMultiplier, 60 / GlobalVariables::getTextureScaler());
+	this->maxVelocity = sf::Vector2f(speedMultiplier, 6.5 * GlobalVariables::getTextureScaler());
 
-	this->gravity = 1.f;
+	this->defaultGravity = 1.f;
+	this->currentGravity = defaultGravity;
 	this->jumpVelocity = -maxVelocity.y;
 	this->isGrounded = false;
 
@@ -46,88 +47,34 @@ void Player::Update() {
 	bool canMoveRight = true;
 	bool canMoveLeft = true;
 	bool isMoving = false;
-
+	bool* isMoving_ptr = &isMoving;
 	bool anyCollision = false;
 
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
 
-		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2 && bb.CheckCollision(GetFutureRect(true,true))) {
+		if (bb.getRect().getPosition().y + bb.getRect().height < position.y - drawnSprite.getTextureRect().height / 2 && bb.CheckCollision(GetFutureRect(true, true)) && velocity.y < 0) {
 			velocity.y = 0;
 		}
 
 		if (bb.CheckCollision(boundingBoxes["GroundBox"])) {
-			velocity.y = 0;
-
-			//std::cout << velocity.y << std::endl;
-			position.y = bb.getRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
-			isGrounded = true;
-			timeOfGrounded = clock.getElapsedTime();
-			anyCollision = true;
-			canJump = true;
-			// std::cout << "In collision" << std::endl;
+			if (velocity.y > 0) {
+				velocity.y = 0;
+			}
+			
+			if (velocity.y == 0) {
+				position.y = bb.getRect().top - drawnSprite.getLocalBounds().height / 2 * GlobalVariables::getTextureScaler();
+				isGrounded = true;
+				timeOfGrounded = clock.getElapsedTime();
+				anyCollision = true;
+				canJump = true;
+			}
 		}
 	}
-	
 
-	if (!anyCollision) {
-		isGrounded = false;
-		currentState = PlayerState::Jump;
-	}
+	UpdateJump(anyCollision);
 
-	if (!isGrounded && !anyCollision) {
-		velocity.y += gravity;
-		velocity.y = velocity.y > maxVelocity.y ? maxVelocity.y : velocity.y;
-	}
-
-	sf::Time timeSinceBeingGrounded = clock.getElapsedTime() - timeOfGrounded;
-
-	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && ((isGrounded && canJump) || (canJump && wasGrounded))) {
-		velocity.y = 0;
-		velocity.y += jumpVelocity;
-		isGrounded = false;
-		canJump = false;
-	}
-
-	/*	bool isPressingKey = false;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		isPressingKey = true;
-		timeOfJumpPress = clock.getElapsedTime();
-	}
-
-	if (wasPressingKey && !isPressingKey && ((isGrounded && canJump) || (canJump && wasGrounded))) {
-		velocity.y = 0;
-		velocity.y += jumpVelocity * (clock.getElapsedTime() / timeOfJumpPress);
-		isGrounded = false;
-		canJump = false;
-	}*/
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		if (velocity.x > 0) {
-			velocity.x -= deceleration * 2;
-		}
-
-		if (canMoveLeft) {
-			velocity.x -= acceleration;
-			velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
-		}
-		isMoving = true;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		if (velocity.x < 0) {
-			velocity.x += deceleration * 2;
-		}
-
-		if (canMoveRight) {
-			velocity.x += acceleration;
-			velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
-		}
-		isMoving = true;
-	}
+	UpdateKeyboardControls(isMoving_ptr, canMoveRight, canMoveLeft);
 
 	for (auto& bb : *currentLevel->getBBArray()) {
 		sf::FloatRect intersection;
@@ -175,6 +122,8 @@ void Player::Update() {
 	if (velocity.x != 0) {
 		lastFacedDirectionX = sign(velocity.x);
 	}
+
+	
 }
 
 void Player::setCurrentLevel(Level* level)
@@ -235,7 +184,7 @@ void Player::IncrementFrameNum(int modulus)
 	}
 }
 
-sf::Sprite Player::CreateSprite(const sf::Texture *texture)
+sf::Sprite Player::CreateSprite(const sf::Texture* texture)
 {
 
 	sf::Sprite newSprite(*texture, sf::IntRect(frameWidth * frameNum, 0, frameWidth, frameHeight));
@@ -262,6 +211,85 @@ void Player::Move(sf::Vector2f speed) {
 	}
 }
 
+void Player::UpdateJump(bool anyCollision)
+{
+	if (velocity.y < 5 && velocity.y > -5) {
+		SetGravityScale(.75);
+	}
+	else {
+		ResetGravity();
+	}
+
+	if (!anyCollision) {
+		isGrounded = false;
+		currentState = PlayerState::Jump;
+	}
+
+	if (!isGrounded && !anyCollision) {
+		velocity.y += currentGravity;
+		velocity.y = velocity.y > maxVelocity.y ? maxVelocity.y : velocity.y;
+	}
+
+	sf::Time timeSinceBeingGrounded = clock.getElapsedTime() - timeOfGrounded;
+
+	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
+
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && ((isGrounded && canJump) || (canJump && wasGrounded))) {
+	//	velocity.y = 0;
+	//	velocity.y += jumpVelocity;
+	//	isGrounded = false;
+	//	canJump = false;
+	//}
+
+	bool isPressingKey = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		isPressingKey = true;
+
+		if (!wasPressingKey && ((isGrounded && canJump) || (canJump && wasGrounded))) {
+			timeOfJumpPress = clock.getElapsedTime();
+			velocity.y = 0;
+			velocity.y += jumpVelocity;
+			isGrounded = false;
+			canJump = false;
+		}
+	}
+
+	if (wasPressingKey && !isPressingKey) {
+
+		velocity.y += (clock.getElapsedTime() - timeOfJumpPress) > sf::seconds(.25f) ? 0 : defaultGravity * 5;
+	}
+
+	wasPressingKey = isPressingKey;
+}
+
+void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canMoveLeft)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		if (velocity.x > 0) {
+			velocity.x -= deceleration * 2;
+		}
+
+		if (canMoveLeft) {
+			velocity.x -= acceleration;
+			velocity.x = velocity.x < -maxVelocity.x ? -maxVelocity.x : velocity.x;
+		}
+		*isMoving = true;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		if (velocity.x < 0) {
+			velocity.x += deceleration * 2;
+		}
+
+		if (canMoveRight) {
+			velocity.x += acceleration;
+			velocity.x = velocity.x > maxVelocity.x ? maxVelocity.x : velocity.x;
+		}
+		*isMoving = true;
+	}
+}
+
 void Player::MoveTo(sf::Vector2f pos)
 {
 	position = pos;
@@ -279,6 +307,16 @@ void Player::MoveTo(sf::Vector2f pos)
 	}
 }
 
+void Player::SetGravityScale(float newGravity)
+{
+	currentGravity = newGravity;
+}
+
+void Player::ResetGravity()
+{
+	currentGravity = defaultGravity;
+}
+
 sf::FloatRect Player::GetFutureRect(bool useX, bool useY)
 {
 	sf::Vector2f tempVelocity(useX ? velocity.x : 0, useY ? velocity.y : 0);
@@ -290,9 +328,9 @@ void Player::CreateBB()
 	int scaler = GlobalVariables::getTextureScaler();
 	BoundingBox box(
 		position - sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler),
-		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 40),
+		position + sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - drawnSprite.getLocalBounds().height / 3 * scaler),
 		sf::Color::Yellow,
-		-sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - 30));
+		-sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - drawnSprite.getLocalBounds().height / 6 * scaler));
 
 	boundingBoxes.emplace("Hitbox", box);
 

@@ -35,7 +35,8 @@ private:
     sf::Vector2f velocity;
     sf::Vector2f maxVelocity;
     float jumpVelocity;
-    float gravity;
+    float currentGravity;
+    float defaultGravity;
     float acceleration;
     float deceleration;
     bool isGrounded;
@@ -57,7 +58,13 @@ private:
     sf::Sprite CreateSprite(const sf::Texture* texture);
     
     void Move(sf::Vector2f speed);
+    void UpdateJump(bool anyCollision);
+    void UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canMoveLeft);
+
     void MoveTo(sf::Vector2f pos);
+
+    void SetGravityScale(float newGravity);
+    void ResetGravity();
 
     sf::FloatRect GetFutureRect(bool useX, bool useY);
     void CreateBB();
