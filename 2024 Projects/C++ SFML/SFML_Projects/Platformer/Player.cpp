@@ -18,7 +18,7 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 
 	this->speedMultiplier = 10;
 	this->velocity = sf::Vector2f(0, 0);
-	this->maxVelocity = sf::Vector2f(speedMultiplier, 6.5 * GlobalVariables::getTextureScaler());
+	this->maxVelocity = sf::Vector2f(speedMultiplier, 7 * GlobalVariables::getTextureScaler());
 
 	this->defaultGravity = 1.f;
 	this->currentGravity = defaultGravity;

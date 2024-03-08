@@ -32,6 +32,6 @@ void ViewManager::SetCameraPosition(sf::Vector2f targetPosition)
 
 void ViewManager::UpdateView()
 {
-	position = lerp(position, targetPosition, .25);
+	position = lerp(position, targetPosition, .125);
 	view->setCenter(position);
 }

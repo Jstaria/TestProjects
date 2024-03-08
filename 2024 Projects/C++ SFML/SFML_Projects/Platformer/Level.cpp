@@ -12,6 +12,16 @@ Level::Level(std::string levelPath) :
     CreateBB(levelPath);
 }
 
+Level::Level(std::string imagePath, bool) :
+    levelPath(imagePath)
+{
+    textureScaler = GlobalVariables::getTextureScaler();
+    textures = GlobalVariables::getTextures();
+
+    LoadTileDataPNG(levelPath);
+    //CreateBB(levelPath);
+}
+
 Level::~Level() {
 
     //for (int i = 0; i < arrayWidth; ++i) {
@@ -78,6 +88,52 @@ void Level::LoadTileData(std::string filePath)
     std::cout << "Loaded Tile Data" << std::endl;
 }
 
+void Level::LoadTileDataPNG(std::string imagePath)
+{
+    std::cout << "Started Loading" << std::endl;
+
+
+    sf::Image image;
+    if (!image.loadFromFile(imagePath)) {
+        std::cerr << "Failed to load image: " << imagePath << std::endl;
+    }
+
+    std::cout << "Loaded Image" << std::endl;
+
+    arrayWidth = image.getSize().x;
+    arrayHeight = image.getSize().y;
+
+    std::cout << "Loaded Level Dimensions: {" << arrayWidth << "," << arrayHeight << std::endl;
+
+    sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+    std::vector<std::vector<TileData>> tileArray(arrayHeight, std::vector<TileData>(arrayWidth));
+
+    for (size_t i = 0; i < arrayWidth; i++)
+    {
+        for (size_t j = 0; j < arrayHeight; j++)
+        {
+            sf::Color color = image.getPixel(j, i);
+
+            TileData tile;
+
+            if (color == sf::Color::Black) {
+                sf::Texture* texture;
+
+                texture = &textures[0];
+
+                sf::Vector2f position(j * texture->getSize().x * textureScaler, i * texture->getSize().y * textureScaler);
+
+                tile = TileData(texture, position, GlobalVariables::getTextureScaler(), 0, sf::Vector2f(i, j));
+
+                tileArray[i][j] = tile;
+                std::cout << "Created Tile: " << i << ',' << j << std::endl;
+            }
+        }
+    }
+
+    this->tileArray = tileArray;
+}
+
 void Level::CreateBB(std::string filePath)
 {
     std::vector<std::string> data = FileIO::ReadFromFile(filePath + "BB.txt");
@@ -128,9 +184,9 @@ void Level::Draw(sf::RenderWindow& window)
         }
     }
 
-    for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
-        it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
-    }
+    //for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
+    //    it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
+    //}
 }
 
 std::list<BoundingBox>* Level::getBBArray()

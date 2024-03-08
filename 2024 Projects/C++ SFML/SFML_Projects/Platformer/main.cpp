@@ -23,6 +23,7 @@ sf::Texture texture;
 Player* player;
 
 Level* testLevel;
+Level* testPNGLevel;
 
 GameManager* game;
 
@@ -61,39 +62,42 @@ void LoadContent(sf::RenderWindow& window) {
 
     levelTextures.emplace(0, texture);
 
-    GlobalVariables::setTextureScaler(2.5);
+    GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
-    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
+    //player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
 
-    game = new GameManager(player);
-    game->SetLevel("Levels/File");
+    //game = new GameManager(player);
+    //game->SetLevel("Levels/File");
+
+    testPNGLevel = new Level("Levels/test.png", true);
 }
 
 void Draw(sf::RenderWindow& window) {
-    game->Draw(window);
+    //game->Draw(window);
+    testPNGLevel->Draw(window);
 }
 
 void Update() {
-    game->Update();
+    //game->Update();
     
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, -50));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, 50 + 720));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(-100, 360));
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(100 + 1280, 360));
-    }
-    else {
-        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(1280 / 2, 720 / 2));
-    }
+    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, -50));
+    //}
+    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, 50 + 720));
+    //}
+    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(-100, 360));
+    //}
+    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(100 + 1280, 360));
+    //}
+    //else {
+    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(1280 / 2, 720 / 2));
+    //}
     
-    ViewManager::Instance()->UpdateView();
+    //ViewManager::Instance()->UpdateView();
 }
 
 int main()
@@ -102,7 +106,8 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "LevelLoading");
+    //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
 
     LoadContent(window);
 

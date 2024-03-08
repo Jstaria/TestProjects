@@ -27,9 +27,12 @@ private:
 
 public:
 	Level(std::string levelPath);
+	Level(std::string imagePath, bool);
+
 	~Level();
 
 	void LoadTileData(std::string filePath);
+	void LoadTileDataPNG(std::string imagePath);
 
 	void CreateBB(std::string filePath);
 
