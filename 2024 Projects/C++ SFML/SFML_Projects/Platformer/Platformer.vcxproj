@@ -30,6 +30,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TileData.h" />
+    <ClInclude Include="ViewManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoundingBox.cpp" />
@@ -43,6 +44,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TileData.cpp" />
+    <ClCompile Include="ViewManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

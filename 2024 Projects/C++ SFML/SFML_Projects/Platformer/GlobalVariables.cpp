@@ -1,7 +1,7 @@
 #include "GlobalVariables.h"
 
 GlobalVariables* GlobalVariables::s_instance = 0;
-int GlobalVariables::textureScaler;
+float GlobalVariables::textureScaler;
 std::map<int, sf::Texture> GlobalVariables::textures;
 
 GlobalVariables::GlobalVariables()
@@ -10,15 +10,18 @@ GlobalVariables::GlobalVariables()
 
 GlobalVariables* GlobalVariables::Instance()
 {
+	if (s_instance == nullptr) {
+		s_instance = new GlobalVariables();
+	}
 	return s_instance;
 }
 
-int GlobalVariables::getTextureScaler()
+float GlobalVariables::getTextureScaler()
 {
 	return textureScaler;
 }
 
-void GlobalVariables::setTextureScaler(int scaler)
+void GlobalVariables::setTextureScaler(float scaler)
 {
 	textureScaler = scaler;
 }

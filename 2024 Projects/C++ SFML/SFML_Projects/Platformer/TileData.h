@@ -16,7 +16,7 @@ private:
 	sf::Vector2f arrayPos;
 
 public:
-	TileData(sf::Texture* texture, sf::Vector2f position, int scaler, int tileID, sf::Vector2f arrayPos);
+	TileData(sf::Texture* texture, sf::Vector2f position, float scaler, int tileID, sf::Vector2f arrayPos);
 	TileData();
 
 	void Draw(sf::RenderWindow& window);

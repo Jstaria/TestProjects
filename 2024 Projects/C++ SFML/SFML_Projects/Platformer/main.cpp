@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Level.h"
 #include "GlobalVariables.h"
+#include "ViewManager.h"
 
 #include "GameManager.h"
 
@@ -25,11 +26,19 @@ Level* testLevel;
 
 GameManager* game;
 
+sf::View* view_ptr;
+sf::View view;
+
 /// <summary>
 /// Will load content so that it is useable in main
 /// </summary>
-void LoadContent() {
+void LoadContent(sf::RenderWindow& window) {
     //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
+
+    view = window.getDefaultView();
+    view_ptr = &view;
+
+    ViewManager::Instance()->SetWindowView(view_ptr);
 
     sf::Texture idle;
     idle.loadFromFile("Images/character_idle.png");
@@ -52,7 +61,7 @@ void LoadContent() {
 
     levelTextures.emplace(0, texture);
 
-    GlobalVariables::setTextureScaler(3);
+    GlobalVariables::setTextureScaler(2.5);
     GlobalVariables::setTextures(levelTextures);
 
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
@@ -67,17 +76,35 @@ void Draw(sf::RenderWindow& window) {
 
 void Update() {
     game->Update();
+    
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, -50));
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, 50 + 720));
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(-100, 360));
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(100 + 1280, 360));
+    }
+    else {
+        ViewManager::Instance()->SetCameraPosition(sf::Vector2f(1280 / 2, 720 / 2));
+    }
+    
+    ViewManager::Instance()->UpdateView();
 }
 
 int main()
 {
     // Load our main content
-    LoadContent();
-
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
+
+    LoadContent(window);
 
     window.setFramerateLimit(60);
 
@@ -93,7 +120,7 @@ int main()
 
         // Update our main gameloop
         Update();
-
+        window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
         //renderTexture.clear(sf::Color::Blue);
 

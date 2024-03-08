@@ -13,7 +13,7 @@ class Level
 {
 private:
 	std::string levelPath;
-	int textureScaler;
+	float textureScaler;
 
 	int arrayWidth;
 	int arrayHeight;

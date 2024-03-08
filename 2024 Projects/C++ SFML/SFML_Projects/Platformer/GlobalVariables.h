@@ -8,7 +8,7 @@ class GlobalVariables {
 private:
 	static GlobalVariables* s_instance;
 
-	static int textureScaler;
+	static float textureScaler;
 	static std::map<int, sf::Texture> textures;
 
 public:
@@ -16,8 +16,8 @@ public:
 
 	static GlobalVariables* Instance();
 
-	static int getTextureScaler();
-	static void setTextureScaler(int scaler);
+	static float getTextureScaler();
+	static void setTextureScaler(float scaler);
 
 	static std::map<int, sf::Texture> getTextures();
 	static void setTextures(std::map<int, sf::Texture> textures);
