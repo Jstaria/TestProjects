@@ -65,21 +65,21 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
-    //player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
+    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
+    
+    game = new GameManager(player);
+    game->SetLevel("Levels/File");
 
-    //game = new GameManager(player);
-    //game->SetLevel("Levels/File");
-
-    testPNGLevel = new Level("Levels/test.png", true);
+    //testPNGLevel = new Level("Levels/test.png", true);
 }
 
 void Draw(sf::RenderWindow& window) {
-    //game->Draw(window);
-    testPNGLevel->Draw(window);
+    game->Draw(window);
+    //testPNGLevel->Draw(window);
 }
 
 void Update() {
-    //game->Update();
+    game->Update();
     
     //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
     //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, -50));
