@@ -27,9 +27,9 @@
     <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="HelperFunctions.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="TextBox.h" />
     <ClInclude Include="TileData.h" />
     <ClInclude Include="ViewControl.h" />
     <ClInclude Include="ViewManager.h" />
@@ -42,10 +42,10 @@
     <ClCompile Include="GlobalVariables.cpp" />
     <ClCompile Include="HelperFunctions.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TileData.cpp" />
     <ClCompile Include="ViewControl.cpp" />
     <ClCompile Include="ViewManager.cpp" />

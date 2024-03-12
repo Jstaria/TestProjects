@@ -8,8 +8,8 @@
 #include "GlobalVariables.h"
 #include "ViewManager.h"
 #include "ViewControl.h"
-#include "TextBox.h"
 #include "GameManager.h"
+#include "LevelEditor.h"
 
 std::vector<std::string> data;
 
@@ -23,7 +23,8 @@ sf::View view;
 
 ViewControl vc;
 sf::Font font;
-TextBox textBox1;
+
+LevelEditor editor;
 
 /// <summary>
 /// Will load content so that it is useable in main
@@ -32,12 +33,9 @@ void LoadContent(sf::RenderWindow& window) {
 
     font.loadFromFile("arial.ttf");
 
-    textBox1 = TextBox(font, sf::Vector2f(100, 100));
-
     view = window.getDefaultView();
     view_ptr = &view;
     ViewManager::Instance()->SetWindowView(view_ptr);
-
 
     vc = ViewControl();
 
@@ -45,23 +43,24 @@ void LoadContent(sf::RenderWindow& window) {
 
     levelTextures.emplace(0, texture);
 
-    GlobalVariables::setTextureScaler(3);
+    GlobalVariables::setTextureScaler(10);
     GlobalVariables::setTextures(levelTextures);
 
+    editor = LevelEditor();
 }
 
 void Draw(sf::RenderWindow& window) {
 
+    //editor.Draw(window);
     sf::Sprite sprite(texture);
     sprite.setScale(10, 10);
-    textBox1.Draw(window);
     window.draw(sprite);
 }
 
-void Update() {
+void Update(sf::RenderWindow& window) {
 
     vc.Update();
-    
+    editor.Update(window);
 }
 
 int main()
@@ -70,7 +69,7 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "LevelLoading");
+    sf::RenderWindow window(sf::VideoMode(500, 500), "LevelLoading");
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
 
     LoadContent(window);
@@ -88,7 +87,7 @@ int main()
         }
 
         // Update our main gameloop
-        Update();
+        Update(window);
         window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
         //renderTexture.clear(sf::Color::Blue);
