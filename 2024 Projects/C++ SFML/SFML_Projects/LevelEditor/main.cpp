@@ -51,7 +51,7 @@ void LoadContent(sf::RenderWindow& window) {
 
 void Draw(sf::RenderWindow& window) {
 
-    //editor.Draw(window);
+    editor.Draw(window);
     sf::Sprite sprite(texture);
     sprite.setScale(10, 10);
     window.draw(sprite);
@@ -69,7 +69,7 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(500, 500), "LevelLoading");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "LevelLoading");
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
 
     LoadContent(window);

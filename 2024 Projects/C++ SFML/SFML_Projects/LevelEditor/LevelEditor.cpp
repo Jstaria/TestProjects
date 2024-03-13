@@ -5,19 +5,16 @@ LevelEditor::LevelEditor()
 	arrayWidth = 200;
 	arrayHeight = 200;
 
-	cellSize = 1;
+	cellSize =
+		GlobalVariables::Instance()->getTextures()[0].getSize().x *
+		GlobalVariables::Instance()->getTextureScaler();
 }
 
 void LevelEditor::Update(sf::RenderWindow& window)
 {
-	//cellSize =
-	//	GlobalVariables::Instance()->getTextures()[0].getSize().x *
-	//	GlobalVariables::Instance()->getTextureScaler() *
-	//	1920 / ViewManager::Instance()->GetWindowView().getSize().x;
-	//
-	//sf::Vector2f viewCenter = ViewManager::Instance()->GetWindowView().getCenter();
-	//sf::Vector2f viewSize = ViewManager::Instance()->GetWindowView().getSize();
-	sf::Vector2i mousePosition = sf::Mouse::getPosition(window); //+sf::Vector2i(viewCenter - viewSize * .5f);
+	sf::Vector2f mousePosition = //sf::Mouse::getPosition(window);
+
+	mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		
