@@ -43,7 +43,7 @@ void LoadContent(sf::RenderWindow& window) {
 
     levelTextures.emplace(0, texture);
 
-    GlobalVariables::setTextureScaler(10);
+    GlobalVariables::setTextureScaler(5);
     GlobalVariables::setTextures(levelTextures);
 
     editor = LevelEditor();
@@ -53,7 +53,7 @@ void Draw(sf::RenderWindow& window) {
 
     editor.Draw(window);
     sf::Sprite sprite(texture);
-    sprite.setScale(10, 10);
+    sprite.setScale(5, 5);
     window.draw(sprite);
 }
 

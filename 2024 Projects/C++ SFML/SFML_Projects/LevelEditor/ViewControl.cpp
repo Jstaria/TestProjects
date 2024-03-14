@@ -21,6 +21,26 @@ void ViewControl::Update()
 		difference = sf::Vector2f(mouseStartPos - sf::Mouse::getPosition());
 	}
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		ViewManager::Instance()->MoveView(
+			sf::Vector2f(0, -10 * 
+				(ViewManager::Instance()->GetWindowView().getSize().x / 1920)));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		ViewManager::Instance()->MoveView(
+			sf::Vector2f(-10 *
+				(ViewManager::Instance()->GetWindowView().getSize().x / 1920), 0));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		ViewManager::Instance()->MoveView(
+			sf::Vector2f(0, 10 *
+				(ViewManager::Instance()->GetWindowView().getSize().x / 1920)));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		ViewManager::Instance()->MoveView(
+			sf::Vector2f(10 *
+				(ViewManager::Instance()->GetWindowView().getSize().x / 1920), 0));
+	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Hyphen)) {
 		ViewManager::Instance()->SetViewZoom(1.05f);

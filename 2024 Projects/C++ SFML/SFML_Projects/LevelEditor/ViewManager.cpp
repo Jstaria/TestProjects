@@ -35,6 +35,11 @@ void ViewManager::SetViewZoom(float delta)
 	view->zoom(delta);
 }
 
+void ViewManager::MoveView(sf::Vector2f direction)
+{
+	view->move(direction);
+}
+
 void ViewManager::UpdateView()
 {
 	position = lerp(position, targetPosition, 1);
