@@ -22,4 +22,5 @@ public:
 	void SetViewZoom(float delta);
 	void MoveView(sf::Vector2f direction);
 	void UpdateView();
+	void ResetPosition();
 };

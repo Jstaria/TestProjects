@@ -44,7 +44,7 @@ void Level::LoadTileData(std::string filePath)
     arrayWidth = std::stoi(dimensions[0]);
     arrayHeight = std::stoi(dimensions[1]);
     
-    sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+    sf::Vector2f scaler(textures[0]->getSize().x * textureScaler, textures[0]->getSize().y * textureScaler);
 
     std::vector<std::string> playerPos = FileIO::Split(',', data[1]);
 
@@ -71,7 +71,7 @@ void Level::LoadTileData(std::string filePath)
                 
                 sf::Texture* texture;
 
-                texture = &textures[0];
+                texture = textures[0];
 
                 sf::Vector2f position(j * texture->getSize().x * textureScaler, i * texture->getSize().y * textureScaler);
 
@@ -105,7 +105,7 @@ void Level::LoadTileDataPNG(std::string imagePath)
 
     std::cout << "Loaded Level Dimensions: {" << arrayWidth << "," << arrayHeight << std::endl;
 
-    sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+    sf::Vector2f scaler(textures[0]->getSize().x * textureScaler, textures[0]->getSize().y * textureScaler);
     std::vector<std::vector<TileData>> tileArray(arrayHeight, std::vector<TileData>(arrayWidth));
 
     for (size_t i = 0; i < arrayWidth; i++)
@@ -119,7 +119,7 @@ void Level::LoadTileDataPNG(std::string imagePath)
             if (color == sf::Color::Black) {
                 sf::Texture* texture;
 
-                texture = &textures[0];
+                texture = textures[0];
 
                 sf::Vector2f position(j * texture->getSize().x * textureScaler, i * texture->getSize().y * textureScaler);
 
@@ -149,7 +149,7 @@ void Level::CreateBB(std::string filePath)
 
         std::vector<std::string> lineData = FileIO::Split(',', line);
 
-        sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+        sf::Vector2f scaler(textures[0]->getSize().x * textureScaler, textures[0]->getSize().y * textureScaler);
 
         std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
         sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);

@@ -45,3 +45,8 @@ void ViewManager::UpdateView()
 	position = lerp(position, targetPosition, 1);
 	view->setCenter(position);
 }
+
+void ViewManager::ResetPosition()
+{
+	view->setCenter(sf::Vector2f(1920/2, 1080/2));
+}

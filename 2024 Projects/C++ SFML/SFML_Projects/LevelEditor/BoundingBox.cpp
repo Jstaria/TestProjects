@@ -102,6 +102,11 @@ bool BoundingBox::CheckCollision(sf::FloatRect rect)
 	return position.intersects(rect);
 }
 
+bool BoundingBox::CheckCollision(sf::Vector2f position)
+{
+	return this->position.contains(position);
+}
+
 bool BoundingBox::isEqual(BoundingBox& bb)
 {
 	return

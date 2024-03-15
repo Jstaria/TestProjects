@@ -13,8 +13,9 @@
 
 std::vector<std::string> data;
 
-sf::Texture texture;
-std::map<int, sf::Texture> levelTextures;
+std::vector<sf::Texture*> texture_ptrs;
+std::vector<sf::Texture> textures;
+std::map<int, sf::Texture*> levelTextures;
 
 GameManager* game;
 
@@ -24,7 +25,17 @@ sf::View view;
 ViewControl vc;
 sf::Font font;
 
-LevelEditor editor;
+LevelEditor* editor;
+
+bool LoadTexture(std::string file) {
+    bool s;
+
+    sf::Texture texture; 
+    s = texture.loadFromFile(file);
+    textures.push_back(texture);
+
+    return s;
+}
 
 /// <summary>
 /// Will load content so that it is useable in main
@@ -38,29 +49,37 @@ void LoadContent(sf::RenderWindow& window) {
     ViewManager::Instance()->SetWindowView(view_ptr);
 
     vc = ViewControl();
+    std::cout << LoadTexture("Images/protoGreen.png") << std::endl;
+    LoadTexture("Images/prototypeBlock.png");
+    LoadTexture("Images/protoRed.png");
+    LoadTexture("Images/protoCyan.png");
+    LoadTexture("Images/protoViolet.png");
 
-    texture.loadFromFile("Images/prototypeBlock.png");
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        texture_ptrs.push_back(&textures[i]);
+    }
 
-    levelTextures.emplace(0, texture);
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        levelTextures.emplace(i, texture_ptrs[i]);
+    }
 
     GlobalVariables::setTextureScaler(5);
     GlobalVariables::setTextures(levelTextures);
 
-    editor = LevelEditor();
+    editor = new LevelEditor();
 }
 
 void Draw(sf::RenderWindow& window) {
 
-    editor.Draw(window);
-    sf::Sprite sprite(texture);
-    sprite.setScale(5, 5);
-    window.draw(sprite);
+    editor->Draw(window);
 }
 
 void Update(sf::RenderWindow& window) {
 
     vc.Update();
-    editor.Update(window);
+    editor->Update(window);
 }
 
 int main()

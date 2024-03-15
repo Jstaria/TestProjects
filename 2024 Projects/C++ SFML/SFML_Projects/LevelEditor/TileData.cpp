@@ -12,6 +12,15 @@ TileData::TileData(sf::Texture* texture, sf::Vector2f position, float scaler, in
 
 TileData::TileData() {
 	isActive = false;
+	texture = nullptr;
+}
+
+TileData::~TileData()
+{
+	//std::cout << "Deleted" << std::endl;
+
+	sprite.setPosition(sf::Vector2f(-100,-100));
+
 }
 
 void TileData::Draw(sf::RenderWindow& window)

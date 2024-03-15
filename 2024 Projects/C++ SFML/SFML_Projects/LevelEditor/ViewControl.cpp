@@ -49,10 +49,15 @@ void ViewControl::Update()
 		ViewManager::Instance()->SetViewZoom(.95f);
 	}
 
-	ViewManager::Instance()->SetCameraPosition(
-		difference * (ViewManager::Instance()->GetWindowView().getSize().x / 1920)
-		+ ViewManager::Instance()->GetWindowView().getCenter());
-	ViewManager::Instance()->UpdateView();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+		ViewManager::Instance()->ResetPosition();
+	}
+	else {
+		ViewManager::Instance()->SetCameraPosition(
+			difference * (ViewManager::Instance()->GetWindowView().getSize().x / 1920)
+			+ ViewManager::Instance()->GetWindowView().getCenter());
+		ViewManager::Instance()->UpdateView();
+	}
 
 	middleWasPressed = middleIsPressed;
 }
