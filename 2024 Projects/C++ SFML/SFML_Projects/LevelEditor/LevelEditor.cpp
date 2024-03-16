@@ -57,10 +57,10 @@ void LevelEditor::Update(sf::RenderWindow& window)
 	}
 					   break;
 
-	case EditMode::BoundingBox: {
+	case EditMode::BoundingBoxPos: {
 		BoundingBoxMode(window, mousePosition);
 	}
-							  break;
+								 break;
 
 	case EditMode::CameraPosition: {
 		CameraPositionMode(window, mousePosition);
@@ -68,6 +68,19 @@ void LevelEditor::Update(sf::RenderWindow& window)
 								 break;
 
 	}
+
+	bool isFPressed = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+		isFPressed = true;
+	}
+
+	if (isFPressed && !wasFPressed) {
+		currentEditMode = (EditMode)((currentEditMode + 1) % 3);
+		std::cout << currentEditMode << std::endl;
+	}
+
+	wasFPressed = isFPressed;
 }
 
 void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
@@ -107,7 +120,7 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 		rightWasPressed = rightPressed;
 	}
-					   break;
+						break;
 
 	case TileMode::Select: {
 		for (size_t i = 0; i < items.size(); i++)
@@ -121,7 +134,7 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 			}
 		}
 	}
-							  break;
+						 break;
 
 	case TileMode::Delete: {
 
@@ -157,7 +170,7 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 		rightWasPressed = rightPressed;
 	}
-								 break;
+						 break;
 
 	}
 
@@ -211,7 +224,26 @@ void LevelEditor::BoundingBoxMode(sf::RenderWindow& window, sf::Vector2f mousePo
 		endPos = sf::Vector2i(gridX, gridY);
 
 		leftPressed = false;
+
+		float scale = textures[0]->getSize().x * GlobalVariables::getTextureScaler();
+		sf::Vector2f position1(startPos.x * scale, startPos.y * scale);
+		sf::Vector2f position2(endPos.x * scale + scale, endPos.y * scale + scale);
+
+		bbArray.push_back(BoundingBox(position1, position2, sf::Color::Yellow));
 	}
+
+	bool isKeyPressed = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+		isKeyPressed = true;
+	}
+
+	if (wasKeyPressed && !isKeyPressed && bbArray.size() > 0) {
+		bbArray.pop_back();
+
+	}
+
+	wasKeyPressed = isKeyPressed;
 }
 
 void LevelEditor::CameraPositionMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
@@ -243,7 +275,7 @@ void LevelEditor::SwapMode()
 	if (currentTileMode == TileMode::Place) {
 		currentTileMode = TileMode::Delete;
 	}
-	else if 
+	else if
 		(currentTileMode == TileMode::Delete) {
 		currentTileMode = TileMode::Place;
 	}
@@ -311,26 +343,38 @@ void LevelEditor::Draw(sf::RenderWindow& window)
 		}
 	}
 
-	if (currentTileMode == TileMode::Select) {
-		sf::RectangleShape rect(ViewManager::Instance()->GetWindowView().getSize());
-		rect.setOrigin(rect.getSize().x / 2, rect.getSize().y / 2);
-		rect.setPosition(ViewManager::Instance()->GetWindowView().getCenter());
-
-		sf::Color color = sf::Color::White;
-		color.a = 50;
-
-		rect.setFillColor(color);
-
-		window.draw(rect);
+	for (size_t i = 0; i < bbArray.size(); i++)
+	{
+		bbArray[i].Draw(window);
 	}
 
-	switch (currentTileMode) {
-	case TileMode::Select: {
-		for (size_t i = 0; i < items.size(); i++)
-		{
-			items[i].Draw(window);
+	switch (currentEditMode) {
+	case EditMode::Tile: {
+		switch (currentTileMode) {
+		case TileMode::Select: {
+
+			sf::RectangleShape rect(ViewManager::Instance()->GetWindowView().getSize());
+			rect.setOrigin(rect.getSize().x / 2, rect.getSize().y / 2);
+			rect.setPosition(ViewManager::Instance()->GetWindowView().getCenter());
+
+			sf::Color color = sf::Color::White;
+			color.a = 50;
+
+			rect.setFillColor(color);
+
+			window.draw(rect);
+
+			for (size_t i = 0; i < items.size(); i++)
+			{
+				items[i].Draw(window);
+			}
+		}
+							 break;
 		}
 	}
-						 break;
+					   break;
+	case EditMode::BoundingBoxPos: {
+		
+	}
 	}
 }

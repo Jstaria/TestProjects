@@ -49,4 +49,5 @@ void ViewManager::UpdateView()
 void ViewManager::ResetPosition()
 {
 	view->setCenter(sf::Vector2f(1920/2, 1080/2));
+	view->zoom(1920 / view->getSize().x);
 }

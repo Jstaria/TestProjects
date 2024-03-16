@@ -7,7 +7,7 @@
 
 enum EditMode {
 	Tile,
-	BoundingBox,
+	BoundingBoxPos,
 	CameraPosition
 };
 
@@ -22,6 +22,7 @@ class LevelEditor
 private:
 	std::vector<std::vector<TileData*>> tileArray;
 	std::vector<SelectionItem> items;
+	std::vector<BoundingBox> bbArray;
 	int arrayWidth 	;
 	int arrayHeight ;
 
@@ -33,6 +34,7 @@ private:
 	bool leftPressed;
 	bool rightWasPressed;
 	bool wasKeyPressed;
+	bool wasFPressed;
 
 	EditMode currentEditMode;
 	TileMode currentTileMode;
