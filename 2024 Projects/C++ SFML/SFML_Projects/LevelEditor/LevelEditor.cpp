@@ -109,7 +109,7 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 			startPos = sf::Vector2i(gridX, gridY);
 
-			std::cout << "Position Set: " << gridX << "," << gridY << std::endl;
+			//std::cout << "Position Set: " << gridX << "," << gridY << std::endl;
 
 			float scaler = GlobalVariables::getTextureScaler() * textures[0]->getSize().x;
 
@@ -159,7 +159,7 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 			startPos = sf::Vector2i(gridX, gridY);
 
-			std::cout << "Position Deleted: " << gridX << "," << gridY << std::endl;
+			//std::cout << "Position Deleted: " << gridX << "," << gridY << std::endl;
 
 			float scaler = GlobalVariables::getTextureScaler() * textures[0]->getSize().x;
 

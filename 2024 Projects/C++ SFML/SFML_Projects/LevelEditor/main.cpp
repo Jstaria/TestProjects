@@ -88,20 +88,21 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "LevelLoading");
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+    sf::RenderWindow window(desktop, "LevelLoading", sf::Style::Fullscreen);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
 
     LoadContent(window);
 
     window.setFramerateLimit(60);
 
-
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
         }
 
