@@ -89,9 +89,10 @@ int main()
     renderTexture.create(1280, 720);
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-
-    sf::RenderWindow window(desktop, "LevelLoading", sf::Style::Fullscreen);
+    desktop = sf::VideoMode(1920, 1080);
+    sf::RenderWindow window(desktop, "LevelLoading"/*, sf::Style::Fullscreen*/);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
+    window.setVerticalSyncEnabled(true);
 
     LoadContent(window);
 
