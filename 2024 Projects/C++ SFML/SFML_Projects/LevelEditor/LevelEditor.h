@@ -23,6 +23,8 @@ private:
 	std::vector<std::vector<TileData*>> tileArray;
 	std::vector<SelectionItem> items;
 	std::vector<BoundingBox> bbArray;
+	std::vector<BoundingBox> cameraArray;
+
 	int arrayWidth 	;
 	int arrayHeight ;
 
@@ -59,6 +61,9 @@ private:
 	void CreateArray();
 
 	bool IsInArray(sf::Vector2i position);
+
+	void SetBoundingBox(std::vector<BoundingBox>& array, sf::Vector2f mousePosition, sf::Color color);
+	void DeleteFromArray(std::vector<BoundingBox>& array);
 
 public:
 	LevelEditor();

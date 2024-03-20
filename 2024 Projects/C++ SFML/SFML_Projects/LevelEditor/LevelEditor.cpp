@@ -195,60 +195,18 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 void LevelEditor::BoundingBoxMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !leftPressed) {
+	SetBoundingBox(bbArray, mousePosition, sf::Color::Yellow);
 
-		int gridX = mousePosition.x / cellSize;
-		int gridY = mousePosition.y / cellSize;
-
-		// Round the grid coordinates to the nearest whole number
-		gridX = std::round(gridX);
-		gridY = std::round(gridY);
-
-		startPos = sf::Vector2i(gridX, gridY);
-
-		std::cout << "First Pos: " << gridX << "," << gridY << std::endl;
-
-		leftPressed = true;
-	}
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && leftPressed) {
-		int gridX = mousePosition.x / cellSize;
-		int gridY = mousePosition.y / cellSize;
-
-		// Round the grid coordinates to the nearest whole number
-		gridX = std::round(gridX);
-		gridY = std::round(gridY);
-
-		std::cout << "Second Pos: " << gridX << "," << gridY << std::endl;
-
-		endPos = sf::Vector2i(gridX, gridY);
-
-		leftPressed = false;
-
-		float scale = textures[0]->getSize().x * GlobalVariables::getTextureScaler();
-		sf::Vector2f position1(startPos.x * scale, startPos.y * scale);
-		sf::Vector2f position2(endPos.x * scale + scale, endPos.y * scale + scale);
-
-		bbArray.push_back(BoundingBox(position1, position2, sf::Color::Yellow));
-	}
-
-	bool isKeyPressed = false;
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
-		isKeyPressed = true;
-	}
-
-	if (wasKeyPressed && !isKeyPressed && bbArray.size() > 0) {
-		bbArray.pop_back();
-
-	}
-
-	wasKeyPressed = isKeyPressed;
+	DeleteFromArray(bbArray);
 }
 
 void LevelEditor::CameraPositionMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 {
+	SetBoundingBox(cameraArray, mousePosition, sf::Color::Magenta);
 
+	DeleteFromArray(cameraArray);
+
+	
 }
 
 void LevelEditor::SetTile(sf::Vector2i position, float scaler)
@@ -310,6 +268,62 @@ bool LevelEditor::IsInArray(sf::Vector2i position)
 		position.y < tileArray[0].size() && position.y >= 0;
 }
 
+void LevelEditor::SetBoundingBox(std::vector<BoundingBox>& array, sf::Vector2f mousePosition, sf::Color color)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !leftPressed) {
+
+		int gridX = mousePosition.x / cellSize;
+		int gridY = mousePosition.y / cellSize;
+
+		// Round the grid coordinates to the nearest whole number
+		gridX = std::round(gridX);
+		gridY = std::round(gridY);
+
+		startPos = sf::Vector2i(gridX, gridY);
+
+		std::cout << "First Pos: " << gridX << "," << gridY << std::endl;
+
+		leftPressed = true;
+	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && leftPressed) {
+		int gridX = mousePosition.x / cellSize;
+		int gridY = mousePosition.y / cellSize;
+
+		// Round the grid coordinates to the nearest whole number
+		gridX = std::round(gridX);
+		gridY = std::round(gridY);
+
+		std::cout << "Second Pos: " << gridX << "," << gridY << std::endl;
+
+		endPos = sf::Vector2i(gridX, gridY);
+
+		leftPressed = false;
+
+		float scale = textures[0]->getSize().x * GlobalVariables::getTextureScaler();
+		sf::Vector2f position1(startPos.x * scale, startPos.y * scale);
+		sf::Vector2f position2(endPos.x * scale + scale, endPos.y * scale + scale);
+
+		array.push_back(BoundingBox(position1, position2, color));
+	}
+}
+
+void LevelEditor::DeleteFromArray(std::vector<BoundingBox>& array)
+{
+	bool isKeyPressed = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+		isKeyPressed = true;
+	}
+
+	if (wasKeyPressed && !isKeyPressed && array.size() > 0) {
+		array.pop_back();
+
+	}
+
+	wasKeyPressed = isKeyPressed;
+}
+
 
 void LevelEditor::Draw(sf::RenderWindow& window)
 {
@@ -346,6 +360,11 @@ void LevelEditor::Draw(sf::RenderWindow& window)
 	for (size_t i = 0; i < bbArray.size(); i++)
 	{
 		bbArray[i].Draw(window);
+	}
+
+	for (size_t i = 0; i < cameraArray.size(); i++)
+	{
+		cameraArray[i].Draw(window);
 	}
 
 	switch (currentEditMode) {
