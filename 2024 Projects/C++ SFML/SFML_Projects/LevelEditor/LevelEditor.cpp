@@ -66,6 +66,10 @@ void LevelEditor::Update(sf::RenderWindow& window)
 		CameraPositionMode(window, mousePosition);
 	}
 								 break;
+	case EditMode::Save: {
+		SaveLevel(mousePosition);
+	}
+					   break;
 
 	}
 
@@ -76,7 +80,7 @@ void LevelEditor::Update(sf::RenderWindow& window)
 	}
 
 	if (isFPressed && !wasFPressed) {
-		currentEditMode = (EditMode)((currentEditMode + 1) % 3);
+		currentEditMode = (EditMode)((currentEditMode + 1) % 4);
 		std::cout << currentEditMode << std::endl;
 	}
 
@@ -206,7 +210,7 @@ void LevelEditor::CameraPositionMode(sf::RenderWindow& window, sf::Vector2f mous
 
 	DeleteFromArray(cameraArray);
 
-	
+
 }
 
 void LevelEditor::SetTile(sf::Vector2i position, float scaler)
@@ -324,6 +328,57 @@ void LevelEditor::DeleteFromArray(std::vector<BoundingBox>& array)
 	wasKeyPressed = isKeyPressed;
 }
 
+void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !leftPressed) {
+
+		int gridX = mousePosition.x / cellSize;
+		int gridY = mousePosition.y / cellSize;
+
+		// Round the grid coordinates to the nearest whole number
+		gridX = std::round(gridX);
+		gridY = std::round(gridY);
+
+		startPos = sf::Vector2i(gridX, gridY);
+
+		std::cout << "First Pos: " << gridX << "," << gridY << std::endl;
+
+		leftPressed = true;
+	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && leftPressed) {
+		int gridX = mousePosition.x / cellSize;
+		int gridY = mousePosition.y / cellSize;
+
+		// Round the grid coordinates to the nearest whole number
+		gridX = std::round(gridX);
+		gridY = std::round(gridY);
+
+		std::cout << "Second Pos: " << gridX << "," << gridY << std::endl;
+
+		endPos = sf::Vector2i(gridX, gridY);
+
+		leftPressed = false;
+		
+		arraySize = endPos - startPos;
+
+		std::cout << "Array Size: " << arraySize.x << "," << arraySize.y << std::endl;
+	}
+
+	bool isKeyPressed = false;
+
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+		isKeyPressed = true;
+	}
+
+	if (!wasKeyPressed && isKeyPressed) {
+		std::cout << "Array Start: " << startPos.x << "," << startPos.y << std::endl;
+		std::cout << "Array Size: " << arraySize.x << "," << arraySize.y << std::endl;
+	}
+
+	wasKeyPressed = isKeyPressed;
+}
 
 void LevelEditor::Draw(sf::RenderWindow& window)
 {
@@ -393,7 +448,7 @@ void LevelEditor::Draw(sf::RenderWindow& window)
 	}
 					   break;
 	case EditMode::BoundingBoxPos: {
-		
+
 	}
 	}
 }

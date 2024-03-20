@@ -8,7 +8,8 @@
 enum EditMode {
 	Tile,
 	BoundingBoxPos,
-	CameraPosition
+	CameraPosition,
+	Save
 };
 
 enum TileMode {
@@ -49,6 +50,8 @@ private:
 
 	std::map<int, sf::Texture*> textures;
 
+	sf::Vector2i arraySize;
+
 	void TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition);
 	void BoundingBoxMode(sf::RenderWindow& window, sf::Vector2f mousePosition);
 	void CameraPositionMode(sf::RenderWindow& window, sf::Vector2f mousePosition);
@@ -64,6 +67,8 @@ private:
 
 	void SetBoundingBox(std::vector<BoundingBox>& array, sf::Vector2f mousePosition, sf::Color color);
 	void DeleteFromArray(std::vector<BoundingBox>& array);
+
+	void SaveLevel(sf::Vector2f mousePosition);
 
 public:
 	LevelEditor();
