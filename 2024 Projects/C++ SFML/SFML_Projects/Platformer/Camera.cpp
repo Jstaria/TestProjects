@@ -17,23 +17,31 @@ void Camera::CheckCollisions()
 			return;
 		}
 	}
-
-	ViewManager::Instance()->SetCameraPosition(currentPosition);
 }
 
 void Camera::StayInBounds()
 {
 	sf::Vector2f size = ViewManager::Instance()->GetWindowView().getSize();
-	sf::Vector2f position = ViewManager::Instance()->GetWindowView().getCenter();
 
 	float left, right, up, down;
 
-	left = current.getRect().left + size.x / 2;
-	up = current.getRect().top + size.y / 2;
-	right = left + current.getRect().width - size.x / 2;
-	down = up + current.getRect().height - size.y / 2;
+	left = current.getRect().left;
+	up = current.getRect().top;
+	right = left + (current.getRect().width);
+	down = up + (current.getRect().height);
 
-	sf::Vector2f newPosition(clamp(currentPosition.x, left, right), clamp(currentPosition.y, up, down));
+	sf::Vector2f newPosition(
+		clamp(currentPosition.x, left + size.x / 2, right - size.x / 2),
+		clamp(currentPosition.y, up + size.y / 2, down - size.y / 2));
+
+	if (current.getRect().width < ViewManager::Instance()->GetWindowView().getSize().x) {
+		newPosition.x = left + current.getRect().width / 2;
+	}
+	if (current.getRect().height < ViewManager::Instance()->GetWindowView().getSize().y) {
+		newPosition.y = up + current.getRect().height / 2;
+	}
+
+	
 
 	ViewManager::Instance()->SetCameraPosition(newPosition);
 }

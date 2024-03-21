@@ -42,7 +42,7 @@ void ViewManager::MoveView(sf::Vector2f direction)
 
 void ViewManager::UpdateView()
 {
-	position = lerp(position, targetPosition, .25);
+	position = lerp(position, targetPosition, .15);
 	view->setCenter(position);
 }
 

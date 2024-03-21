@@ -55,7 +55,7 @@ void Level::LoadTileData(std::string filePath)
 	arrayWidth = std::stoi(dimensions[0]);
 	arrayHeight = std::stoi(dimensions[1]);
 
-	sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+	sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
 
 	std::vector<std::string> playerPos = FileIO::Split(',', data[1]);
 
@@ -79,10 +79,11 @@ void Level::LoadTileData(std::string filePath)
 		{
 			//std::cout << "Loaded {" << i << "," << j << "}" << std::endl;
 
+			if (lineData[j] == "-1") continue;
 
 			sf::Texture* texture;
 
-			texture = &textures[std::stoi(lineData[j])];
+			texture = textures[std::stoi(lineData[j])];
 
 			sf::Vector2f position((i - 2) * texture->getSize().x * textureScaler, j * texture->getSize().y * textureScaler);
 
@@ -116,7 +117,7 @@ void Level::LoadTileDataPNG(std::string imagePath)
 
 	std::cout << "Loaded Level Dimensions: {" << arrayWidth << "," << arrayHeight << std::endl;
 
-	sf::Vector2f scaler(textures[0].getSize().x * textureScaler, textures[0].getSize().y * textureScaler);
+	sf::Vector2f scaler(textures[0]->getSize().x * textureScaler, textures[0]->getSize().y * textureScaler);
 	std::vector<std::vector<TileData>> tileArray(arrayHeight, std::vector<TileData>(arrayWidth));
 
 	for (size_t i = 0; i < arrayWidth; i++)
@@ -130,7 +131,7 @@ void Level::LoadTileDataPNG(std::string imagePath)
 			if (color == sf::Color::Black) {
 				sf::Texture* texture;
 
-				texture = &textures[0];
+				texture = textures[0];
 
 				sf::Vector2f position(j * texture->getSize().x * textureScaler, i * texture->getSize().y * textureScaler);
 
@@ -160,7 +161,7 @@ void Level::CreateBB(std::string filePath)
 
 		std::vector<std::string> lineData = FileIO::Split(',', line);
 
-		sf::Vector2f scaler(textures[1].getSize().x * textureScaler, textures[1].getSize().y * textureScaler);
+		sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
 
 		std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
 		sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
@@ -193,7 +194,7 @@ void Level::CreateCameraBB(std::string filePath)
 
 		std::vector<std::string> lineData = FileIO::Split(',', line);
 
-		sf::Vector2f scaler(textures[1].getSize().x * textureScaler, textures[1].getSize().y * textureScaler);
+		sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
 
 		std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
 		sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
@@ -215,14 +216,45 @@ void Level::CreateCameraBB(std::string filePath)
 
 void Level::Draw(sf::RenderWindow& window)
 {
-	//std::cout << "Got to draw" << std::endl;
-	for (size_t i = 0; i < arrayWidth; i++)
-	{
-		for (size_t j = 0; j < arrayHeight; j++)
-		{
-			if (!tileArray[j][i].IsActive()) continue;
+	// Get only the area that the camera can see to draw
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	int scaler = GlobalVariables::getTextureScaler() * GlobalVariables::getTextures()[1]->getSize().x;
+	int buffer = 10;
+	int halfWidth = (ViewManager::Instance()->GetWindowView().getSize().x / 2);
+	int halfHeight = (ViewManager::Instance()->GetWindowView().getSize().y / 2);
 
-			tileArray[j][i].Draw(window);
+	sf::Vector2f cameraCenter = ViewManager::Instance()->GetWindowView().getCenter();
+
+	// Start Position
+	int gridX = (cameraCenter.x - halfWidth) / scaler ;
+	int gridY = (cameraCenter.y - halfHeight) / scaler;
+
+	gridX = std::round(gridX) - buffer;
+	gridY = std::round(gridY) - buffer;
+
+	sf::Vector2i startPos = sf::Vector2i(clamp(gridX, 0, arrayHeight), clamp(gridY, 0, arrayWidth));
+	//std::cout << "Start Position Set: " << startPos.x << "," << startPos.y << std::endl;
+	// End Position
+	gridX = (cameraCenter.x + halfWidth) / scaler;
+	gridY = (cameraCenter.y + halfHeight) / scaler;
+
+	gridX = std::round(gridX) + buffer;
+	gridY = std::round(gridY) + buffer;
+
+	sf::Vector2i endPos = sf::Vector2i(clamp(gridX, 0, arrayHeight), clamp(gridY, 0, arrayWidth));
+
+	//std::cout << "End Position Set: " << endPos.x << "," << endPos.y << std::endl;
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	//std::cout << "Got to draw" << std::endl;
+	for (size_t i = startPos.x; i < endPos.x; i++)
+	{
+		for (size_t j = startPos.y; j < endPos.y; j++)
+		{
+			if (!tileArray[i][j].IsActive()) continue;
+
+			tileArray[i][j].Draw(window);
 
 			//std::cout << "Drew Tile: {" << i << "," << j << "}" << std::endl;
 		}

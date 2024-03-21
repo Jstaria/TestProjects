@@ -13,6 +13,7 @@ TileData::TileData(sf::Texture* texture, sf::Vector2f position, float scaler, in
 TileData::TileData() {
 	isActive = false;
 	texture = nullptr;
+	tileID = -1;
 }
 
 TileData::~TileData()

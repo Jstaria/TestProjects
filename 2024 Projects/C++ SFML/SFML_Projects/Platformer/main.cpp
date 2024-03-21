@@ -13,12 +13,13 @@
 std::vector<std::string> data;
 
 std::map<std::string, sf::Texture> playerTextures;
-std::map<int, sf::Texture> levelTextures;
 
 std::map<std::string, sf::Sprite> playerSprites;
 std::map<std::string, sf::Sprite>* playerSprites_ptr = &playerSprites;
 
-sf::Texture texture;
+std::vector<sf::Texture*> texture_ptrs;
+std::vector<sf::Texture> textures;
+std::map<int, sf::Texture*> levelTextures;
 
 Player* player;
 
@@ -29,6 +30,16 @@ GameManager* game;
 
 sf::View* view_ptr;
 sf::View view;
+
+bool LoadTexture(std::string file) {
+    bool s;
+
+    sf::Texture texture;
+    s = texture.loadFromFile(file);
+    textures.push_back(texture);
+
+    return s;
+}
 
 /// <summary>
 /// Will load content so that it is useable in main
@@ -58,9 +69,21 @@ void LoadContent(sf::RenderWindow& window) {
         playerSprites.emplace(pair.first,sprite);
     }
 
-    texture.loadFromFile("Images/prototypeBlock.png");
+    LoadTexture("Images/protoGreen.png");
+    LoadTexture("Images/prototypeBlock.png");
+    LoadTexture("Images/protoRed.png");
+    LoadTexture("Images/protoCyan.png");
+    LoadTexture("Images/protoViolet.png");
 
-    levelTextures.emplace(1, texture);
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        texture_ptrs.push_back(&textures[i]);
+    }
+
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        levelTextures.emplace(i, texture_ptrs[i]);
+    }
 
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
@@ -68,7 +91,7 @@ void LoadContent(sf::RenderWindow& window) {
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
     
     game = new GameManager(player);
-    game->SetLevel("Levels/EditorTest");
+    game->SetLevel("Levels/EditorTest1");
 
     //testPNGLevel = new Level("Levels/test.png", true);
 }
@@ -78,24 +101,12 @@ void Draw(sf::RenderWindow& window) {
     //testPNGLevel->Draw(window);
 }
 
-void Update() {
+void Update(sf::RenderWindow& window) {
     game->Update();
     
-    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, -50));
-    //}
-    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(640, 50 + 720));
-    //}
-    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(-100, 360));
-    //}
-    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(100 + 1280, 360));
-    //}
-    //else {
-    //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(1280 / 2, 720 / 2));
-    //}
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        window.close();
+    }
 }
 
 int main()
@@ -104,8 +115,11 @@ int main()
     sf::RenderTexture renderTexture;
     renderTexture.create(1280, 720);
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "LevelLoading");
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    //desktop = sf::VideoMode(1920, 1080);
+    sf::RenderWindow window(desktop, "Level", sf::Style::Fullscreen);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
+    window.setVerticalSyncEnabled(true);
 
     LoadContent(window);
 
@@ -122,7 +136,7 @@ int main()
         }
 
         // Update our main gameloop
-        Update();
+        Update(window);
         window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
         //renderTexture.clear(sf::Color::Blue);

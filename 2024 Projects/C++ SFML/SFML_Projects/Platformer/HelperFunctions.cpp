@@ -23,5 +23,9 @@ int sign(float x){
 }
 
 float clamp(float value, float low, float high) {
-	return (value < low) ? low : (value > high) ? high : value;
+
+	if (value > high) return high;
+	if (value < low) return low;
+	
+	return value;
 }

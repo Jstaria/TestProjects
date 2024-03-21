@@ -9,6 +9,7 @@ private:
 	sf::Sprite sprite;
 	sf::Texture* texture;
 	sf::Vector2f position;
+	sf::FloatRect rectPos;
 
 	bool isActive;
 	int tileID;
@@ -22,6 +23,8 @@ public:
 	void Draw(sf::RenderWindow& window);
 
 	int getID();
+
+	sf::FloatRect getPosition();
 
 	bool IsActive();
 };

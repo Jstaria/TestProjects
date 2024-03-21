@@ -8,6 +8,8 @@ TileData::TileData(sf::Texture* texture, sf::Vector2f position, float scaler, in
 	sprite.setScale(scaler, scaler);
 
 	isActive = true;
+
+	rectPos = sf::FloatRect(sprite.getTextureRect());
 }
 
 TileData::TileData() {
@@ -21,6 +23,11 @@ void TileData::Draw(sf::RenderWindow& window)
 
 int TileData::getID() {
 	return tileID;
+}
+
+sf::FloatRect TileData::getPosition()
+{
+	return rectPos;
 }
 
 bool TileData::IsActive()

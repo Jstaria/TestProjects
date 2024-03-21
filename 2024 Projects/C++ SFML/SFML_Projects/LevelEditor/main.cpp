@@ -49,7 +49,7 @@ void LoadContent(sf::RenderWindow& window) {
     ViewManager::Instance()->SetWindowView(view_ptr);
 
     vc = ViewControl();
-    std::cout << LoadTexture("Images/protoGreen.png") << std::endl;
+    LoadTexture("Images/protoGreen.png");
     LoadTexture("Images/prototypeBlock.png");
     LoadTexture("Images/protoRed.png");
     LoadTexture("Images/protoCyan.png");
