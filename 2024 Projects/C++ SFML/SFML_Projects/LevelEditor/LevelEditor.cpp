@@ -6,6 +6,8 @@ LevelEditor::LevelEditor()
 	arrayWidth = 200;
 	arrayHeight = 200;
 
+	brushSize = 3;
+
 	std::cout << "Set dimensions" << std::endl;
 
 	CreateArray();
@@ -89,8 +91,29 @@ void LevelEditor::Update(sf::RenderWindow& window)
 
 void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 {
+	bool isKeyUpPressed = false;
+	bool isKeyDownPressed = false;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		isKeyUpPressed = true;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		isKeyDownPressed = true;
+	}
+
+	if (isKeyUpPressed && !wasKeyPressed2) {
+		brushSize++;
+	}
+	if (isKeyDownPressed && !wasKeyPressed1) {
+		brushSize = brushSize - 1 > 0 ? brushSize - 1 : 1;
+	}
+
+	wasKeyPressed2 = isKeyUpPressed;
+	wasKeyPressed1 = isKeyDownPressed;
+
 	switch (currentTileMode) {
 	case TileMode::Place: {
+
 
 		bool rightPressed = false;
 
@@ -117,9 +140,17 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 
 			float scaler = GlobalVariables::getTextureScaler() * textures[0]->getSize().x;
 
-			if (IsInArray(startPos) /*&& tileArray[gridX][gridY]->getID() != selectedTileID*/) {
-				SetTile(startPos, scaler);
+			for (size_t i = 0; i < brushSize; i++)
+			{
+				for (size_t j = 0; j < brushSize; j++)
+				{
+					if (IsInArray(startPos + sf::Vector2i(i, j)) /*&& tileArray[gridX][gridY]->getID() != selectedTileID*/) {
+						SetTile(startPos + sf::Vector2i(i, j), scaler);
+					}
+				}
 			}
+
+
 		}
 
 		rightWasPressed = rightPressed;
@@ -168,7 +199,17 @@ void LevelEditor::TileMode(sf::RenderWindow& window, sf::Vector2f mousePosition)
 			float scaler = GlobalVariables::getTextureScaler() * textures[0]->getSize().x;
 
 			if (IsInArray(startPos) /*&& tileArray[gridX][gridY]->getID() != selectedTileID*/) {
-				DeleteTile(startPos);
+				
+			}
+
+			for (size_t i = 0; i < brushSize; i++)
+			{
+				for (size_t j = 0; j < brushSize; j++)
+				{
+					if (IsInArray(startPos + sf::Vector2i(i, j)) /*&& tileArray[gridX][gridY]->getID() != selectedTileID*/) {
+						DeleteTile(startPos + sf::Vector2i(i, j));
+					}
+				}
 			}
 		}
 
@@ -359,8 +400,8 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 		endPos = sf::Vector2i(gridX, gridY);
 
 		leftPressed = false;
-		
-		arraySize = endPos - startPos + sf::Vector2i(1,1);
+
+		arraySize = endPos - startPos + sf::Vector2i(1, 1);
 
 		std::cout << "Array Size: " << arraySize.x << "," << arraySize.y << std::endl;
 	}

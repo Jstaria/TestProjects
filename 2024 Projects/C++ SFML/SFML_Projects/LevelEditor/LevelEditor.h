@@ -26,6 +26,8 @@ private:
 	std::vector<BoundingBox> bbArray;
 	std::vector<BoundingBox> cameraArray;
 
+	int brushSize;
+
 	int arrayWidth 	;
 	int arrayHeight ;
 
@@ -37,6 +39,8 @@ private:
 	bool leftPressed;
 	bool rightWasPressed;
 	bool wasKeyPressed;
+	bool wasKeyPressed1;
+	bool wasKeyPressed2;
 	bool wasFPressed;
 
 	EditMode currentEditMode;
