@@ -69,8 +69,9 @@ void LoadContent(sf::RenderWindow& window) {
         playerSprites.emplace(pair.first,sprite);
     }
 
-    LoadTexture("Images/protoGreen.png");
+    
     LoadTexture("Images/prototypeBlock.png");
+    LoadTexture("Images/protoGreen.png");
     LoadTexture("Images/protoRed.png");
     LoadTexture("Images/protoCyan.png");
     LoadTexture("Images/protoViolet.png");
@@ -116,7 +117,7 @@ int main()
     renderTexture.create(1280, 720);
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    //desktop = sf::VideoMode(1920, 1080);
+    desktop = sf::VideoMode(1920, 1080);
     sf::RenderWindow window(desktop, "Level", sf::Style::Fullscreen);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
     window.setVerticalSyncEnabled(true);
