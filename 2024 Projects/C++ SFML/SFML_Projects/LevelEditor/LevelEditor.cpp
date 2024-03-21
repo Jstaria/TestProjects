@@ -308,7 +308,7 @@ void LevelEditor::SetBoundingBox(std::vector<BoundingBox>& array, sf::Vector2f m
 		sf::Vector2f position1(startPos.x * scale, startPos.y * scale);
 		sf::Vector2f position2(endPos.x * scale + scale, endPos.y * scale + scale);
 
-		array.push_back(BoundingBox(position1, position2, color));
+		array.push_back(BoundingBox(position1, position2, color, startPos, endPos));
 	}
 }
 
@@ -360,7 +360,7 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 
 		leftPressed = false;
 		
-		arraySize = endPos - startPos;
+		arraySize = endPos - startPos + sf::Vector2i(1,1);
 
 		std::cout << "Array Size: " << arraySize.x << "," << arraySize.y << std::endl;
 	}
@@ -375,6 +375,54 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 	if (!wasKeyPressed && isKeyPressed) {
 		std::cout << "Array Start: " << startPos.x << "," << startPos.y << std::endl;
 		std::cout << "Array Size: " << arraySize.x << "," << arraySize.y << std::endl;
+
+		std::vector<std::string> data;
+
+		std::string size = std::to_string(arraySize.y) + "," + std::to_string(arraySize.x) + ",";
+		data.push_back(size);
+
+		size = std::to_string(3) + "," + std::to_string(-1) + ",";
+		data.push_back(size);
+
+		for (size_t i = 0; i < arraySize.x; i++)
+		{
+			std::string line;
+
+			for (size_t j = 0; j < arraySize.y; j++)
+			{
+				line += std::to_string(tileArray[i + startPos.x][j + startPos.y]->getID()) + ",";
+			}
+
+			data.push_back(line);
+		}
+
+		FileIO::WriteToFile("Levels/EditorTest.txt", data);
+
+		data.clear();
+
+		for (size_t i = 0; i < bbArray.size(); i++)
+		{
+			data.push_back(
+				std::to_string(bbArray[i].getPos1().x) + ":" +
+				std::to_string(bbArray[i].getPos1().y) + ":" + "," +
+				std::to_string(bbArray[i].getPos2().x) + ":" +
+				std::to_string(bbArray[i].getPos2().y) + ":" + ",");
+		}
+
+		FileIO::WriteToFile("Levels/EditorTestBB.txt", data);
+
+		data.clear();
+
+		for (size_t i = 0; i < cameraArray.size(); i++)
+		{
+			data.push_back(
+				std::to_string(cameraArray[i].getPos1().x) + ":" +
+				std::to_string(cameraArray[i].getPos1().y) + ":" + "," +
+				std::to_string(cameraArray[i].getPos2().x) + ":" +
+				std::to_string(cameraArray[i].getPos2().y) + ":" + ",");
+		}
+
+		FileIO::WriteToFile("Levels/EditorTestCBB.txt", data);
 	}
 
 	wasKeyPressed = isKeyPressed;

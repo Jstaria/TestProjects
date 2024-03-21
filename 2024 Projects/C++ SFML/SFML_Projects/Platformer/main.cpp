@@ -60,7 +60,7 @@ void LoadContent(sf::RenderWindow& window) {
 
     texture.loadFromFile("Images/prototypeBlock.png");
 
-    levelTextures.emplace(0, texture);
+    levelTextures.emplace(1, texture);
 
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
@@ -68,7 +68,7 @@ void LoadContent(sf::RenderWindow& window) {
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
     
     game = new GameManager(player);
-    game->SetLevel("Levels/File");
+    game->SetLevel("Levels/EditorTest");
 
     //testPNGLevel = new Level("Levels/test.png", true);
 }
@@ -96,8 +96,6 @@ void Update() {
     //else {
     //    ViewManager::Instance()->SetCameraPosition(sf::Vector2f(1280 / 2, 720 / 2));
     //}
-    
-    //ViewManager::Instance()->UpdateView();
 }
 
 int main()
@@ -142,7 +140,7 @@ int main()
         Draw(window);
 
         window.display();
-    }
+}
 
     return 0;
 }

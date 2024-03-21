@@ -25,6 +25,7 @@ public:
 
 	bool CheckCollision(BoundingBox bb);
 	bool CheckCollision(sf::FloatRect rect);
+	bool CheckCollision(sf::Vector2f position);
 	bool isEqual(BoundingBox& bb);
 };
 

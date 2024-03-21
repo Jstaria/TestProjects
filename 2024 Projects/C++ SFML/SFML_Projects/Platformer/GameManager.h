@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "SceneManager.h"
 #include "Level.h"
+#include "Camera.h"
 
 class GameManager
 {
@@ -9,6 +10,7 @@ class GameManager
 private:
 	Player* player;
 	Level* currentLevel;
+	Camera* camera;
 
 public:
 	GameManager(Player* player);

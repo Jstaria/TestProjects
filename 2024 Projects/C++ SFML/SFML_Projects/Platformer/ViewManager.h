@@ -19,6 +19,8 @@ public:
 	void SetWindowView(sf::View* view);
 	sf::View GetWindowView();
 	void SetCameraPosition(sf::Vector2f targetPosition);
-
+	void SetViewZoom(float delta);
+	void MoveView(sf::Vector2f direction);
 	void UpdateView();
+	void ResetPosition();
 };

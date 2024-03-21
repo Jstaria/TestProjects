@@ -10,6 +10,7 @@ private:
 
 	static float textureScaler;
 	static std::map<int, sf::Texture> textures;
+	static sf::Vector2f playerPosition;
 
 public:
 	GlobalVariables();
@@ -21,5 +22,7 @@ public:
 
 	static std::map<int, sf::Texture> getTextures();
 	static void setTextures(std::map<int, sf::Texture> textures);
+	static sf::Vector2f getPlayerPosition();
+	static void setPlayerPosition(sf::Vector2f position);
 };
 

@@ -41,7 +41,14 @@ std::vector<std::string> FileIO::ReadFromFile(std::string fileDirectory) {
 
 void FileIO::WriteToFile(std::string fileDirectory, std::vector<std::string> data)
 {
-    
+    outputFile.open(fileDirectory);
+
+    for (size_t i = 0; i < data.size(); i++)
+    {
+        outputFile << data[i] << std::endl;
+    }
+
+    outputFile.close();
 }
 
 std::vector<std::string> FileIO::Split(char splitChar, std::string string)

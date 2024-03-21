@@ -30,8 +30,24 @@ void ViewManager::SetCameraPosition(sf::Vector2f targetPosition)
 	this->targetPosition = targetPosition;
 }
 
+void ViewManager::SetViewZoom(float delta)
+{
+	view->zoom(delta);
+}
+
+void ViewManager::MoveView(sf::Vector2f direction)
+{
+	view->move(direction);
+}
+
 void ViewManager::UpdateView()
 {
-	position = lerp(position, targetPosition, .125);
+	position = lerp(position, targetPosition, .25);
 	view->setCenter(position);
+}
+
+void ViewManager::ResetPosition()
+{
+	view->setCenter(sf::Vector2f(1920 / 2, 1080 / 2));
+	view->zoom(1920 / view->getSize().x);
 }

@@ -2,6 +2,7 @@
 
 GlobalVariables* GlobalVariables::s_instance = 0;
 float GlobalVariables::textureScaler;
+sf::Vector2f GlobalVariables::playerPosition;
 std::map<int, sf::Texture> GlobalVariables::textures;
 
 GlobalVariables::GlobalVariables()
@@ -34,4 +35,14 @@ std::map<int, sf::Texture> GlobalVariables::getTextures()
 void GlobalVariables::setTextures(std::map<int, sf::Texture> textures)
 {
 	GlobalVariables::textures = textures;
+}
+
+sf::Vector2f GlobalVariables::getPlayerPosition()
+{
+	return playerPosition;
+}
+
+void GlobalVariables::setPlayerPosition(sf::Vector2f position)
+{
+	playerPosition = position;
 }

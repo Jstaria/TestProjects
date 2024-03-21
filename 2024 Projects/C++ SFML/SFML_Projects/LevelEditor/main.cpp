@@ -65,7 +65,7 @@ void LoadContent(sf::RenderWindow& window) {
         levelTextures.emplace(i, texture_ptrs[i]);
     }
 
-    GlobalVariables::setTextureScaler(5);
+    GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
     editor = new LevelEditor();

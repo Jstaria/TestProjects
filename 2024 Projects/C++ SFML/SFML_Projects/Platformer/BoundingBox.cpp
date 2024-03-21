@@ -59,12 +59,12 @@ sf::FloatRect BoundingBox::setRect(sf::FloatRect newPosition)
 void BoundingBox::Draw(sf::RenderWindow& window)
 {
 	window.draw(boundingBox);
-	//int radius = 10;
-	//sf::CircleShape origin(radius);
-	//origin.setOrigin(radius, radius);
-	//origin.setPosition(position.getPosition());
-	//origin.setFillColor(sf::Color::Red);
-	//window.draw(origin);
+	int radius = 10;
+	sf::CircleShape origin(radius);
+	origin.setOrigin(radius, radius);
+	origin.setPosition(position.getPosition());
+	origin.setFillColor(sf::Color::Red);
+	window.draw(origin);
 }
 
 void BoundingBox::Move(sf::Vector2f direction)
@@ -100,6 +100,11 @@ bool BoundingBox::CheckCollision(BoundingBox bb)
 bool BoundingBox::CheckCollision(sf::FloatRect rect)
 {
 	return position.intersects(rect);
+}
+
+bool BoundingBox::CheckCollision(sf::Vector2f position)
+{
+	return this->position.contains(position);
 }
 
 bool BoundingBox::isEqual(BoundingBox& bb)

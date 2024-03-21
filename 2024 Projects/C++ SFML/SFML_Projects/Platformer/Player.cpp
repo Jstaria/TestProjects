@@ -126,7 +126,7 @@ void Player::Update() {
 		lastFacedDirectionX = sign(velocity.x);
 	}
 
-	
+	GlobalVariables::setPlayerPosition(position);
 }
 
 void Player::setCurrentLevel(Level* level)

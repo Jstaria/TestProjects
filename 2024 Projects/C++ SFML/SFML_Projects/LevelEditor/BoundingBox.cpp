@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color) :
-	position(pos1, pos2 - pos1)
+BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, sf::Vector2i gridPos1, sf::Vector2i gridPos2) :
+	position(pos1, pos2 - pos1), pos1(gridPos1), pos2(gridPos2)
 {
 	color.a = 150;
 
@@ -95,6 +95,16 @@ bool BoundingBox::CheckCollision(BoundingBox bb)
 	//isColliding = bb.GetRect().contains(boundingBox.getPosition());
 
 	return position.intersects(rect);
+}
+
+sf::Vector2i BoundingBox::getPos1()
+{
+	return pos1;
+}
+
+sf::Vector2i BoundingBox::getPos2()
+{
+	return pos2;
 }
 
 bool BoundingBox::CheckCollision(sf::FloatRect rect)
