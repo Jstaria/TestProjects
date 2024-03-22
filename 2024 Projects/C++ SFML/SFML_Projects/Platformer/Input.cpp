@@ -33,7 +33,21 @@ bool Input::GetInputHold(std::string input)
 	}
 							 break;
 	case InputState::Controller: {
-		return false;
+
+		if (controllerButtonInputs.find(input) != controllerButtonInputs.end()) {
+			return sf::Joystick::isButtonPressed(0, controllerButtonInputs[input]);
+		}
+		else {
+
+			sf::Vector2f currentAxis(
+				sf::Joystick::getAxisPosition(0, sf::Joystick::X),
+				sf::Joystick::getAxisPosition(0, sf::Joystick::Y)
+			);
+			sf::Vector2f axis = controllerAxisInputs[input];
+
+			if (axis.x == 0) return currentAxis.y > axis.y;
+			if (axis.y == 0) return currentAxis.x > axis.x;
+		}
 	}
 							   break;
 	}
