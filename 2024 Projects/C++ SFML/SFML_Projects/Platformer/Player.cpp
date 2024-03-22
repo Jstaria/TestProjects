@@ -298,6 +298,8 @@ void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canM
 		}
 		*isMoving = true;
 	}
+
+	//std::cout << *isMoving << std::endl;
 }
 
 void Player::MoveTo(sf::Vector2f pos)

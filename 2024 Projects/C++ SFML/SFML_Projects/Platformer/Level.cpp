@@ -232,7 +232,7 @@ void Level::Draw(sf::RenderWindow& window)
 	gridX = std::round(gridX) - buffer;
 	gridY = std::round(gridY) - buffer;
 
-	sf::Vector2i startPos = sf::Vector2i(clamp(gridX, 0, arrayHeight), clamp(gridY, 0, arrayWidth));
+	sf::Vector2i startPos = sf::Vector2i(clamp(gridX, 0, arrayWidth), clamp(gridY, 0, arrayHeight));
 	//std::cout << "Start Position Set: " << startPos.x << "," << startPos.y << std::endl;
 	// End Position
 	gridX = (cameraCenter.x + halfWidth) / scaler;
@@ -241,7 +241,7 @@ void Level::Draw(sf::RenderWindow& window)
 	gridX = std::round(gridX) + buffer;
 	gridY = std::round(gridY) + buffer;
 
-	sf::Vector2i endPos = sf::Vector2i(clamp(gridX, 0, arrayHeight), clamp(gridY, 0, arrayWidth));
+	sf::Vector2i endPos = sf::Vector2i(clamp(gridX, 0, arrayWidth), clamp(gridY, 0, arrayHeight));
 
 	//std::cout << "End Position Set: " << endPos.x << "," << endPos.y << std::endl;
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

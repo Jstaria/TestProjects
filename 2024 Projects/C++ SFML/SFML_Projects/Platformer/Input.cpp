@@ -13,11 +13,36 @@ void Input::LoadInput(std::string filePath)
 			keyboardInputs[lineData[0]] = (sf::Keyboard::Key)std::stoi(lineData[1]);
 		}
 	}
+
+	data = FileIO::ReadFromFile(filePath + "GP.txt");
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		std::vector<std::string> lineData = FileIO::Split(':', data[i]);
+
+		for (size_t j = 0; j < lineData.size(); j++)
+		{
+			std::vector<std::string> axisData = FileIO::Split(',', lineData[1]);
+			sf::Vector2f axis(std::stof(axisData[0]), std::stof(axisData[1]));
+
+			controllerAxisInputs[lineData[0]] = axis;
+		}
+	}
+
+	for (size_t i = 4; i < data.size(); i++)
+	{
+		std::vector<std::string> lineData = FileIO::Split(':', data[i]);
+
+		for (size_t j = 0; j < lineData.size(); j++)
+		{
+			controllerButtonInputs[lineData[0]] = (sf::Keyboard::Key)std::stoi(lineData[1]);
+		}
+	}
 }
 
 Input::Input(std::string filePath)
 {
-	currentInputState = InputState::Keyboard;
+	currentInputState = InputState::Controller;
 	LoadInput(filePath);
 }
 
@@ -37,7 +62,7 @@ bool Input::GetInputHold(std::string input)
 		if (controllerButtonInputs.find(input) != controllerButtonInputs.end()) {
 			return sf::Joystick::isButtonPressed(0, controllerButtonInputs[input]);
 		}
-		else {
+		else if (controllerAxisInputs.find(input) != controllerAxisInputs.end()){
 
 			sf::Vector2f currentAxis(
 				sf::Joystick::getAxisPosition(0, sf::Joystick::X),
@@ -45,8 +70,11 @@ bool Input::GetInputHold(std::string input)
 			);
 			sf::Vector2f axis = controllerAxisInputs[input];
 
-			if (axis.x == 0) return currentAxis.y > axis.y;
-			if (axis.y == 0) return currentAxis.x > axis.x;
+			if (currentAxis == sf::Vector2f(0, 0)) return false;
+			if (axis.x == 0 && axis.y > 0) return currentAxis.y > axis.y;
+			if (axis.y == 0 && axis.x > 0) return currentAxis.x > axis.x;
+			if (axis.y == 0 && axis.x <= 0) return currentAxis.x <= axis.x;
+			if (axis.x == 0 && axis.y <= 0) return currentAxis.y <= axis.y;
 		}
 	}
 							   break;
@@ -68,7 +96,7 @@ bool Input::GetInputPress(std::string input)
 	}
 							 break;
 	case InputState::Controller: {
-
+		return false;
 	}
 							   break;
 	}

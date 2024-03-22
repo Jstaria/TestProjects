@@ -21,3 +21,11 @@ int sign(float x){
 	if (x < 0) return -1;
 	return 0;
 }
+
+float clamp(float value, float low, float high) {
+
+	if (value > high) return high;
+	if (value < low) return low;
+
+	return value;
+}

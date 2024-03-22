@@ -3,7 +3,7 @@
 LevelEditor::LevelEditor()
 {
 	selectedTileID = 0;
-	arrayWidth = 200;
+	arrayWidth = 400;
 	arrayHeight = 200;
 
 	brushSize = 3;
@@ -33,12 +33,14 @@ LevelEditor::LevelEditor()
 
 	CreateSelectMenu();
 
+	std::cout << "Created select menu" << std::endl;
+
 	placeCoolDown = sf::seconds(.25f);
 }
 
 void LevelEditor::CreateArray()
 {
-	tileArray = std::vector<std::vector<TileData*>>(arrayHeight, std::vector<TileData*>(arrayWidth));
+	tileArray = std::vector<std::vector<TileData*>>(arrayWidth, std::vector<TileData*>(arrayHeight));
 
 	for (size_t i = 0; i < arrayWidth; i++)
 	{
@@ -493,11 +495,45 @@ void LevelEditor::Draw(sf::RenderWindow& window)
 		window.draw(line, 2, sf::Lines);
 	}
 
-	for (size_t i = 0; i < arrayWidth; i++)
+	// Get only the area that the camera can see to draw
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	int scaler = GlobalVariables::getTextureScaler() * GlobalVariables::getTextures()[1]->getSize().x;
+	int buffer = 10;
+	int halfWidth = (ViewManager::Instance()->GetWindowView().getSize().x / 2);
+	int halfHeight = (ViewManager::Instance()->GetWindowView().getSize().y / 2);
+
+	sf::Vector2f cameraCenter = ViewManager::Instance()->GetWindowView().getCenter();
+
+	// Start Position
+	int gridX = (cameraCenter.x - halfWidth) / scaler;
+	int gridY = (cameraCenter.y - halfHeight) / scaler;
+
+	gridX = std::round(gridX) - buffer;
+	gridY = std::round(gridY) - buffer;
+
+	sf::Vector2i startPos = sf::Vector2i(clamp(gridX, 0, arrayWidth), clamp(gridY, 0, arrayHeight));
+	//std::cout << "Start Position Set: " << startPos.x << "," << startPos.y << std::endl;
+	// End Position
+	gridX = (cameraCenter.x + halfWidth) / scaler;
+	gridY = (cameraCenter.y + halfHeight) / scaler;
+
+	gridX = std::round(gridX) + buffer;
+	gridY = std::round(gridY) + buffer;
+
+	sf::Vector2i endPos = sf::Vector2i(clamp(gridX, 0, arrayWidth), clamp(gridY, 0, arrayHeight));
+
+	//std::cout << "End Position Set: " << endPos.x << "," << endPos.y << std::endl;
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	for (size_t i = startPos.x; i < endPos.x; i++)
 	{
-		for (size_t j = 0; j < arrayWidth; j++)
+		for (size_t j = startPos.y; j < endPos.y; j++)
 		{
+			if (IsInArray(sf::Vector2i(i,j)) && !tileArray[i][j]->IsActive()) continue;
+
 			tileArray[i][j]->Draw(window);
+
+			//std::cout << "Drew Tile: {" << i << "," << j << "}" << std::endl;
 		}
 	}
 
