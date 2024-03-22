@@ -1,0 +1,5 @@
+MoveUp:0,-.5,:
+MoveLeft:-.5,0,:
+MoveDown:0,.5,:
+MoveRight:.5,0,:
+Jump:0:

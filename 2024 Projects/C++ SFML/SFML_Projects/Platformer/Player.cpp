@@ -39,6 +39,7 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 	CreateBB();
 
 	currentState = PlayerState::Idle;
+	input = Input("Input/Controls");
 }
 
 void Player::Update() {
@@ -236,17 +237,9 @@ void Player::UpdateJump(bool anyCollision)
 	sf::Time timeSinceBeingGrounded = clock.getElapsedTime() - timeOfGrounded;
 
 	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && ((isGrounded && canJump) || (canJump && wasGrounded))) {
-	//	velocity.y = 0;
-	//	velocity.y += jumpVelocity;
-	//	isGrounded = false;
-	//	canJump = false;
-	//}
-
 	bool isPressingKey = false;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+	if (input.GetInputHold("Jump")) {
 		wantsToJump = true;
 
 		if (!wasPressingKey) {
@@ -282,7 +275,7 @@ void Player::UpdateJump(bool anyCollision)
 
 void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canMoveLeft)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+	if (input.GetInputHold("MoveLeft")) {
 		if (velocity.x > 0) {
 			velocity.x -= deceleration * 2;
 		}
@@ -294,7 +287,7 @@ void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canM
 		*isMoving = true;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+	if (input.GetInputHold("MoveRight")) {
 		if (velocity.x < 0) {
 			velocity.x += deceleration * 2;
 		}

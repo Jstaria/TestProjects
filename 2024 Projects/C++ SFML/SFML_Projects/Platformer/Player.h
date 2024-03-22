@@ -7,6 +7,7 @@
 #include "HelperFunctions.h"
 #include "BoundingBox.h"
 #include "Level.h"
+#include "Input.h"
 
 enum PlayerState {
     Idle,
@@ -28,6 +29,8 @@ public:
 private:
 
     PlayerState currentState;
+
+    Input input;
 
     int count;
     int speedMultiplier;

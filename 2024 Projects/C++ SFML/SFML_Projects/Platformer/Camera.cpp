@@ -12,7 +12,7 @@ void Camera::CheckCollisions()
 		// position that is at the players current location but still is locked within bounds
 
 		if (bb.CheckCollision(currentPosition)) {
-			std::cout << "set current" << std::endl;
+			//std::cout << "set current" << std::endl;
 			current = bb;
 			return;
 		}
