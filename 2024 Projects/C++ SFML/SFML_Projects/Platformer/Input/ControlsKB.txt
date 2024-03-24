@@ -3,3 +3,4 @@ MoveLeft:0:
 MoveDown:18:
 MoveRight:3:
 Jump:57:
+SwapControl:27:

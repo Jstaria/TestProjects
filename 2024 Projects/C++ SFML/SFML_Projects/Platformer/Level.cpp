@@ -74,7 +74,7 @@ void Level::LoadTileData(std::string filePath)
 		std::string line = data[i];
 
 		std::vector<std::string> lineData = FileIO::Split(',', line);
-
+ 
 		for (size_t j = 0; j < lineData.size(); j++)
 		{
 			//std::cout << "Loaded {" << i << "," << j << "}" << std::endl;
@@ -165,6 +165,8 @@ void Level::CreateBB(std::string filePath)
 
 		std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
 		sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
+
+
 
 		//std::cout << "Position 1 Created" << std::endl;
 

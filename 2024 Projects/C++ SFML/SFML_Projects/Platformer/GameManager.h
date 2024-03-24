@@ -11,9 +11,10 @@ private:
 	Player* player;
 	Level* currentLevel;
 	Camera* camera;
+	Input* input;
 
 public:
-	GameManager(Player* player);
+	GameManager(Player* player, Input* input);
 
 	void Draw(sf::RenderWindow& window);
 

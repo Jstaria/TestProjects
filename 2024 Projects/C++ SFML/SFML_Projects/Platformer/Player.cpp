@@ -2,7 +2,7 @@
 #include <iostream>
 #include "GlobalVariables.h"
 
-Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames)
+Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames, Input* input)
 	: Entity(sprites, position, maxFrames) {
 
 	for (const auto& pair : *Player::sprites) {
@@ -39,7 +39,8 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 	CreateBB();
 
 	currentState = PlayerState::Idle;
-	input = Input("Input/Controls");
+
+	this->input = input;
 }
 
 void Player::Update() {
@@ -239,7 +240,7 @@ void Player::UpdateJump(bool anyCollision)
 	bool wasGrounded = timeSinceBeingGrounded < coyoteTime && !isGrounded;
 	bool isPressingKey = false;
 
-	if (input.GetInputHold("Jump")) {
+	if (input->GetInputHold("Jump")) {
 		wantsToJump = true;
 
 		if (!wasPressingKey) {
@@ -275,7 +276,7 @@ void Player::UpdateJump(bool anyCollision)
 
 void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canMoveLeft)
 {
-	if (input.GetInputHold("MoveLeft")) {
+	if (input->GetInputHold("MoveLeft")) {
 		if (velocity.x > 0) {
 			velocity.x -= deceleration * 2;
 		}
@@ -287,7 +288,7 @@ void Player::UpdateKeyboardControls(bool* isMoving, bool canMoveRight, bool canM
 		*isMoving = true;
 	}
 
-	if (input.GetInputHold("MoveRight")) {
+	if (input->GetInputHold("MoveRight")) {
 		if (velocity.x < 0) {
 			velocity.x += deceleration * 2;
 		}

@@ -19,7 +19,7 @@ class Player :
     public Entity
 {
 public:
-    Player(std::map<std::string,sf::Sprite>* sprites, sf::Vector2f position, int maxFrames);
+    Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames, Input* input);
 
     void Draw(sf::RenderWindow& window);
     void Update();
@@ -30,7 +30,7 @@ private:
 
     PlayerState currentState;
 
-    Input input;
+    Input* input;
 
     int count;
     int speedMultiplier;

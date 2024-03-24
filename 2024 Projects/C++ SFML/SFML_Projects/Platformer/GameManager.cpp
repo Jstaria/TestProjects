@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager(Player* player) : player(player)
+GameManager::GameManager(Player* player, Input* input) : player(player), input(input)
 {
 	camera = new Camera();
 }
@@ -16,6 +16,7 @@ void GameManager::Update()
 {
 	player->Update();
 	camera->Update();
+	input->Update();
 	ViewManager::Instance()->UpdateView();
 }
 

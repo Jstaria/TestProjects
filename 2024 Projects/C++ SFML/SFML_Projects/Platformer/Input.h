@@ -30,5 +30,7 @@ public:
 
 	bool GetInputHold(std::string input);
 	bool GetInputPress(std::string input);
+
+	void Update();
 };
 

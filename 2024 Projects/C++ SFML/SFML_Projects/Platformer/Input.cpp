@@ -42,7 +42,7 @@ void Input::LoadInput(std::string filePath)
 
 Input::Input(std::string filePath)
 {
-	currentInputState = InputState::Controller;
+	currentInputState = InputState::Keyboard;
 	LoadInput(filePath);
 }
 
@@ -96,10 +96,23 @@ bool Input::GetInputPress(std::string input)
 	}
 							 break;
 	case InputState::Controller: {
-		return false;
+		isPressed = sf::Joystick::isButtonPressed(0, controllerButtonInputs[input]);
+
+		inputValue = isPressed && !conInputsPressed[input];
+
+		conInputsPressed[input] = isPressed;
 	}
 							   break;
 	}
 
 	return inputValue;
+}
+
+void Input::Update()
+{
+	if (GetInputPress("SwapControl")) {
+		currentInputState = (InputState)((currentInputState + 1) % 2);
+
+		std::cout << "did" << std::endl;
+	}
 }

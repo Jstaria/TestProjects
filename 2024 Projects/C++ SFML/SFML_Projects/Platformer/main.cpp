@@ -22,6 +22,7 @@ std::vector<sf::Texture> textures;
 std::map<int, sf::Texture*> levelTextures;
 
 Player* player;
+Input* input;
 
 Level* testLevel;
 Level* testPNGLevel;
@@ -69,7 +70,8 @@ void LoadContent(sf::RenderWindow& window) {
         playerSprites.emplace(pair.first,sprite);
     }
 
-    
+    input = new Input("Input/Controls");
+
     LoadTexture("Images/prototypeBlock.png");
     LoadTexture("Images/protoGreen.png");
     LoadTexture("Images/protoRed.png");
@@ -89,9 +91,9 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
-    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6);
+    player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
-    game = new GameManager(player);
+    game = new GameManager(player, input);
     game->SetLevel("Levels/EditorTest");
 
     //testPNGLevel = new Level("Levels/test.png", true);
