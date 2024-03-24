@@ -31,6 +31,7 @@ Player::Player(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position
 	this->clock = sf::Clock();
 	this->coyoteTime = sf::seconds(.5f);
 	this->jumpBufferTime = sf::seconds(.1f);
+	this->maxYFall = 1000;
 
 	lastFacedDirectionX = 1;
 	currentSprite = (*this->sprites)[key];
@@ -64,6 +65,13 @@ void Player::Update() {
 		if (bb.CheckCollision(boundingBoxes["GroundBox"])) {
 			if (velocity.y > 0) {
 				velocity.y = 0;
+
+				//std::cout << position.y - jumpYStart << std::endl;
+
+				//if (position.y - jumpYStart > maxYFall) {
+				//	MoveTo(sf::Vector2f(200, 150));
+
+				//}
 			}
 			
 			if (velocity.y == 0) {
@@ -73,6 +81,7 @@ void Player::Update() {
 				anyCollision = true;
 				wantsToJump = false;
 				canJump = true;
+				jumpYStart = position.y;
 			}
 		}
 	}

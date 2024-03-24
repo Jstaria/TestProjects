@@ -58,6 +58,9 @@ private:
     sf::Time jumpBufferTime;
     sf::Time jumpBufferCounter;
 
+    float jumpYStart;
+    float maxYFall;
+
     std::map<std::string, BoundingBox> boundingBoxes;
 
     void GetCurrentSprite();

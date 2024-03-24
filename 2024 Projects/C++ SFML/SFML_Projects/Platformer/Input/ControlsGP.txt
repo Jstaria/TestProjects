@@ -1,6 +1,6 @@
 MoveUp:0,-25,:
-MoveLeft:-25,0,:
+MoveLeft:-30,0,:
 MoveDown:0,25,:
-MoveRight:25,0,:
+MoveRight:30,0,:
 Jump:0:
 SwapControl:6:
