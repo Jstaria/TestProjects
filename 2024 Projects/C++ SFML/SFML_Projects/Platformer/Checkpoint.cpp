@@ -12,12 +12,15 @@ void Checkpoint::Draw(sf::RenderTarget& window)
 
 void Checkpoint::Update()
 {
+	// Get interaction
 }
 
 void Checkpoint::GetInteraction() const
 {
+	// Check collision, if true, bring up interaction text
 }
 
 void Checkpoint::CheckCollision() const
 {
+	// GlobalVariables player bounding box, check to see if it intersects with the save box
 }

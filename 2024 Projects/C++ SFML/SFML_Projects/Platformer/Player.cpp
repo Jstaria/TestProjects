@@ -355,6 +355,9 @@ void Player::CreateBB()
 		-sf::Vector2f(drawnSprite.getLocalBounds().width / 6 * scaler, drawnSprite.getLocalBounds().height / 2 * scaler - drawnSprite.getLocalBounds().height / 6 * scaler));
 
 	boundingBoxes.emplace("Hitbox", box);
+	mainBB_ptr = &boundingBoxes["Hitbox"];
+
+	GlobalVariables::Instance()->setPlayerBB(mainBB_ptr);
 
 	float boxWidth = box.getRect().width / 2;
 

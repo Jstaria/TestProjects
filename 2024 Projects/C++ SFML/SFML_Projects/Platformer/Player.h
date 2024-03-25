@@ -62,6 +62,7 @@ private:
     float maxYFall;
 
     std::map<std::string, BoundingBox> boundingBoxes;
+    BoundingBox* mainBB_ptr;
 
     void GetCurrentSprite();
     void IncrementFrameNum(int modulus);
