@@ -42,7 +42,7 @@ void Input::LoadInput(std::string filePath)
 
 Input::Input(std::string filePath)
 {
-	currentInputState = InputState::Keyboard;
+	currentInputState = InputState::Controller;
 	LoadInput(filePath);
 }
 
