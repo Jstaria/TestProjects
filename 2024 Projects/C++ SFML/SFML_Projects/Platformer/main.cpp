@@ -7,20 +7,24 @@
 #include "Level.h"
 #include "GlobalVariables.h"
 #include "ViewManager.h"
-
+#include "Checkpoint.h"
 #include "GameManager.h"
 
 std::vector<std::string> data;
 
 std::map<std::string, sf::Texture> playerTextures;
+std::map<std::string, sf::Texture> checkTextures;
 
 std::map<std::string, sf::Sprite> playerSprites;
 std::map<std::string, sf::Sprite>* playerSprites_ptr = &playerSprites;
+std::map<std::string, sf::Sprite> checkSprites;
+std::map<std::string, sf::Sprite>* checkSprites_ptr = &checkSprites;
 
 std::vector<sf::Texture*> texture_ptrs;
 std::vector<sf::Texture> textures;
 std::map<int, sf::Texture*> levelTextures;
 
+Checkpoint* testPoint;
 Player* player;
 Input* input;
 
@@ -63,11 +67,25 @@ void LoadContent(sf::RenderWindow& window) {
     jump.loadFromFile("Images/character_jump.png");
     playerTextures.emplace("jump", jump);
 
+    sf::Texture unlit;
+    unlit.loadFromFile("Images/checkpoint_unlit.png");
+    checkTextures.emplace("unlit", unlit);
+    sf::Texture lit;
+    lit.loadFromFile("Images/checkpoint_lit.png");
+    checkTextures.emplace("lit", lit);
+
     for (auto& pair : playerTextures) {
         sf::Sprite sprite;
         sprite.setTexture(pair.second);
 
         playerSprites.emplace(pair.first,sprite);
+    }
+
+    for (auto& pair : checkTextures) {
+        sf::Sprite sprite;
+        sprite.setTexture(pair.second);
+
+        checkSprites.emplace(pair.first, sprite);
     }
 
     input = new Input("Input/Controls");
@@ -91,6 +109,7 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
 
+    testPoint = new Checkpoint(checkSprites_ptr, sf::Vector2f(800, 300), 1);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
@@ -101,12 +120,14 @@ void LoadContent(sf::RenderWindow& window) {
 
 void Draw(sf::RenderWindow& window) {
     game->Draw(window);
+    testPoint->Draw(window);
     //testPNGLevel->Draw(window);
 }
 
 void Update(sf::RenderWindow& window) {
     game->Update();
-    
+    testPoint->Update();
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();
     }
@@ -120,7 +141,7 @@ int main()
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     desktop = sf::VideoMode(1920, 1080);
-    sf::RenderWindow window(desktop, "Level", sf::Style::Fullscreen);
+    sf::RenderWindow window(desktop, "Level"/*, sf::Style::Fullscreen*/);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
     window.setVerticalSyncEnabled(true);
 

@@ -14,8 +14,8 @@ private:
     BoundingBox boundingBox;
 
     // Inherited via IInteractable
-    void GetInteraction() const override;
-    bool CheckCollision() const override;
+    void GetInteraction() override;
+    bool CheckCollision() override;
 
 public:
     Checkpoint(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames);

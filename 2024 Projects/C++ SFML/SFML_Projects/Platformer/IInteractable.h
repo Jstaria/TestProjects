@@ -2,6 +2,6 @@
 
 class IInteractable {
 private:
-	virtual void GetInteraction() const = 0;
-	virtual bool CheckCollision() const = 0;
+	virtual void GetInteraction() = 0;
+	virtual bool CheckCollision() = 0;
 };
