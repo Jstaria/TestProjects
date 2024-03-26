@@ -4,6 +4,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 #include "BoundingBox.h"
+#include "Input.h"
 
 class GlobalVariables {
 private:
@@ -12,6 +13,7 @@ private:
 	static float textureScaler;
 	static std::map<int, sf::Texture*> textures;
 	static sf::Vector2f playerPosition;
+	static Input* input;
 	static BoundingBox* playerBB;
 
 public:
@@ -26,7 +28,11 @@ public:
 	static void setTextures(std::map<int, sf::Texture*>& textures);
 	static sf::Vector2f getPlayerPosition();
 	static BoundingBox getPlayerBB();
+	
 	static void setPlayerPosition(sf::Vector2f position);
 	static void setPlayerBB(BoundingBox* bb);
+
+	static void setInput(Input* input);
+	static Input* getInput();
 };
 

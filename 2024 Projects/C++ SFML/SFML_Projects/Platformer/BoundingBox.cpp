@@ -58,7 +58,7 @@ sf::FloatRect BoundingBox::setRect(sf::FloatRect newPosition)
 
 void BoundingBox::Draw(sf::RenderWindow& window)
 {
-	window.draw(boundingBox);
+	//window.draw(boundingBox);
 	//int radius = 10;
 	//sf::CircleShape origin(radius);
 	//origin.setOrigin(radius, radius);

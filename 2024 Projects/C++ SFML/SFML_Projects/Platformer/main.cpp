@@ -108,6 +108,7 @@ void LoadContent(sf::RenderWindow& window) {
 
     GlobalVariables::setTextureScaler(3);
     GlobalVariables::setTextures(levelTextures);
+    GlobalVariables::setInput(input);
 
     testPoint = new Checkpoint(checkSprites_ptr, sf::Vector2f(800, 300), 1);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
@@ -119,8 +120,8 @@ void LoadContent(sf::RenderWindow& window) {
 }
 
 void Draw(sf::RenderWindow& window) {
-    game->Draw(window);
     testPoint->Draw(window);
+    game->Draw(window);
     //testPNGLevel->Draw(window);
 }
 

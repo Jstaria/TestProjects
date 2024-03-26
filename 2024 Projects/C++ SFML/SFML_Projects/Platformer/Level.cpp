@@ -42,6 +42,7 @@ Level::~Level() {
 
 	bbArray->clear();
 	delete bbArray;
+	delete camera;
 }
 
 void Level::LoadTileData(std::string filePath)
@@ -186,6 +187,39 @@ void Level::CreateBB(std::string filePath)
 void Level::CreateCameraBB(std::string filePath)
 {
 	std::vector<std::string> data = FileIO::ReadFromFile(filePath + "CBB.txt");
+
+	std::cout << "Read File" << std::endl;
+
+
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		std::string line = data[i];
+
+		std::vector<std::string> lineData = FileIO::Split(',', line);
+
+		sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
+
+		std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
+		sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
+
+		//std::cout << "Position 1 Created" << std::endl;
+
+		std::vector<std::string> pos2Data = FileIO::Split(':', lineData[1]);
+		sf::Vector2f pos2(std::stoi(pos2Data[0]) * scaler.x + scaler.x, std::stoi(pos2Data[1]) * scaler.y + scaler.x);
+
+		//std::cout << "Position 2 Created" << std::endl;
+
+		BoundingBox bb(pos1, pos2, sf::Color::Magenta);
+
+		camera->AddBoundingEdge(bb);
+
+		//std::cout << "Bounding Box Created" << std::endl;
+	}
+}
+
+void Level::CreateInteractables(std::string filePath)
+{
+	std::vector<std::string> data = FileIO::ReadFromFile(filePath + "IO.txt");
 
 	std::cout << "Read File" << std::endl;
 

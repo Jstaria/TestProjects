@@ -4,3 +4,4 @@ MoveDown:18:
 MoveRight:3:
 Jump:57:
 SwapControl:27:
+Interact:4:

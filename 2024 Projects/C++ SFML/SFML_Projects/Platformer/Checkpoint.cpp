@@ -41,17 +41,14 @@ void Checkpoint::Draw(sf::RenderWindow& window)
 void Checkpoint::Update()
 {
 	GetInteraction();
+
+	currentSprite = isActive ? spriteMap["lit"] : spriteMap["unlit"];
 }
 
 void Checkpoint::GetInteraction()
 {
-	if (CheckCollision()) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-			currentSprite = spriteMap["lit"];
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
-			currentSprite = spriteMap["unlit"];
-		}
+	if (CheckCollision() && GlobalVariables::getInput()->GetInputPress("Interact")) {
+		isActive = !isActive;
 	}
 }
 

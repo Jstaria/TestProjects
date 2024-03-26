@@ -25,7 +25,8 @@ private:
 	/*std::vector<std::vector<TileData>>*/
 	std::vector<std::vector<TileData>> tileArray;
 	std::list<BoundingBox>* bbArray;
-	std::map<int, sf::Texture*> textures;
+	std::map<
+		int, sf::Texture*> textures;
 
 public:
 	Level(std::string levelPath);
@@ -39,6 +40,7 @@ public:
 
 	void CreateBB(std::string filePath);
 	void CreateCameraBB(std::string filePath);
+	void CreateInteractables(std::string filePath);
 
 	void Draw(sf::RenderWindow& window);
 

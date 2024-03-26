@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "GlobalVariables.h"
 #include "FileIO.h"
 
 enum InputState {

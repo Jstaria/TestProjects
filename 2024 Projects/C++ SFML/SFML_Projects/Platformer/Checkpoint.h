@@ -12,6 +12,7 @@ private:
     sf::Sprite currentSprite;
     std::map<std::string, sf::Sprite> spriteMap;
     BoundingBox boundingBox;
+    bool isActive;
 
     // Inherited via IInteractable
     void GetInteraction() override;
