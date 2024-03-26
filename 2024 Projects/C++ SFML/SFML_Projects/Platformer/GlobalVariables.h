@@ -11,7 +11,7 @@ private:
 	static GlobalVariables* s_instance;
 
 	static float textureScaler;
-	static std::map<int, sf::Texture*> textures;
+	static std::map<std::string, std::map<int, sf::Texture*>> textures;
 	static sf::Vector2f playerPosition;
 	static Input* input;
 	static BoundingBox* playerBB;
@@ -24,8 +24,8 @@ public:
 	static float getTextureScaler();
 	static void setTextureScaler(float scaler);
 
-	static std::map<int, sf::Texture*> getTextures();
-	static void setTextures(std::map<int, sf::Texture*>& textures);
+	static std::map<int, sf::Texture*> getTextures(std::string textureName);
+	static void setTextures(std::map<int, sf::Texture*>& textures, std::string textureName);
 	static sf::Vector2f getPlayerPosition();
 	static BoundingBox getPlayerBB();
 	

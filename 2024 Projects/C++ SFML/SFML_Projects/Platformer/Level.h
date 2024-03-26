@@ -9,6 +9,8 @@
 #include "TileData.h"
 #include <list>
 #include "Camera.h"
+#include "Checkpoint.h"
+#include "IInteractable.h"
 
 class Level
 {
@@ -24,7 +26,8 @@ private:
 
 	/*std::vector<std::vector<TileData>>*/
 	std::vector<std::vector<TileData>> tileArray;
-	std::list<BoundingBox>* bbArray;
+	std::vector<BoundingBox>* bbArray;
+	std::vector<IInteractable> interactableArray;
 	std::map<
 		int, sf::Texture*> textures;
 
@@ -44,7 +47,7 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 
-	std::list<BoundingBox>* getBBArray();
+	std::vector<BoundingBox>* getBBArray();
 	sf::Vector2f getPlayerPos();
 };
 

@@ -36,12 +36,23 @@ GameManager* game;
 sf::View* view_ptr;
 sf::View view;
 
-bool LoadTexture(std::string file) {
+bool LoadTexture(std::string file, std::vector<sf::Texture>& textures) {
     bool s;
 
     sf::Texture texture;
     s = texture.loadFromFile(file);
     textures.push_back(texture);
+
+    return s;
+}
+
+bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf::Sprite>& sprites, std::vector<sf::Texture>& textures) {
+    
+    bool s;
+
+    LoadTexture(file, textures);
+
+    sprites.emplace(mapName, sf::Sprite(textures.back()));
 
     return s;
 }
@@ -90,11 +101,11 @@ void LoadContent(sf::RenderWindow& window) {
 
     input = new Input("Input/Controls");
 
-    LoadTexture("Images/prototypeBlock.png");
-    LoadTexture("Images/protoGreen.png");
-    LoadTexture("Images/protoRed.png");
-    LoadTexture("Images/protoCyan.png");
-    LoadTexture("Images/protoViolet.png");
+    LoadTexture("Images/prototypeBlock.png", textures);
+    LoadTexture("Images/protoGreen.png", textures);
+    LoadTexture("Images/protoRed.png", textures);
+    LoadTexture("Images/protoCyan.png", textures);
+    LoadTexture("Images/protoViolet.png", textures);
 
     for (size_t i = 0; i < textures.size(); i++)
     {
@@ -107,7 +118,8 @@ void LoadContent(sf::RenderWindow& window) {
     }
 
     GlobalVariables::setTextureScaler(3);
-    GlobalVariables::setTextures(levelTextures);
+    GlobalVariables::setTextures(levelTextures, "level");
+    //GlobalVariables::setTextures(levelTextures, "level");
     GlobalVariables::setInput(input);
 
     testPoint = new Checkpoint(checkSprites_ptr, sf::Vector2f(800, 300), 1);

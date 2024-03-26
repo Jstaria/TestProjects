@@ -6,7 +6,7 @@ Level::Level(std::string levelPath) :
 	levelPath(levelPath)
 {
 	textureScaler = GlobalVariables::getTextureScaler();
-	textures = GlobalVariables::getTextures();
+	textures = GlobalVariables::getTextures("level");
 
 	LoadTileData(levelPath);
 	CreateBB(levelPath);
@@ -16,7 +16,7 @@ Level::Level(std::string imagePath, bool) :
 	levelPath(imagePath)
 {
 	textureScaler = GlobalVariables::getTextureScaler();
-	textures = GlobalVariables::getTextures();
+	textures = GlobalVariables::getTextures("level");
 
 	LoadTileDataPNG(levelPath);
 	//CreateBB(levelPath);
@@ -26,7 +26,7 @@ Level::Level(std::string levelPath, Camera* camera) :
 	levelPath(levelPath), camera(camera)
 {
 	textureScaler = GlobalVariables::getTextureScaler();
-	textures = GlobalVariables::getTextures();
+	textures = GlobalVariables::getTextures("level");
 
 	LoadTileData(levelPath);
 	CreateBB(levelPath);
@@ -153,7 +153,7 @@ void Level::CreateBB(std::string filePath)
 
 	std::cout << "Read File" << std::endl;
 
-	bbArray = new std::list<BoundingBox>();
+	bbArray = new std::vector<BoundingBox>();
 
 
 	for (size_t i = 0; i < data.size(); i++)
@@ -232,19 +232,17 @@ void Level::CreateInteractables(std::string filePath)
 
 		sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
 
-		std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
-		sf::Vector2f pos1(std::stoi(pos1Data[0]) * scaler.x, std::stoi(pos1Data[1]) * scaler.y);
+		//std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
+		sf::Vector2f pos1(std::stoi(lineData[1]) * scaler.x, std::stoi(lineData[2]) * scaler.y);
 
 		//std::cout << "Position 1 Created" << std::endl;
 
-		std::vector<std::string> pos2Data = FileIO::Split(':', lineData[1]);
-		sf::Vector2f pos2(std::stoi(pos2Data[0]) * scaler.x + scaler.x, std::stoi(pos2Data[1]) * scaler.y + scaler.x);
+		//std::vector<std::string> pos2Data = FileIO::Split(':', lineData[1]);
+		//sf::Vector2f pos2(std::stoi(pos2Data[0]) * scaler.x + scaler.x, std::stoi(pos2Data[1]) * scaler.y + scaler.x);
 
 		//std::cout << "Position 2 Created" << std::endl;
 
-		BoundingBox bb(pos1, pos2, sf::Color::Magenta);
-
-		camera->AddBoundingEdge(bb);
+		//Checkpoint bb(pos1, 1);
 
 		//std::cout << "Bounding Box Created" << std::endl;
 	}
@@ -254,7 +252,7 @@ void Level::Draw(sf::RenderWindow& window)
 {
 	// Get only the area that the camera can see to draw
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	int scaler = GlobalVariables::getTextureScaler() * GlobalVariables::getTextures()[1]->getSize().x;
+	int scaler = GlobalVariables::getTextureScaler() * GlobalVariables::getTextures("level")[1]->getSize().x;
 	int buffer = 10;
 	int halfWidth = (ViewManager::Instance()->GetWindowView().getSize().x / 2);
 	int halfHeight = (ViewManager::Instance()->GetWindowView().getSize().y / 2);
@@ -301,7 +299,7 @@ void Level::Draw(sf::RenderWindow& window)
 	}
 }
 
-std::list<BoundingBox>* Level::getBBArray()
+std::vector<BoundingBox>* Level::getBBArray()
 {
 	return bbArray;
 }
