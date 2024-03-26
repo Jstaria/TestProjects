@@ -50,7 +50,7 @@ bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf:
     
     bool s;
 
-    LoadTexture(file, textures);
+    s = LoadTexture(file, textures);
 
     sprites.emplace(mapName, sf::Sprite(textures.back()));
 
