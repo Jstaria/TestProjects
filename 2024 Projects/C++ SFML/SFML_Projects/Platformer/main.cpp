@@ -20,11 +20,14 @@ std::map<std::string, sf::Sprite>* playerSprites_ptr = &playerSprites;
 std::map<std::string, sf::Sprite> checkSprites;
 std::map<std::string, sf::Sprite>* checkSprites_ptr = &checkSprites;
 
+std::map<std::string, sf::Texture> textures;
+
 std::vector<sf::Texture*> texture_ptrs;
-std::vector<sf::Texture> textures;
-std::map<int, sf::Texture*> levelTextures;
+std::vector<sf::Texture> levelTextures;
+std::map<int, sf::Texture*> levelTexture_ptrs;
 
 Checkpoint* testPoint;
+Checkpoint* testPoint2;
 Player* player;
 Input* input;
 
@@ -35,6 +38,27 @@ GameManager* game;
 
 sf::View* view_ptr;
 sf::View view;
+
+bool loadTexture(const std::string& id, const std::string& filename) {
+    sf::Texture texture;
+    if (!texture.loadFromFile(filename)) {
+        return false;
+    }
+    textures[id] = texture;
+    return true;
+}
+
+// Get texture by ID
+sf::Texture& getTexture(const std::string& id) {
+    return textures.at(id);
+}
+
+// Load sprite from texture
+sf::Sprite createSprite(const std::string& textureId) {
+    sf::Sprite sprite;
+    sprite.setTexture(getTexture(textureId));
+    return sprite;
+}
 
 bool LoadTexture(std::string file, std::vector<sf::Texture>& textures) {
     bool s;
@@ -68,22 +92,19 @@ void LoadContent(sf::RenderWindow& window) {
 
     ViewManager::Instance()->SetWindowView(view_ptr);
 
-    sf::Texture idle;
-    idle.loadFromFile("Images/character_idle.png");
-    playerTextures.emplace("idle", idle);
-    sf::Texture walk;
-    walk.loadFromFile("Images/character_walk.png");
-    playerTextures.emplace("walk", walk);
-    sf::Texture jump;
-    jump.loadFromFile("Images/character_jump.png");
-    playerTextures.emplace("jump", jump);
+    loadTexture("idle", "Images/character_idle.png");
+    loadTexture("walk", "Images/character_walk.png");
+    loadTexture("jump", "Images/character_jump.png");
 
-    sf::Texture unlit;
-    unlit.loadFromFile("Images/checkpoint_unlit.png");
-    checkTextures.emplace("unlit", unlit);
-    sf::Texture lit;
-    lit.loadFromFile("Images/checkpoint_lit.png");
-    checkTextures.emplace("lit", lit);
+    playerSprites["idle"] = createSprite("idle");
+    playerSprites["walk"] = createSprite("walk");
+    playerSprites["jump"] = createSprite("jump");
+
+    loadTexture("unlit", "Images/checkpoint_unlit.png");
+    loadTexture("lit", "Images/checkpoint_lit.png");
+
+    checkSprites["unlit"] = createSprite("unlit");
+    checkSprites["lit"] = createSprite("lit");
 
     for (auto& pair : playerTextures) {
         sf::Sprite sprite;
@@ -101,28 +122,30 @@ void LoadContent(sf::RenderWindow& window) {
 
     input = new Input("Input/Controls");
 
-    LoadTexture("Images/prototypeBlock.png", textures);
-    LoadTexture("Images/protoGreen.png", textures);
-    LoadTexture("Images/protoRed.png", textures);
-    LoadTexture("Images/protoCyan.png", textures);
-    LoadTexture("Images/protoViolet.png", textures);
+    LoadTexture("Images/prototypeBlock.png", levelTextures);
+    LoadTexture("Images/protoGreen.png", levelTextures);
+    LoadTexture("Images/protoRed.png", levelTextures);
+    LoadTexture("Images/protoCyan.png", levelTextures);
+    LoadTexture("Images/protoViolet.png", levelTextures);
 
-    for (size_t i = 0; i < textures.size(); i++)
+    for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        texture_ptrs.push_back(&textures[i]);
+        texture_ptrs.push_back(&levelTextures[i]);
     }
 
-    for (size_t i = 0; i < textures.size(); i++)
+    for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        levelTextures.emplace(i, texture_ptrs[i]);
+        levelTexture_ptrs.emplace(i, texture_ptrs[i]);
     }
 
     GlobalVariables::setTextureScaler(3);
-    GlobalVariables::setTextures(levelTextures, "level");
-    //GlobalVariables::setTextures(levelTextures, "level");
+    GlobalVariables::setTextures(levelTexture_ptrs, "level");
+    GlobalVariables::setSprites(checkSprites_ptr, "interactableSprites");
+    GlobalVariables::setSprites(playerSprites_ptr, "playerSprites");
     GlobalVariables::setInput(input);
 
-    testPoint = new Checkpoint(checkSprites_ptr, sf::Vector2f(800, 300), 1);
+    testPoint = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(800, 300), 1);
+    testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 1);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
@@ -133,6 +156,7 @@ void LoadContent(sf::RenderWindow& window) {
 
 void Draw(sf::RenderWindow& window) {
     testPoint->Draw(window);
+    testPoint2->Draw(window);
     game->Draw(window);
     //testPNGLevel->Draw(window);
 }
@@ -140,6 +164,7 @@ void Draw(sf::RenderWindow& window) {
 void Update(sf::RenderWindow& window) {
     game->Update();
     testPoint->Update();
+    testPoint2->Update();
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();

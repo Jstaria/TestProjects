@@ -14,8 +14,8 @@
 std::vector<std::string> data;
 
 std::vector<sf::Texture*> texture_ptrs;
-std::vector<sf::Texture> textures;
-std::map<int, sf::Texture*> levelTextures;
+std::vector<sf::Texture> levelTextures;
+std::map<int, sf::Texture*> levelTexture_ptrs;
 
 GameManager* game;
 
@@ -32,7 +32,7 @@ bool LoadTexture(std::string file) {
 
     sf::Texture texture; 
     s = texture.loadFromFile(file);
-    textures.push_back(texture);
+    levelTextures.push_back(texture);
 
     return s;
 }
@@ -55,18 +55,18 @@ void LoadContent(sf::RenderWindow& window) {
     LoadTexture("Images/protoCyan.png");
     LoadTexture("Images/protoViolet.png");
 
-    for (size_t i = 0; i < textures.size(); i++)
+    for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        texture_ptrs.push_back(&textures[i]);
+        texture_ptrs.push_back(&levelTextures[i]);
     }
 
-    for (size_t i = 0; i < textures.size(); i++)
+    for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        levelTextures.emplace(i, texture_ptrs[i]);
+        levelTexture_ptrs.emplace(i, texture_ptrs[i]);
     }
 
     GlobalVariables::setTextureScaler(3);
-    GlobalVariables::setTextures(levelTextures);
+    GlobalVariables::setTextures(levelTexture_ptrs);
 
     editor = new LevelEditor();
 }
