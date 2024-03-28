@@ -32,7 +32,7 @@ Player* player;
 Input* input;
 
 Level* testLevel;
-Level* testPNGLevel;
+
 
 GameManager* game;
 
@@ -103,7 +103,9 @@ void LoadContent(sf::RenderWindow& window) {
     loadTexture("unlit", "Images/checkpoint_unlit.png");
     loadTexture("lit", "Images/checkpoint_lit.png");
     loadTexture("light", "Images/checkpoint_light.png");
+    loadTexture("extinguish", "Images/checkpoint_extinguish.png");
 
+    checkSprites["extinguish"] = createSprite("extinguish");
     checkSprites["light"] = createSprite("light");
     checkSprites["unlit"] = createSprite("unlit");
     checkSprites["lit"] = createSprite("lit");
@@ -146,8 +148,8 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setSprites(playerSprites_ptr, "playerSprites");
     GlobalVariables::setInput(input);
 
-    testPoint = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(800, 300), 1);
-    testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 1);
+    testPoint = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(800, 300), 4);
+    //testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 4);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
@@ -158,7 +160,7 @@ void LoadContent(sf::RenderWindow& window) {
 
 void Draw(sf::RenderWindow& window) {
     testPoint->Draw(window);
-    testPoint2->Draw(window);
+    //testPoint2->Draw(window);
     game->Draw(window);
     //testPNGLevel->Draw(window);
 }
@@ -166,7 +168,7 @@ void Draw(sf::RenderWindow& window) {
 void Update(sf::RenderWindow& window) {
     game->Update();
     testPoint->Update();
-    testPoint2->Update();
+    //testPoint2->Update();
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();

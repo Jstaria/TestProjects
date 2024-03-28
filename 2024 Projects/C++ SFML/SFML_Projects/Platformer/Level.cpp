@@ -49,7 +49,7 @@ void Level::LoadTileData(std::string filePath)
 {
 	std::vector<std::string> data = FileIO::ReadFromFile(filePath + ".txt");
 
-	std::cout << "Loaded File" << std::endl;
+	//std::cout << "Loaded File" << std::endl;
 
 	std::vector<std::string> dimensions = FileIO::Split(',', data[0]);
 
@@ -62,13 +62,13 @@ void Level::LoadTileData(std::string filePath)
 
 	playerStartPos = sf::Vector2f(std::stoi(playerPos[0]) * scaler.x, std::stoi(playerPos[1]) * scaler.y);
 
-	std::cout << "Loaded Level Dimensions" << std::endl;
+	//std::cout << "Loaded Level Dimensions" << std::endl;
 
 	std::vector<std::vector<TileData>> tileArray(arrayHeight, std::vector<TileData>(arrayWidth));
 
-	std::cout << "Set Array Width" << std::endl;
+	//std::cout << "Set Array Width" << std::endl;
 
-	std::cout << "Set Array height" << std::endl;
+	//std::cout << "Set Array height" << std::endl;
 
 	for (size_t i = 2; i < data.size(); i++)
 	{
@@ -98,25 +98,25 @@ void Level::LoadTileData(std::string filePath)
 
 	this->tileArray = tileArray;
 
-	std::cout << "Loaded Tile Data" << std::endl;
+	//std::cout << "Loaded Tile Data" << std::endl;
 }
 
 void Level::LoadTileDataPNG(std::string imagePath)
 {
-	std::cout << "Started Loading" << std::endl;
+	//std::cout << "Started Loading" << std::endl;
 
 
 	sf::Image image;
 	if (!image.loadFromFile(imagePath)) {
-		std::cerr << "Failed to load image: " << imagePath << std::endl;
+		//std::cerr << "Failed to load image: " << imagePath << std::endl;
 	}
 
-	std::cout << "Loaded Image" << std::endl;
+	//std::cout << "Loaded Image" << std::endl;
 
 	arrayWidth = image.getSize().x;
 	arrayHeight = image.getSize().y;
 
-	std::cout << "Loaded Level Dimensions: {" << arrayWidth << "," << arrayHeight << std::endl;
+	//std::cout << "Loaded Level Dimensions: {" << arrayWidth << "," << arrayHeight << std::endl;
 
 	sf::Vector2f scaler(textures[0]->getSize().x * textureScaler, textures[0]->getSize().y * textureScaler);
 	std::vector<std::vector<TileData>> tileArray(arrayHeight, std::vector<TileData>(arrayWidth));
@@ -151,7 +151,7 @@ void Level::CreateBB(std::string filePath)
 {
 	std::vector<std::string> data = FileIO::ReadFromFile(filePath + "BB.txt");
 
-	std::cout << "Read File" << std::endl;
+	//std::cout << "Read File" << std::endl;
 
 	bbArray = new std::vector<BoundingBox>();
 
@@ -188,7 +188,7 @@ void Level::CreateCameraBB(std::string filePath)
 {
 	std::vector<std::string> data = FileIO::ReadFromFile(filePath + "CBB.txt");
 
-	std::cout << "Read File" << std::endl;
+	//std::cout << "Read File" << std::endl;
 
 
 	for (size_t i = 0; i < data.size(); i++)
@@ -221,7 +221,7 @@ void Level::CreateInteractables(std::string filePath)
 {
 	std::vector<std::string> data = FileIO::ReadFromFile(filePath + "IO.txt");
 
-	std::cout << "Read File" << std::endl;
+	//std::cout << "Read File" << std::endl;
 
 
 	for (size_t i = 0; i < data.size(); i++)
