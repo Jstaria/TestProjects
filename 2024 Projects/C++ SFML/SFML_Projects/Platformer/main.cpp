@@ -102,7 +102,9 @@ void LoadContent(sf::RenderWindow& window) {
 
     loadTexture("unlit", "Images/checkpoint_unlit.png");
     loadTexture("lit", "Images/checkpoint_lit.png");
+    loadTexture("light", "Images/checkpoint_light.png");
 
+    checkSprites["light"] = createSprite("light");
     checkSprites["unlit"] = createSprite("unlit");
     checkSprites["lit"] = createSprite("lit");
 
