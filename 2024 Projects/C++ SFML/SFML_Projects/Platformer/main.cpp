@@ -33,6 +33,7 @@ Input* input;
 
 Level* testLevel;
 
+sf::Shader shader;
 
 GameManager* game;
 
@@ -86,6 +87,8 @@ bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf:
 /// </summary>
 void LoadContent(sf::RenderWindow& window) {
     //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
+
+    shader.loadFromFile("Shaders/Outline.frag", sf::Shader::Fragment);
 
     view = window.getDefaultView();
     view_ptr = &view;
@@ -147,9 +150,10 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setSprites(checkSprites_ptr, "interactableSprites");
     GlobalVariables::setSprites(playerSprites_ptr, "playerSprites");
     GlobalVariables::setInput(input);
+    GlobalVariables::setShader("outline", &shader);
 
     testPoint = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(800, 300), 4);
-    //testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 4);
+    testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 4);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
@@ -160,7 +164,7 @@ void LoadContent(sf::RenderWindow& window) {
 
 void Draw(sf::RenderWindow& window) {
     testPoint->Draw(window);
-    //testPoint2->Draw(window);
+    testPoint2->Draw(window);
     game->Draw(window);
     //testPNGLevel->Draw(window);
 }
@@ -168,7 +172,7 @@ void Draw(sf::RenderWindow& window) {
 void Update(sf::RenderWindow& window) {
     game->Update();
     testPoint->Update();
-    //testPoint2->Update();
+    testPoint2->Update();
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();

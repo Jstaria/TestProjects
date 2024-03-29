@@ -7,6 +7,7 @@ BoundingBox* GlobalVariables::playerBB;
 Input* GlobalVariables::input = nullptr;
 std::map<std::string, std::map<int, sf::Texture*>> GlobalVariables::textures;
 std::map<std::string, std::map<std::string, sf::Sprite>*> GlobalVariables::sprites;
+std::map<std::string, sf::Shader*> GlobalVariables::shaders;
 
 GlobalVariables::GlobalVariables()
 {
@@ -78,6 +79,16 @@ void GlobalVariables::setInput(Input* input)
 Input* GlobalVariables::getInput()
 {
 	return input;
+}
+
+sf::Shader* GlobalVariables::getShader(std::string shaderName)
+{
+	return shaders[shaderName];
+}
+
+void GlobalVariables::setShader(std::string shaderName, sf::Shader* shader)
+{
+	shaders[shaderName] = shader;
 }
 
 

@@ -13,6 +13,7 @@ private:
 	static float textureScaler;
 	static std::map<std::string, std::map<int, sf::Texture*>> textures;
 	static std::map<std::string, std::map<std::string, sf::Sprite>*> sprites;
+	static std::map<std::string, sf::Shader*> shaders;
 	static sf::Vector2f playerPosition;
 	static Input* input;
 	static BoundingBox* playerBB;
@@ -34,6 +35,9 @@ public:
 	
 	static void setPlayerPosition(sf::Vector2f position);
 	static void setPlayerBB(BoundingBox* bb);
+
+	static sf::Shader* getShader(std::string shaderName);
+	static void setShader(std::string shaderName, sf::Shader* shader);
 
 	static void setInput(Input* input);
 	static Input* getInput();

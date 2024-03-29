@@ -44,25 +44,8 @@ Checkpoint::Checkpoint(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f 
 
 void Checkpoint::Draw(sf::RenderWindow& window)
 {
-	if (inCollision) {
-		sf::Sprite sprite = drawnSprite;
-		sf::Image image = sprite.getTexture()->copyToImage();
-		image.createMaskFromColor(sf::Color::White);
-		sf::Texture texture;
-		texture.loadFromImage(image);
-		sprite.setTexture(texture);
-
-		float size = sprite.getLocalBounds().getSize().y * sprite.getScale().y;
-
-		sprite.setScale(sprite.getScale() + sf::Vector2f(.1f, .1f));
-
-  		size = ((sprite.getLocalBounds().getSize().y * sprite.getScale().y) - size) / 3;
-
-		sprite.setPosition(sprite.getPosition() + sf::Vector2f(0, size));
-		window.draw(sprite);
-	}
-
-	window.draw(drawnSprite);
+	GlobalVariables::getShader("outline")->setUniform("isActive", inCollision);
+	window.draw(drawnSprite, GlobalVariables::getShader("outline"));
 
 	boundingBox.Draw(window);
 }

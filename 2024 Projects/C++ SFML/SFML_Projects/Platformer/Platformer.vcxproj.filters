@@ -123,4 +123,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Outline.frag" />
+    <None Include="Shaders\Outline.vert" />
+  </ItemGroup>
 </Project>
