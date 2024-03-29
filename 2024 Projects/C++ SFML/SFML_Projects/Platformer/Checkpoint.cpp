@@ -56,7 +56,7 @@ void Checkpoint::Draw(sf::RenderWindow& window)
 
 		sprite.setScale(sprite.getScale() + sf::Vector2f(.1f, .1f));
 
-  		size = ((sprite.getLocalBounds().getSize().y * sprite.getScale().y) - size) / 4;
+  		size = ((sprite.getLocalBounds().getSize().y * sprite.getScale().y) - size) / 3;
 
 		sprite.setPosition(sprite.getPosition() + sf::Vector2f(0, size));
 		window.draw(sprite);

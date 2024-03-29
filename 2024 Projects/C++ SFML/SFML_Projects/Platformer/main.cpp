@@ -183,7 +183,7 @@ int main()
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     desktop = sf::VideoMode(1920, 1080);
-    sf::RenderWindow window(desktop, "Level"/*, sf::Style::Fullscreen*/);
+    sf::RenderWindow window(desktop, "Level", sf::Style::Fullscreen);
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
     window.setVerticalSyncEnabled(true);
 

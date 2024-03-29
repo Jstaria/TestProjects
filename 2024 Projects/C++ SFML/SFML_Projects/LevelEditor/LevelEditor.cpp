@@ -1,7 +1,15 @@
 #include "LevelEditor.h"
+#include "Windows.h"
 
 LevelEditor::LevelEditor()
 {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 14);
+
+	std::cout << "(WASD) and (MMB) to move camera\n(+/-) to zoom camera\nPress (SPACE) while in tile mode to bring up selectable tiles\n(LMB) to place/delete tiles, (RMB) to switch from delete and place\nPress (UP/DOWN) to change brush size\nPress (F) to switch placing mode\n In Bounding Box mode(Where you set tile collision boxes), from left to right, LMB to set first position and RMB to set second position\nMake sure First is to the left and above the second position for this and the next two modes\nIn CameraBB mode, set the area a camera can move\nIn Save mode, you can select corners of your level to export by pressing (L)\nCrashes if you do not follow instructions on how to select corners!!!" << std::endl;
+
+
+	SetConsoleTextAttribute(hConsole, 15); 
 	selectedTileID = 0;
 	arrayWidth = 400;
 	arrayHeight = 200;
