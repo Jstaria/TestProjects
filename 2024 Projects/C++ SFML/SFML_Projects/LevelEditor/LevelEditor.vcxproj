@@ -27,6 +27,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="Interactable.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Player.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GlobalVariables.cpp" />
     <ClCompile Include="HelperFunctions.cpp" />
+    <ClCompile Include="Interactable.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />

@@ -27,7 +27,7 @@ private:
 	/*std::vector<std::vector<TileData>>*/
 	std::vector<std::vector<TileData>> tileArray;
 	std::vector<BoundingBox>* bbArray;
-	std::vector<IInteractable> interactableArray;
+	std::vector<IInteractable*> interactableArray;
 	std::map<
 		int, sf::Texture*> textures;
 
@@ -37,6 +37,8 @@ public:
 	Level(std::string levelPath, Camera* camera);
 
 	~Level();
+
+	void Update();
 
 	void LoadTileData(std::string filePath);
 	void LoadTileDataPNG(std::string imagePath);

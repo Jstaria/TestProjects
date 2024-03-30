@@ -6,7 +6,7 @@ Level::Level(std::string levelPath) :
 	levelPath(levelPath)
 {
 	textureScaler = GlobalVariables::getTextureScaler();
-	textures = GlobalVariables::getTextures();
+	textures = GlobalVariables::getTextures("level");
 
 	LoadTileData(levelPath);
 	CreateBB(levelPath);
@@ -16,7 +16,7 @@ Level::Level(std::string imagePath, bool) :
 	levelPath(imagePath)
 {
 	textureScaler = GlobalVariables::getTextureScaler();
-	textures = GlobalVariables::getTextures();
+	textures = GlobalVariables::getTextures("level");
 
 	LoadTileDataPNG(levelPath);
 	//CreateBB(levelPath);

@@ -24,7 +24,7 @@ public:
 
 	bool CheckCollision(sf::Vector2f mousePosition);
 
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window, float scale);
 
 	int GetID();
 };

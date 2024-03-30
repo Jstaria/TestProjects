@@ -1,5 +1,6 @@
 // Fragment shader
-uniform vec2 iResolution;
+uniform float time;
+uniform float intensity;
 uniform bool isActive;
 uniform sampler2D texture;
 void main()
@@ -10,7 +11,8 @@ void main()
 
     // Get the color of the current pixel
     vec4 color = texture2D(texture, uv);
-
+    float alpha = 0.5 + 0.5 * cos(time * 5.0) / 2;
+    //alpha = min(alpha, 0.5);
     // Check if the alpha value is above the threshold
     if (color.a == threshold)
     {
@@ -28,7 +30,7 @@ void main()
         if (color.a == 0 && (top.a > 0 || left.a > 0 || right.a > 0 || bottom.a > 0) && isActive)
         {
             // Set the color to the outline color (e.g., black)
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            gl_FragColor = vec4(1.0, 1.0, 1.0, alpha * intensity);
             return;
         }
     }

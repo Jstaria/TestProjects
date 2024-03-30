@@ -7,7 +7,7 @@
 #include "HelperFunctions.h"
 
 class Checkpoint :
-    public Entity, IInteractable
+    public Entity, public IInteractable
 {
 private:
     sf::Sprite currentSprite;
@@ -21,6 +21,8 @@ private:
     sf::Clock clock;
     sf::Time coolDown;
     sf::Time timeOfSwitch;
+    sf::Time sinceCollision;
+    float intensity;
     int count;
 
     // Inherited via IInteractable
@@ -33,8 +35,8 @@ private:
 public:
     Checkpoint(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f position, int maxFrames);
 
-    void Draw(sf::RenderWindow& window);
+    void Draw(sf::RenderWindow& window) override;
 
-    void Update();
+    void Update() override;
 };
 

@@ -13,9 +13,12 @@
 
 std::vector<std::string> data;
 
-std::vector<sf::Texture*> texture_ptrs;
+std::vector<sf::Texture*> lTexture_ptrs;
 std::vector<sf::Texture> levelTextures;
 std::map<int, sf::Texture*> levelTexture_ptrs;
+std::vector<sf::Texture*> iTexture_ptrs;
+std::vector<sf::Texture> interactableTextures;
+std::map<int, sf::Texture*> interactableTexture_ptrs;
 
 GameManager* game;
 
@@ -27,12 +30,12 @@ sf::Font font;
 
 LevelEditor* editor;
 
-bool LoadTexture(std::string file) {
+bool LoadTexture(std::string file, std::vector<sf::Texture>& textures) {
     bool s;
 
     sf::Texture texture; 
     s = texture.loadFromFile(file);
-    levelTextures.push_back(texture);
+    textures.push_back(texture);
 
     return s;
 }
@@ -49,24 +52,36 @@ void LoadContent(sf::RenderWindow& window) {
     ViewManager::Instance()->SetWindowView(view_ptr);
 
     vc = ViewControl();
-    LoadTexture("Images/prototypeBlock.png");
-    LoadTexture("Images/protoGreen.png");
-    LoadTexture("Images/protoRed.png");
-    LoadTexture("Images/protoCyan.png");
-    LoadTexture("Images/protoViolet.png");
+    LoadTexture("Images/prototypeBlock.png", levelTextures);
+    LoadTexture("Images/protoGreen.png", levelTextures);
+    LoadTexture("Images/protoRed.png", levelTextures);
+    LoadTexture("Images/protoCyan.png", levelTextures);
+    LoadTexture("Images/protoViolet.png", levelTextures);
+    LoadTexture("Images/checkpoint_unlit_editor.png", interactableTextures);
 
     for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        texture_ptrs.push_back(&levelTextures[i]);
+        lTexture_ptrs.push_back(&levelTextures[i]);
     }
 
     for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        levelTexture_ptrs.emplace(i, texture_ptrs[i]);
+        levelTexture_ptrs.emplace(i, lTexture_ptrs[i]);
+    }
+
+    for (size_t i = 0; i < interactableTextures.size(); i++)
+    {
+        iTexture_ptrs.push_back(&interactableTextures[i]);
+    }
+
+    for (size_t i = 0; i < interactableTextures.size(); i++)
+    {
+        interactableTexture_ptrs.emplace(i, iTexture_ptrs[i]);
     }
 
     GlobalVariables::setTextureScaler(3);
-    GlobalVariables::setTextures(levelTexture_ptrs);
+    GlobalVariables::setTextures(levelTexture_ptrs, "level");
+    GlobalVariables::setTextures(interactableTexture_ptrs, "interactable");
 
     editor = new LevelEditor();
 }

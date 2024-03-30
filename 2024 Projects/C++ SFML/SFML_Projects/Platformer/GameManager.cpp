@@ -17,6 +17,7 @@ void GameManager::Update()
 	player->Update();
 	camera->Update();
 	input->Update();
+	currentLevel->Update();
 	ViewManager::Instance()->UpdateView();
 }
 

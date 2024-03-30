@@ -3,8 +3,8 @@
 void SelectionItem::UpdateBB(sf::Vector2f position, float size)
 {
 	sf::FloatRect rectPos(
-		position - sf::Vector2f(10, 10), 
-		sf::Vector2f(size + 20, size + 20));
+		position, 
+		sf::Vector2f(size, size));
 
 	bb.setRect(rectPos);
 }
@@ -28,18 +28,19 @@ bool SelectionItem::CheckCollision(sf::Vector2f mousePosition)
 	return (isInCollision = bb.CheckCollision(mousePosition));
 }
 
-void SelectionItem::Draw(sf::RenderWindow& window)
+void SelectionItem::Draw(sf::RenderWindow& window, float scale)
 {
 	float scaler = (ViewManager::Instance()->GetWindowView().getSize().x / 1920);
-	int scale = 10;
+
+	float mainScale = scale;
 
 	if (isInCollision) {
-		scale = 11;
+		mainScale = scale * 1.05f;
 	}
 
 	sprite.setScale(
-		scaler * scale,
-		scaler * scale);
+		scaler * mainScale,
+		scaler * mainScale);
 	
 	sf::Vector2f position(ViewManager::Instance()->GetWindowView().getCenter() -
 		(ViewManager::Instance()->GetWindowView().getSize() * .5f) +
@@ -49,10 +50,10 @@ void SelectionItem::Draw(sf::RenderWindow& window)
 	rect.setPosition(position - (sf::Vector2f(10,10) * scaler));
 	
 	rect.setScale(
-		scaler * scale,
-		scaler * scale);
+		scaler * mainScale,
+		scaler * mainScale);
 
-	UpdateBB(position, scaler * rect.getSize().x * 10);
+	UpdateBB(position, scaler * rect.getLocalBounds().width * rect.getScale().x);
 
 	window.draw(rect);
 	window.draw(sprite);

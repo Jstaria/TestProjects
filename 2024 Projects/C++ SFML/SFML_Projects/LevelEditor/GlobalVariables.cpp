@@ -2,7 +2,7 @@
 
 GlobalVariables* GlobalVariables::s_instance = 0;
 float GlobalVariables::textureScaler;
-std::map<int, sf::Texture*> GlobalVariables::textures;
+std::map< std::string, std::map<int, sf::Texture*>> GlobalVariables::textures;
 
 GlobalVariables::GlobalVariables()
 {
@@ -26,12 +26,12 @@ void GlobalVariables::setTextureScaler(float scaler)
 	textureScaler = scaler;
 }
 
-std::map<int, sf::Texture*> GlobalVariables::getTextures()
+std::map<int, sf::Texture*> GlobalVariables::getTextures(std::string name)
 {
-	return textures;
+	return textures[name];
 }
 
-void GlobalVariables::setTextures(std::map<int, sf::Texture*>& textures)
+void GlobalVariables::setTextures(std::map<int, sf::Texture*>& textures, std::string name)
 {
-	GlobalVariables::textures = textures;
+	GlobalVariables::textures[name] = textures;
 }

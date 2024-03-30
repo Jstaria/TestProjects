@@ -31,18 +31,27 @@ Level::Level(std::string levelPath, Camera* camera) :
 	LoadTileData(levelPath);
 	CreateBB(levelPath);
 	CreateCameraBB(levelPath);
+	CreateInteractables(levelPath);
 }
 
 Level::~Level() {
 
-	//for (int i = 0; i < arrayWidth; ++i) {
-	//    delete[] tileArray[i];
-	//}
-	//delete[] tileArray;
-
 	bbArray->clear();
 	delete bbArray;
 	delete camera;
+
+	for (size_t i = 0; i < interactableArray.size(); i++)
+	{
+		delete interactableArray[i];
+	}
+}
+
+void Level::Update()
+{
+	for (size_t i = 0; i < interactableArray.size(); i++)
+	{
+		interactableArray[i]->Update();
+	}
 }
 
 void Level::LoadTileData(std::string filePath)
@@ -232,19 +241,19 @@ void Level::CreateInteractables(std::string filePath)
 
 		sf::Vector2f scaler(textures[1]->getSize().x * textureScaler, textures[1]->getSize().y * textureScaler);
 
+		int ID = stoi(lineData[0]);
 		//std::vector<std::string> pos1Data = FileIO::Split(':', lineData[0]);
-		sf::Vector2f pos1(std::stoi(lineData[1]) * scaler.x, std::stoi(lineData[2]) * scaler.y);
+		sf::Vector2f pos1(std::stof(lineData[1]), std::stof(lineData[2]));
+		
+		IInteractable* interactable;
 
-		//std::cout << "Position 1 Created" << std::endl;
-
-		//std::vector<std::string> pos2Data = FileIO::Split(':', lineData[1]);
-		//sf::Vector2f pos2(std::stoi(pos2Data[0]) * scaler.x + scaler.x, std::stoi(pos2Data[1]) * scaler.y + scaler.x);
-
-		//std::cout << "Position 2 Created" << std::endl;
-
-		//Checkpoint bb(pos1, 1);
-
-		//std::cout << "Bounding Box Created" << std::endl;
+		switch (ID) {
+		case 0: {
+			interactable = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), pos1, 4);
+		}
+		}
+		
+		interactableArray.push_back(interactable);
 	}
 }
 
@@ -296,6 +305,11 @@ void Level::Draw(sf::RenderWindow& window)
 
 	for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
 		it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
+	}
+
+	for (size_t i = 0; i < interactableArray.size(); i++)
+	{
+		interactableArray[i]->Draw(window);
 	}
 }
 

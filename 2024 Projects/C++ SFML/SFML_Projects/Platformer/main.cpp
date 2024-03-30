@@ -22,12 +22,10 @@ std::map<std::string, sf::Sprite>* checkSprites_ptr = &checkSprites;
 
 std::map<std::string, sf::Texture> textures;
 
-std::vector<sf::Texture*> texture_ptrs;
+std::vector<sf::Texture*> lTexture_ptrs;
 std::vector<sf::Texture> levelTextures;
 std::map<int, sf::Texture*> levelTexture_ptrs;
 
-Checkpoint* testPoint;
-Checkpoint* testPoint2;
 Player* player;
 Input* input;
 
@@ -137,12 +135,12 @@ void LoadContent(sf::RenderWindow& window) {
 
     for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        texture_ptrs.push_back(&levelTextures[i]);
+        lTexture_ptrs.push_back(&levelTextures[i]);
     }
 
     for (size_t i = 0; i < levelTextures.size(); i++)
     {
-        levelTexture_ptrs.emplace(i, texture_ptrs[i]);
+        levelTexture_ptrs.emplace(i, lTexture_ptrs[i]);
     }
 
     GlobalVariables::setTextureScaler(3);
@@ -152,8 +150,6 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setInput(input);
     GlobalVariables::setShader("outline", &shader);
 
-    testPoint = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(800, 300), 4);
-    testPoint2 = new Checkpoint(GlobalVariables::getSprites("interactableSprites"), sf::Vector2f(1200, 300), 4);
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
@@ -163,16 +159,13 @@ void LoadContent(sf::RenderWindow& window) {
 }
 
 void Draw(sf::RenderWindow& window) {
-    testPoint->Draw(window);
-    testPoint2->Draw(window);
+
     game->Draw(window);
     //testPNGLevel->Draw(window);
 }
 
 void Update(sf::RenderWindow& window) {
     game->Update();
-    testPoint->Update();
-    testPoint2->Update();
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();
@@ -218,7 +211,8 @@ int main()
         //sf::Sprite renderSprite(renderTexture.getTexture());
 
         // Then draw that texture to the window
-        window.clear(sf::Color::Color(180, 243, 255));
+        window.clear(sf::Color::Color(140, 203, 215));
+        //window.clear(sf::Color::Color(0,00,00));
         //window.draw(renderSprite);
 
         Draw(window);

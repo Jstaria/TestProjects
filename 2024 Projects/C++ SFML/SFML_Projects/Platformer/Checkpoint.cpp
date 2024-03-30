@@ -40,11 +40,15 @@ Checkpoint::Checkpoint(std::map<std::string, sf::Sprite>* sprites, sf::Vector2f 
 	);
 
 	coolDown = sf::seconds(.1f);
+	intensity = 0;
 }
 
 void Checkpoint::Draw(sf::RenderWindow& window)
 {
-	GlobalVariables::getShader("outline")->setUniform("isActive", inCollision);
+	GlobalVariables::getShader("outline")->setUniform("isActive", inCollision || intensity > 0);
+	GlobalVariables::getShader("outline")->setUniform("time", clock.getElapsedTime().asSeconds());
+	GlobalVariables::getShader("outline")->setUniform("intensity", intensity);
+	
 	window.draw(drawnSprite, GlobalVariables::getShader("outline"));
 
 	boundingBox.Draw(window);
@@ -59,7 +63,11 @@ void Checkpoint::Update()
 
 void Checkpoint::GetInteraction()
 {
+	intensity = clamp(intensity += ((clock.getElapsedTime() - sinceCollision > sf::seconds(.2)) ? -.1f : .1f), 0, 1);
+
 	if (!(inCollision = CheckCollision())) return;
+
+	sinceCollision = clock.getElapsedTime();
 
 	if (!GlobalVariables::getInput()->GetInputPress("Interact")) return;
 	
