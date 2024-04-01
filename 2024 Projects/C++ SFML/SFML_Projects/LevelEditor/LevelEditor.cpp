@@ -593,7 +593,7 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 			data.push_back(line);
 		}
 
-		FileIO::WriteToFile("Levels/EditorTest.txt", data);
+		FileIO::WriteToFile("../Platformer/Levels/EditorTest.txt", data);
 
 		data.clear();
 
@@ -606,7 +606,7 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 				std::to_string(bbArray[i].getPos2().y) + ":" + ",");
 		}
 
-		FileIO::WriteToFile("Levels/EditorTestBB.txt", data);
+		FileIO::WriteToFile("../Platformer/Levels/EditorTestBB.txt", data);
 
 		data.clear();
 
@@ -619,7 +619,7 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 				std::to_string(cameraArray[i].getPos2().y) + ":" + ",");
 		}
 
-		FileIO::WriteToFile("Levels/EditorTestCBB.txt", data);
+		FileIO::WriteToFile("../Platformer/Levels/EditorTestCBB.txt", data);
 
 		data.clear();
 
@@ -636,7 +636,7 @@ void LevelEditor::SaveLevel(sf::Vector2f mousePosition) {
 			}
 		}
 
-		FileIO::WriteToFile("Levels/EditorTestIO.txt", data);
+		FileIO::WriteToFile("../Platformer/Levels/EditorTestIO.txt", data);
 	}
 
 	wasKeyPressed = isKeyPressed;
@@ -758,7 +758,7 @@ void LevelEditor::LoadTileData(std::string filePath)
 
 			sf::Vector2f position((i - 2) * texture->getSize().x * GlobalVariables::getTextureScaler(), j * texture->getSize().y * GlobalVariables::getTextureScaler());
 
-			TileData* tile = new TileData(texture, position, GlobalVariables::getTextureScaler(), 0, sf::Vector2f(i, j));
+			TileData* tile = new TileData(texture, position, GlobalVariables::getTextureScaler(), std::stoi(lineData[j]), sf::Vector2f(i, j));
 
 			delete tileArray[i - 2][j];
 			tileArray[i - 2][j] = tile;
@@ -1032,7 +1032,7 @@ void LevelEditor::Draw(sf::RenderWindow& window)
 
 void LevelEditor::LoadLevel()
 {
-	std::vector<std::string> data = FileIO::ReadFromFile("Levels/LoadLevel.txt");
+	std::vector<std::string> data = FileIO::ReadFromFile("../Platformer/Levels/LoadLevel.txt");
 
 	if (data.size() == 0) return;
 

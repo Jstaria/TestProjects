@@ -10,7 +10,7 @@ BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, 
 	boundingBox = sf::RectangleShape(sf::Vector2f(position.width, position.height));
 	boundingBox.setFillColor(sf::Color::Transparent);
 	boundingBox.setOutlineColor(color);
-	boundingBox.setOutlineThickness(-5.f);
+	boundingBox.setOutlineThickness(-2.f);
 
 	sf::Vector2f origin(position.width / 2, position.height / 2);
 
