@@ -417,11 +417,13 @@ void LevelEditor::CreateSelectMenu()
 
 	for (auto& pair : GlobalVariables::getTextures("level"))
 	{
-		sf::Vector2f position(y * 250 + 100, x * 250 + 100);
+		sf::Vector2f position(x * 250 + 100, y * 250 + 100);
 
 		levelItems.push_back(SelectionItem(pair.second, position, pair.first));
 
-		if (x % 8 == 0) {
+		x++;
+
+		if (x % 7 == 0) {
 			x = 0;
 			y++;
 		}
@@ -434,11 +436,13 @@ void LevelEditor::CreateSelectMenu()
 
 	for (auto& pair : GlobalVariables::getTextures("interactable"))
 	{
-		sf::Vector2f position(y * 300 + 100, x * 250 + 100);
+		sf::Vector2f position(x * 300 + 100, y * 250 + 100);
 
 		interactableItems.push_back(SelectionItem(pair.second, position, pair.first));
 
-		if (x % 8 == 0) {
+		x++;
+
+		if (x % 4 == 0) {
 			x = 0;
 			y++;
 		}

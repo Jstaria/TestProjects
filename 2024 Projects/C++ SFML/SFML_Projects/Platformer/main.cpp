@@ -127,6 +127,19 @@ void LoadContent(sf::RenderWindow& window) {
 
     input = new Input("Input/Controls");
 
+    LoadTexture("Images/grass1.png", levelTextures);
+    LoadTexture("Images/grass2.png", levelTextures);
+    LoadTexture("Images/grass3.png", levelTextures);
+    LoadTexture("Images/grass4.png", levelTextures);
+    LoadTexture("Images/grass5.png", levelTextures);
+    LoadTexture("Images/grass6.png", levelTextures);
+    LoadTexture("Images/grass7.png", levelTextures);
+    LoadTexture("Images/grass8.png", levelTextures);
+    LoadTexture("Images/grass9.png", levelTextures);
+    LoadTexture("Images/grass10.png", levelTextures);
+    LoadTexture("Images/grass11.png", levelTextures);
+    LoadTexture("Images/grass12.png", levelTextures);
+    LoadTexture("Images/dirt.png", levelTextures);
     LoadTexture("Images/prototypeBlock.png", levelTextures);
     LoadTexture("Images/protoGreen.png", levelTextures);
     LoadTexture("Images/protoRed.png", levelTextures);
