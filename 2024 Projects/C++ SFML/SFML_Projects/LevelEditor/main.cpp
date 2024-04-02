@@ -65,6 +65,12 @@ void LoadContent(sf::RenderWindow& window) {
     LoadTexture("../Platformer/Images/grass10.png", levelTextures);
     LoadTexture("../Platformer/Images/grass11.png", levelTextures);
     LoadTexture("../Platformer/Images/grass12.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass13.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass14.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass15.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass16.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass17.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass18.png", levelTextures);
     LoadTexture("../Platformer/Images/dirt.png", levelTextures);
     LoadTexture("../Platformer/Images/prototypeBlock.png", levelTextures);
     LoadTexture("../Platformer/Images/protoGreen.png", levelTextures);
