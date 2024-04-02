@@ -4,7 +4,7 @@ ViewManager* ViewManager::s_instance = 0;
 
 ViewManager::ViewManager()
 {
-
+	lerpSpeed = .15;
 }
 
 ViewManager* ViewManager::Instance()
@@ -42,7 +42,9 @@ void ViewManager::MoveView(sf::Vector2f direction)
 
 void ViewManager::UpdateView()
 {
-	position = lerp(position, targetPosition, .15);
+	position.x = lerp(position.x, targetPosition.x, .15);
+	position.y = lerp(position.y, targetPosition.y, .05);
+	
 	view->setCenter(position);
 }
 
@@ -50,4 +52,13 @@ void ViewManager::ResetPosition()
 {
 	view->setCenter(sf::Vector2f(1920 / 2, 1080 / 2));
 	view->zoom(1920 / view->getSize().x);
+}
+
+void ViewManager::setLerpSpeed(float speed)
+{
+	lerpSpeed = speed;
+}
+
+void ViewManager::shakeCamera(float maxAngle, float maxDistance, float strength)
+{
 }

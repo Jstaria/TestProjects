@@ -5,6 +5,11 @@ sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t) {
 	return (1 - t) * a + t * b;
 }
 
+float lerp(const float a, const float b, float t)
+{
+	return (1 - t) * a + t * b;
+}
+
 sf::Vector2f Normalize(sf::Vector2f& vector, int multiplier) {
 	float length = std::sqrt(vector.x * vector.x + vector.y * vector.y);
 

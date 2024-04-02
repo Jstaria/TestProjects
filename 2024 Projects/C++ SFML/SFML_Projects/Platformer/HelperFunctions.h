@@ -5,6 +5,7 @@
 
 // Linear interpolation for sf::Vector2f
 sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t);
+float lerp(const float a, const float b, float t);
 
 sf::Vector2f Normalize(sf::Vector2f& vector, int multiplier);
 

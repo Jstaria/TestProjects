@@ -53,25 +53,25 @@ void LoadContent(sf::RenderWindow& window) {
 
     vc = ViewControl();
 
-    LoadTexture("Images/grass1.png", levelTextures);
-    LoadTexture("Images/grass2.png", levelTextures);
-    LoadTexture("Images/grass3.png", levelTextures);
-    LoadTexture("Images/grass4.png", levelTextures);
-    LoadTexture("Images/grass5.png", levelTextures);
-    LoadTexture("Images/grass6.png", levelTextures);
-    LoadTexture("Images/grass7.png", levelTextures);
-    LoadTexture("Images/grass8.png", levelTextures);
-    LoadTexture("Images/grass9.png", levelTextures);
-    LoadTexture("Images/grass10.png", levelTextures);
-    LoadTexture("Images/grass11.png", levelTextures);
-    LoadTexture("Images/grass12.png", levelTextures);
-    LoadTexture("Images/dirt.png", levelTextures);
-    LoadTexture("Images/prototypeBlock.png", levelTextures);
-    LoadTexture("Images/protoGreen.png", levelTextures);
-    LoadTexture("Images/protoRed.png", levelTextures);
-    LoadTexture("Images/protoCyan.png", levelTextures);
-    LoadTexture("Images/protoViolet.png", levelTextures);
-    LoadTexture("Images/checkpoint_unlit_editor.png", interactableTextures);
+    LoadTexture("../Platformer/Images/grass1.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass2.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass3.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass4.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass5.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass6.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass7.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass8.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass9.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass10.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass11.png", levelTextures);
+    LoadTexture("../Platformer/Images/grass12.png", levelTextures);
+    LoadTexture("../Platformer/Images/dirt.png", levelTextures);
+    LoadTexture("../Platformer/Images/prototypeBlock.png", levelTextures);
+    LoadTexture("../Platformer/Images/protoGreen.png", levelTextures);
+    LoadTexture("../Platformer/Images/protoRed.png", levelTextures);
+    LoadTexture("../Platformer/Images/protoCyan.png", levelTextures);
+    LoadTexture("../Platformer/Images/protoViolet.png", levelTextures);
+    LoadTexture("../Platformer/Images/checkpoint_unlit_editor.png", interactableTextures);
 
     for (size_t i = 0; i < levelTextures.size(); i++)
     {
