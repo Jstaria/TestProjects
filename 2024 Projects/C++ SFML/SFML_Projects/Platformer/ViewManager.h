@@ -1,8 +1,7 @@
 #pragma once
 #include "HelperFunctions.h"
 #include "GlobalVariables.h"
-#include <SFML/Graphics.hpp>
-#include <FastNoiseLite.h>
+//#include <SFML/Graphics.hpp>
 
 class ViewManager {
 private:
@@ -25,5 +24,5 @@ public:
 	void UpdateView();
 	void ResetPosition();
 	void setLerpSpeed(float speed);
-	void shakeCamera(float maxAngle, float maxDistance, float strength);
+	//void shakeCamera(float maxAngle, float maxDistance, float strength);
 };

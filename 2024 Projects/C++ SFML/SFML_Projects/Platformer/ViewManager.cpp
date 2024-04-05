@@ -59,6 +59,9 @@ void ViewManager::setLerpSpeed(float speed)
 	lerpSpeed = speed;
 }
 
-void ViewManager::shakeCamera(float maxAngle, float maxDistance, float strength)
-{
-}
+//void ViewManager::shakeCamera(float maxAngle, float maxDistance, float strength)
+//{
+//	float angle = maxAngle * strength * GlobalVariables::getNoise().GetNoise(0.f, GlobalVariables::getClock().getElapsedTime().asSeconds());
+//
+//	view->setRotation(view->getRotation() + angle);
+//}

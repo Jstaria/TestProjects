@@ -8,9 +8,14 @@ Input* GlobalVariables::input = nullptr;
 std::map<std::string, std::map<int, sf::Texture*>> GlobalVariables::textures;
 std::map<std::string, std::map<std::string, sf::Sprite>*> GlobalVariables::sprites;
 std::map<std::string, sf::Shader*> GlobalVariables::shaders;
+FastNoiseLite GlobalVariables::noise;
+sf::Clock GlobalVariables::clock;
+//Camera* GlobalVariables::camera;
 
 GlobalVariables::GlobalVariables()
 {
+	noise = FastNoiseLite();
+	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
 }
 
 GlobalVariables* GlobalVariables::Instance()
@@ -91,5 +96,17 @@ void GlobalVariables::setShader(std::string shaderName, sf::Shader* shader)
 	shaders[shaderName] = shader;
 }
 
+FastNoiseLite GlobalVariables::getNoise() {
+	return noise;
+}
 
+sf::Clock GlobalVariables::getClock() {
+	return clock;
+}
 
+//void GlobalVariables::setCamera(Camera* camera) {
+//	GlobalVariables::camera = camera;
+//}
+//Camera* GlobalVariables::getCamera() {
+//	return camera;
+//}

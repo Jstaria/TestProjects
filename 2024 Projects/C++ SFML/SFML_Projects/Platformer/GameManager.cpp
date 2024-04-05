@@ -3,6 +3,7 @@
 GameManager::GameManager(Player* player, Input* input) : player(player), input(input)
 {
 	camera = new Camera();
+	//GlobalVariables::setCamera(camera);
 }
 
 void GameManager::Draw(sf::RenderWindow& window)

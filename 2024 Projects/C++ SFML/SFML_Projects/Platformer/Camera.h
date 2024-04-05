@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "GlobalVariables.h"
 #include "ViewManager.h"
 #include "BoundingBox.h"
 #include <vector>
@@ -26,5 +25,7 @@ public:
 	void Update();
 	void Draw(sf::RenderWindow& window);
 	std::vector< BoundingBox> GetBoundingEdges();
+
+	//void ShakeCamera(float maxAngle, float maxDistance, float strength);
 };
 

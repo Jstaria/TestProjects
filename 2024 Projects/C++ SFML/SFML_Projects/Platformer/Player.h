@@ -8,6 +8,7 @@
 #include "BoundingBox.h"
 #include "Level.h"
 #include "Input.h"
+#include "GlobalVariables.h"
 
 enum PlayerState {
     Idle,

@@ -68,10 +68,9 @@ void Player::Update() {
 
 				//std::cout << position.y - jumpYStart << std::endl;
 
-				//if (position.y - jumpYStart > maxYFall) {
-				//	MoveTo(sf::Vector2f(200, 150));
-
-				//}
+				if (position.y - jumpYStart > maxYFall) {	
+					//GlobalVariables::getCamera()->ShakeCamera(5, 5, 1);
+				}
 			}
 			
 			if (velocity.y == 0) {

@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "BoundingBox.h"
 #include "Input.h"
+#include "FastNoiseLite.h"
 
 class GlobalVariables {
 private:
@@ -17,6 +18,9 @@ private:
 	static sf::Vector2f playerPosition;
 	static Input* input;
 	static BoundingBox* playerBB;
+	static FastNoiseLite noise;
+	static sf::Clock clock;
+	//static Camera* camera;
 
 public:
 	GlobalVariables();
@@ -41,5 +45,11 @@ public:
 
 	static void setInput(Input* input);
 	static Input* getInput();
+
+	static FastNoiseLite getNoise();
+	static sf::Clock getClock();
+
+	//static void setCamera(Camera* camera);
+	//static Camera* getCamera();
 };
 

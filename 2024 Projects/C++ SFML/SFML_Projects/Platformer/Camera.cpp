@@ -46,6 +46,11 @@ void Camera::StayInBounds()
 	ViewManager::Instance()->SetCameraPosition(newPosition);
 }
 
+//void Camera::ShakeCamera(float maxAngle, float maxDistance, float strength)
+//{
+//	ViewManager::Instance()->shakeCamera(maxAngle, maxDistance, strength);
+//}
+
 Camera::Camera()
 {
 
