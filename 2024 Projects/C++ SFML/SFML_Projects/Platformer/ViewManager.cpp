@@ -1,4 +1,5 @@
 #include "ViewManager.h"
+#include "GlobalVariables.h"
 
 ViewManager* ViewManager::s_instance = 0;
 
@@ -44,8 +45,34 @@ void ViewManager::UpdateView()
 {
 	position.x = lerp(position.x, targetPosition.x, .15);
 	position.y = lerp(position.y, targetPosition.y, .05);
-	
+
 	view->setCenter(position);
+
+	int angle = magnitude *
+		GlobalVariables::getNoise().GetNoise(0.f,
+			(float)GlobalVariables::getClock().getElapsedTime().asMilliseconds());
+
+	angle %= 360;
+
+	view->setRotation(angle);
+
+	angle = displace *
+		GlobalVariables::getNoise().GetNoise(0.f,
+			(float)GlobalVariables::getClock().getElapsedTime().asMilliseconds());
+
+	angle %= 360;
+
+	float offsetX = sin(angle) * displace;
+	float offsetY = cos(angle) * displace;
+
+	view->move(offsetX, offsetY);
+
+	if (displace < 0.01 && displace > 0) displace = 0;
+	if (displace > -0.01 && displace < 0) displace = 0;
+	else displace *= shakeStrength;
+
+	if (magnitude > 0) magnitude -= shakeStrength;
+	if (magnitude < 0) magnitude += shakeStrength;
 }
 
 void ViewManager::ResetPosition()
@@ -59,9 +86,10 @@ void ViewManager::setLerpSpeed(float speed)
 	lerpSpeed = speed;
 }
 
-//void ViewManager::shakeCamera(float maxAngle, float maxDistance, float strength)
-//{
-//	float angle = maxAngle * strength * GlobalVariables::getNoise().GetNoise(0.f, GlobalVariables::getClock().getElapsedTime().asSeconds());
-//
-//	view->setRotation(view->getRotation() + angle);
-//}
+void ViewManager::shakeCamera(float maxAngle, float maxDistance, float strength, float frequency)
+{
+	//GlobalVariables::getNoise().SetFrequency(frequency);
+	shakeStrength = strength;
+	magnitude = maxAngle;
+	displace = maxDistance;
+}

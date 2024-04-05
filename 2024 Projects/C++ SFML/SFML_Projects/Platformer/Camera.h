@@ -4,7 +4,6 @@
 #include "BoundingBox.h"
 #include <vector>
 #include <map>
-#include "HelperFunctions.h"
 
 class Camera
 {
@@ -26,6 +25,6 @@ public:
 	void Draw(sf::RenderWindow& window);
 	std::vector< BoundingBox> GetBoundingEdges();
 
-	//void ShakeCamera(float maxAngle, float maxDistance, float strength);
+	void ShakeCamera(float maxAngle, float maxDistance, float strength, float frequency);
 };
 

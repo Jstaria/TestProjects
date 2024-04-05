@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "GlobalVariables.h"
 
 void Camera::CheckCollisions()
 {
@@ -46,10 +47,10 @@ void Camera::StayInBounds()
 	ViewManager::Instance()->SetCameraPosition(newPosition);
 }
 
-//void Camera::ShakeCamera(float maxAngle, float maxDistance, float strength)
-//{
-//	ViewManager::Instance()->shakeCamera(maxAngle, maxDistance, strength);
-//}
+void Camera::ShakeCamera(float maxAngle, float maxDistance, float strength, float frequency)
+{
+	ViewManager::Instance()->shakeCamera(maxAngle, maxDistance, strength, frequency);
+}
 
 Camera::Camera()
 {

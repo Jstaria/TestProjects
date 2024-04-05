@@ -3,9 +3,9 @@
 #include <iostream>
 #include <map>
 #include <SFML/Graphics.hpp>
-#include "BoundingBox.h"
 #include "Input.h"
 #include "FastNoiseLite.h"
+#include "Camera.h"
 
 class GlobalVariables {
 private:
@@ -20,7 +20,7 @@ private:
 	static BoundingBox* playerBB;
 	static FastNoiseLite noise;
 	static sf::Clock clock;
-	//static Camera* camera;
+	static Camera* camera;
 
 public:
 	GlobalVariables();
@@ -49,7 +49,7 @@ public:
 	static FastNoiseLite getNoise();
 	static sf::Clock getClock();
 
-	//static void setCamera(Camera* camera);
-	//static Camera* getCamera();
+	static void setCamera(Camera* camera);
+	static Camera* getCamera();
 };
 

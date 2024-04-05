@@ -1,6 +1,6 @@
 #pragma once
 #include "HelperFunctions.h"
-#include "GlobalVariables.h"
+//#include "GlobalVariables.h"
 //#include <SFML/Graphics.hpp>
 
 class ViewManager {
@@ -8,6 +8,11 @@ private:
 	static ViewManager* s_instance;
 	sf::Vector2f position;
 	sf::Vector2f targetPosition;
+
+	float magnitude;
+	float shakeStrength;
+	float displace;
+
 	float lerpSpeed;
 	sf::View* view;
 
@@ -24,5 +29,5 @@ public:
 	void UpdateView();
 	void ResetPosition();
 	void setLerpSpeed(float speed);
-	//void shakeCamera(float maxAngle, float maxDistance, float strength);
+	void shakeCamera(float maxAngle, float maxDistance, float strength, float frequency);
 };

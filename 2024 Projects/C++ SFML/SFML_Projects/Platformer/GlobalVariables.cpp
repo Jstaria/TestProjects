@@ -10,7 +10,7 @@ std::map<std::string, std::map<std::string, sf::Sprite>*> GlobalVariables::sprit
 std::map<std::string, sf::Shader*> GlobalVariables::shaders;
 FastNoiseLite GlobalVariables::noise;
 sf::Clock GlobalVariables::clock;
-//Camera* GlobalVariables::camera;
+Camera* GlobalVariables::camera;
 
 GlobalVariables::GlobalVariables()
 {
@@ -104,9 +104,10 @@ sf::Clock GlobalVariables::getClock() {
 	return clock;
 }
 
-//void GlobalVariables::setCamera(Camera* camera) {
-//	GlobalVariables::camera = camera;
-//}
-//Camera* GlobalVariables::getCamera() {
-//	return camera;
-//}
+void GlobalVariables::setCamera(Camera* camera) {
+	GlobalVariables::camera = camera;
+}
+
+Camera* GlobalVariables::getCamera() {
+	return camera;
+}

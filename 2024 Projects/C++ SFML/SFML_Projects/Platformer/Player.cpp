@@ -69,7 +69,7 @@ void Player::Update() {
 				//std::cout << position.y - jumpYStart << std::endl;
 
 				if (position.y - jumpYStart > maxYFall) {	
-					//GlobalVariables::getCamera()->ShakeCamera(5, 5, 1);
+					GlobalVariables::getCamera()->ShakeCamera(50, 100, .96, .25);
 				}
 			}
 			
