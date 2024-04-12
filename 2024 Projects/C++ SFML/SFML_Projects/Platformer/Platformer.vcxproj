@@ -57,8 +57,8 @@
     <ClCompile Include="ViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Light.frag" />
     <None Include="Shaders\Outline.frag" />
-    <None Include="Shaders\Outline.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

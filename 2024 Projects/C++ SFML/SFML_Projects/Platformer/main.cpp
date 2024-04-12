@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <bitset>
 
 #include "SceneManager.h"
 #include "FileIO.h"
@@ -31,7 +32,8 @@ Input* input;
 
 Level* testLevel;
 
-sf::Shader shader;
+sf::Shader outlineShader;
+sf::Shader lightShader;
 
 GameManager* game;
 
@@ -86,7 +88,8 @@ bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf:
 void LoadContent(sf::RenderWindow& window) {
     //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
 
-    shader.loadFromFile("Shaders/Outline.frag", sf::Shader::Fragment);
+    outlineShader.loadFromFile("Shaders/Outline.frag", sf::Shader::Fragment);
+    lightShader.loadFromFile("Shaders/Light.frag", sf::Shader::Fragment);
 
     view = window.getDefaultView();
     view_ptr = &view;
@@ -167,12 +170,13 @@ void LoadContent(sf::RenderWindow& window) {
     GlobalVariables::setSprites(checkSprites_ptr, "interactableSprites");
     GlobalVariables::setSprites(playerSprites_ptr, "playerSprites");
     GlobalVariables::setInput(input);
-    GlobalVariables::setShader("outline", &shader);
+    GlobalVariables::setShader("outline", &outlineShader);
+    GlobalVariables::setShader("light", &lightShader);
 
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
-    game->SetLevel("Levels/EditorTest2");
+    game->SetLevel("Levels/EditorTest");
 
     //testPNGLevel = new Level("Levels/test.png", true);
 }
@@ -199,7 +203,7 @@ int main()
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     desktop = sf::VideoMode(1920, 1080);
-    sf::RenderWindow window(desktop, "Level", sf::Style::Fullscreen);
+    sf::RenderWindow window(desktop, "Level");
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
     window.setVerticalSyncEnabled(true);
 
@@ -221,20 +225,32 @@ int main()
         Update(window);
         window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
-        //renderTexture.clear(sf::Color::Blue);
+        renderTexture.clear(sf::Color::Blue);
 
         //
 
-        //renderTexture.display();
+        renderTexture.display();
 
-        //sf::Sprite renderSprite(renderTexture.getTexture());
+        sf::Sprite renderSprite(renderTexture.getTexture());
 
         // Then draw that texture to the window
         window.clear(sf::Color::Color(140, 203, 215));
         //window.clear(sf::Color::Color(0,00,00));
-        //window.draw(renderSprite);
-
+        
         Draw(window);
+
+        //int binary;
+
+        int positionX = 300 / renderSprite.getLocalBounds().getSize().x;
+        int positiony = 300 / renderSprite.getLocalBounds().getSize().y;
+
+        int width = 300;
+        int height = 300;
+
+        /*binary += */
+
+        //lightShader.setUniform("positionsAndWidths", binary);
+        window.draw(renderSprite, &lightShader);
 
         window.display();
 }

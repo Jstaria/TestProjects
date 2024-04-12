@@ -128,6 +128,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Outline.frag" />
-    <None Include="Shaders\Outline.vert" />
+    <None Include="Shaders\Light.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
