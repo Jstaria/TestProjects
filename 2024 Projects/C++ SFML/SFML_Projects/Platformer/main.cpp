@@ -198,11 +198,14 @@ void Update(sf::RenderWindow& window) {
 int main()
 {
     // Load our main content
-    sf::RenderTexture renderTexture;
-    renderTexture.create(1280, 720);
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     desktop = sf::VideoMode(1920, 1080);
+
+    sf::RenderTexture renderTexture;
+    renderTexture.create(desktop.width, desktop.height);
+
+    
     sf::RenderWindow window(desktop, "Level");
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
     window.setVerticalSyncEnabled(true);
@@ -225,14 +228,14 @@ int main()
         Update(window);
         window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
-        renderTexture.clear(sf::Color::Blue);
 
-        //
+        renderTexture.clear();
 
         renderTexture.display();
 
         sf::Sprite renderSprite(renderTexture.getTexture());
-
+        renderSprite.setPosition(view.getCenter());
+        renderSprite.setOrigin(view.getSize().x / 2, view.getSize().y / 2);
         // Then draw that texture to the window
         window.clear(sf::Color::Color(140, 203, 215));
         //window.clear(sf::Color::Color(0,00,00));
@@ -241,15 +244,18 @@ int main()
 
         //int binary;
 
-        int positionX = 300 / renderSprite.getLocalBounds().getSize().x;
-        int positiony = 300 / renderSprite.getLocalBounds().getSize().y;
+        float positionX = 300;
+        float positionY = 300;
 
-        int width = 300;
-        int height = 300;
+        float width = 300;
+        float height = 300;
+
+        //std::cout << positionX << "," << positionY << "," << width << "," << height << std::endl;
 
         /*binary += */
 
-        //lightShader.setUniform("positionsAndWidths", binary);
+        lightShader.setUniform("position", sf::Vector2f(positionX, positionY));
+        lightShader.setUniform("bounds", sf::Vector2f(width, height));
         window.draw(renderSprite, &lightShader);
 
         window.display();

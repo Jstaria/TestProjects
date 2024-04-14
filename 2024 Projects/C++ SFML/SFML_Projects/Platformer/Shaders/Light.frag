@@ -1,23 +1,29 @@
-uniform int positionsAndWidths;
+uniform vec2 position;
+uniform vec2 bounds;
 uniform sampler2D texture;
+
+vec2 textureBounds;
 
 void main()
 {
+    textureBounds = textureSize(texture, 0);
+    position /= textureBounds.y;
+    bounds /= textureBounds.y;
+
     vec2 uv = gl_TexCoord[0].xy;
+    uv.x *= 1920.0 / 1080.0;
+    uv.y = 1 - uv.y;
 
     vec4 color = texture2D(texture, uv);
 
-    int positionX = int(extractRange(positionsAndWidths, 0, 14));
-    int positionY = int(extractRange(positionsAndWidths, 13, 14));
-    int width = int(extractRange(positionsAndWidths, 27, 10));
-    int height = int(extractRange(positionsAndWidths, 37, 10));
-
-    if (uv.x >= positionX && uv.x <= positionX + width && uv.y >= positionY && uv.y <= positionY + height) {
+    if (uv.x >= position.x && uv.x < position.x + bounds.x &&
+        uv.y >= position.y && uv.y < position.y + bounds.y) {
         
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
             return;
     }
 
     // If not an outline pixel, keep original color
-    gl_FragColor = color;
+
+    gl_FragColor = vec4(uv,0.0,0.0);
 }
