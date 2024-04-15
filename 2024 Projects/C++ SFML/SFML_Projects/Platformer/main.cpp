@@ -40,6 +40,8 @@ GameManager* game;
 sf::View* view_ptr;
 sf::View view;
 
+sf::Clock clock2;
+
 bool loadTexture(const std::string& id, const std::string& filename) {
     sf::Texture texture;
     if (!texture.loadFromFile(filename)) {
@@ -193,6 +195,9 @@ void Update(sf::RenderWindow& window) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window.close();
     }
+
+    std::cout << clock2.getElapsedTime().asMilliseconds() << std::endl;
+    clock2.restart();
 }
 
 int main()
@@ -200,11 +205,13 @@ int main()
     // Load our main content
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    desktop = sf::VideoMode(1920, 1080);
+    desktop = sf::VideoMode(1280, 720);
+
+    view.setCenter(desktop.width * .5f, desktop.height * .5f);
 
     sf::RenderTexture renderTexture;
     renderTexture.create(desktop.width, desktop.height);
-
+    sf::Vector2f ogPos = view.getCenter();
     
     sf::RenderWindow window(desktop, "Level");
     //sf::RenderWindow window(sf::VideoMode(1280, 720), "LevelLoading");
@@ -244,8 +251,10 @@ int main()
 
         //int binary;
 
-        float positionX = 300;
-        float positionY = 300;
+        sf::Vector2f difference = view.getCenter() - ogPos;
+
+        float positionX = 300 - difference.x;
+        float positionY = 300 - difference.y;
 
         float width = 300;
         float height = 300;
