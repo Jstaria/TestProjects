@@ -16,6 +16,8 @@ BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color) 
 
 	//boundingBox.setOrigin(origin);
 	boundingBox.setPosition(pos1 );
+
+	CreateEdges();
 }
 
 BoundingBox::BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, sf::Vector2f offset) :
@@ -114,4 +116,10 @@ bool BoundingBox::isEqual(BoundingBox& bb)
 		
 }
 
-
+void BoundingBox::CreateEdges()
+{
+	edges.emplace(sf::Vector2f(position.top + position.height, position.left), sf::Vector2f(position.top, position.left)); // left
+	edges.emplace(sf::Vector2f(position.top, position.left), sf::Vector2f(position.top, position.left + position.width)); // top
+	edges.emplace(sf::Vector2f(position.top, position.left + position.width), sf::Vector2f(position.top + position.height, position.left + position.width)); // right
+	edges.emplace(sf::Vector2f(position.top + position.height, position.left + position.width), sf::Vector2f(position.top + position.height, position.left)); // bottom
+}

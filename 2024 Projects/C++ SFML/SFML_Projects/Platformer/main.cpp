@@ -196,7 +196,7 @@ void Update(sf::RenderWindow& window) {
         window.close();
     }
 
-    std::cout << clock2.getElapsedTime().asMilliseconds() << std::endl;
+    //std::cout << clock2.getElapsedTime().asMilliseconds() << std::endl;
     clock2.restart();
 }
 

@@ -9,6 +9,10 @@ private:
 	sf::RectangleShape boundingBox;
 	sf::Vector2f offset;
 
+	std::map<sf::Vector2f, sf::Vector2f> edges;
+
+	void CreateEdges();
+
 public:
 	BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color);
 	BoundingBox(sf::Vector2f pos1, sf::Vector2f pos2, sf::Color color, sf::Vector2f offset);
