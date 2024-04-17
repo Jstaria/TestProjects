@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <bitset>
+#include <vector>
 
 #include "SceneManager.h"
 #include "FileIO.h"
@@ -41,6 +41,8 @@ sf::View* view_ptr;
 sf::View view;
 
 sf::Clock clock2;
+
+BoundingBox bb;
 
 bool loadTexture(const std::string& id, const std::string& filename) {
     sf::Texture texture;
@@ -89,6 +91,8 @@ bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf:
 /// </summary>
 void LoadContent(sf::RenderWindow& window) {
     //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
+
+    bb = BoundingBox(sf::Vector2f(300, 300), sf::Vector2f(600, 600), sf::Color::Blue);
 
     outlineShader.loadFromFile("Shaders/Outline.frag", sf::Shader::Fragment);
     lightShader.loadFromFile("Shaders/Light.frag", sf::Shader::Fragment);
@@ -184,9 +188,28 @@ void LoadContent(sf::RenderWindow& window) {
 }
 
 void Draw(sf::RenderWindow& window) {
-
     game->Draw(window);
     //testPNGLevel->Draw(window);
+
+    bb.Draw(window);
+
+    std::vector<sf::Vector2f> points = bb.RayCast(view.getCenter(), window.mapPixelToCoords(sf::Mouse::getPosition()));
+
+    sf::VertexArray line(sf::Lines, 2); 
+    line[0] = view.getCenter();
+    line[1] = window.mapPixelToCoords(sf::Mouse::getPosition());
+    line[0].color = sf::Color::Red;
+
+    window.draw(line);
+
+    for (int i = 0; i < points.size(); i++)
+    {
+        sf::CircleShape shape(.5);
+        shape.setOrigin(.25, .25);
+        shape.setPosition(points[i]);
+
+        window.draw(shape);
+    }
 }
 
 void Update(sf::RenderWindow& window) {
@@ -265,7 +288,7 @@ int main()
 
         lightShader.setUniform("position", sf::Vector2f(positionX, positionY));
         lightShader.setUniform("bounds", sf::Vector2f(width, height));
-        window.draw(renderSprite, &lightShader);
+        //window.draw(renderSprite, &lightShader);
 
         window.display();
 }

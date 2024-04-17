@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <map>
+#include "HelperFunctions.h"
 
 class BoundingBox
 {
@@ -9,7 +12,8 @@ private:
 	sf::RectangleShape boundingBox;
 	sf::Vector2f offset;
 
-	std::map<sf::Vector2f, sf::Vector2f> edges;
+	std::vector<sf::Vector2f> edgePoints;
+	std::vector<sf::Vector2f> edgeDirections;
 
 	void CreateEdges();
 
@@ -27,6 +31,7 @@ public:
 	void Move(sf::Vector2f direction);
 	void MoveTo(sf::Vector2f pos);
 
+	std::vector<sf::Vector2f> RayCast(sf::Vector2f point, sf::Vector2f direction);
 	bool CheckCollision(BoundingBox bb);
 	bool CheckCollision(sf::FloatRect rect);
 	bool CheckCollision(sf::Vector2f position);
