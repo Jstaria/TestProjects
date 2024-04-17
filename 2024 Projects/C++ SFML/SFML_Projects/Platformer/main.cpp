@@ -193,19 +193,23 @@ void Draw(sf::RenderWindow& window) {
 
     bb.Draw(window);
 
-    std::vector<sf::Vector2f> points = bb.RayCast(view.getCenter(), window.mapPixelToCoords(sf::Mouse::getPosition()));
+    sf::Vector2f direction = window.mapPixelToCoords(sf::Mouse::getPosition()) - view.getCenter();
+    std::vector<sf::Vector2f> points = 
+        bb.RayCast(
+            view.getCenter(), 
+            Normalize(direction, 1000));
 
     sf::VertexArray line(sf::Lines, 2); 
     line[0] = view.getCenter();
-    line[1] = window.mapPixelToCoords(sf::Mouse::getPosition());
+    line[1] = line[0].position + Normalize(direction,1000);
     line[0].color = sf::Color::Red;
 
     window.draw(line);
 
     for (int i = 0; i < points.size(); i++)
     {
-        sf::CircleShape shape(.5);
-        shape.setOrigin(.25, .25);
+        sf::CircleShape shape(10);
+        shape.setOrigin(5, 5);
         shape.setPosition(points[i]);
 
         window.draw(shape);

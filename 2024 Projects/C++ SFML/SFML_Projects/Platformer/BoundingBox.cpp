@@ -88,25 +88,32 @@ void BoundingBox::MoveTo(sf::Vector2f pos)
 	position = rect;
 }
 
-std::vector<sf::Vector2f> BoundingBox::RayCast(sf::Vector2f p1, sf::Vector2f d1)
+std::vector<sf::Vector2f> BoundingBox::RayCast(sf::Vector2f rp, sf::Vector2f rd)
 {
 	std::vector<float> t1s;
 	std::vector<sf::Vector2f> rayPoints;
 
 	for (size_t i = 0; i < edgePoints.size(); i++)
 	{
-		if (Normalize(d1, 1) == Normalize(edgeDirections[i], 1)) continue;
+		if (Normalize(rd, 1) == Normalize(edgeDirections[i], 1)) continue;
 
-		sf::Vector2f p2 = edgePoints[i];
-		sf::Vector2f d2 = edgeDirections[i];
+		float r_px = rp.x;
+		float r_py = rp.y;
+		float r_dx = rd.x;
+		float r_dy = rd.y;
 
-		float t2 = (d1.x * (p2.y - p1.y) + d1.y * (p1.x - p2.x)) / (d2.x * d1.y - d2.y * d1.x);
-		float t1 = (p2.x + d2.x * t2 - p1.x) / d1.x;
+		float s_px = edgePoints[i].x;
+		float s_py = edgePoints[i].y;
+		float s_dx = edgeDirections[i].x;
+		float s_dy = edgeDirections[i].y;
+
+		float t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
+		float t1 = (s_px + s_dx * t2 - r_px) / r_dx;
 
 		if (t1 <= 0 || !(t2 > 0 && t2 < 1)) continue;
 
 		t1s.push_back(t1);
-		rayPoints.push_back(p1 + d1 * t1);
+		rayPoints.push_back(rp + (rd * t1));
 	}
 
 
@@ -149,8 +156,8 @@ void BoundingBox::CreateEdges()
 	edgePoints.push_back(sf::Vector2f(position.top, position.left + position.width)); // right
 	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left + position.width)); // bottom
 
-	edgeDirections.push_back(sf::Vector2f(position.top, position.left));
-	edgeDirections.push_back(sf::Vector2f(position.top, position.left + position.width));
-	edgeDirections.push_back(sf::Vector2f(position.top + position.height, position.left + position.width));
-	edgeDirections.push_back(sf::Vector2f(position.top + position.height, position.left));
+	edgeDirections.push_back(sf::Vector2f(-position.height, 0));
+	edgeDirections.push_back(sf::Vector2f(0, position.width));
+	edgeDirections.push_back(sf::Vector2f(position.height, 0));
+	edgeDirections.push_back(sf::Vector2f(0, -position.width));
 }
