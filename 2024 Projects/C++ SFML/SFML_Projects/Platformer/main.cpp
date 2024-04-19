@@ -235,36 +235,12 @@ int main()
         window.setView(ViewManager::Instance()->GetWindowView());
         //// Draw everything to a render texture
 
-        renderTexture.clear();
-
-        renderTexture.display();
-
         sf::Sprite renderSprite(renderTexture.getTexture());
-        renderSprite.setPosition(view.getCenter());
-        renderSprite.setOrigin(view.getSize().x / 2, view.getSize().y / 2);
         // Then draw that texture to the window
         window.clear(sf::Color::Color(140, 203, 215));
-        //window.clear(sf::Color::Color(0,00,00));
+
         
         Draw(window);
-
-        //int binary;
-
-        sf::Vector2f difference = view.getCenter() - ogPos;
-
-        float positionX = 300 - difference.x;
-        float positionY = 300 - difference.y;
-
-        float width = 300;
-        float height = 300;
-
-        //std::cout << positionX << "," << positionY << "," << width << "," << height << std::endl;
-
-        /*binary += */
-
-        lightShader.setUniform("position", sf::Vector2f(positionX, positionY));
-        lightShader.setUniform("bounds", sf::Vector2f(width, height));
-        //window.draw(renderSprite, &lightShader);
 
         window.display();
 }

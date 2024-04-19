@@ -54,3 +54,17 @@ float Dot2D(const sf::Vector2f a, const sf::Vector2f b)
 {
 	return a.x * b.x + a.y * b.y;
 }
+
+float AngleBetweenPoints(const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& reference) {
+	float angle = std::atan2(p1.y - reference.y, p1.x - reference.x) - std::atan2(p2.y - reference.y, p2.x - reference.x);
+	if (angle < 0)
+		angle += 2 * 3.14159265358979323846f; 
+	return angle;
+}
+
+void SortPointsClockwise(std::vector<sf::Vector2f>& points, const sf::Vector2f& reference) {
+	
+	std::sort(points.begin(), points.end(), [&](const sf::Vector2f& p1, const sf::Vector2f& p2) {
+		return AngleBetweenPoints(p1, p2, reference) < AngleBetweenPoints(p2, p1, reference);
+		});
+}

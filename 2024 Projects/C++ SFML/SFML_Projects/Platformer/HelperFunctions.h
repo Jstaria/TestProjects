@@ -23,3 +23,7 @@ int sign(float x);
 float Cross2D(const sf::Vector2f a, const sf::Vector2f b);
 
 float Dot2D(const sf::Vector2f a, const sf::Vector2f b);
+
+float AngleBetweenPoints(const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& reference);
+
+void SortPointsClockwise(std::vector<sf::Vector2f>& points, const sf::Vector2f& reference);

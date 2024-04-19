@@ -24,7 +24,7 @@ void GameManager::Update()
 	input->Update();
 	currentLevel->Update();
 	ViewManager::Instance()->UpdateView();
-	light = Light(GlobalVariables::getPlayerPosition(), 360, 0, 600, 100);
+	light = Light(GlobalVariables::getPlayerPosition(), 360, 0, 200, 100);
 	light.CalculateMesh(*currentLevel->getBBArray());
 }
 
