@@ -9,6 +9,7 @@ class Light
 private:
 	sf::Vector2f position;
 	std::vector<sf::Vector2f> rayPoints;
+	sf::Vector2f currentDirection;
 
 	sf::VertexArray mesh;
 

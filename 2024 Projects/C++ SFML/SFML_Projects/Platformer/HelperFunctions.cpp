@@ -5,7 +5,7 @@ float degreesToRadians(float degrees) {
 }
 
 // Linear interpolation for sf::Vector2f
-sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t) {
+sf::Vector2f lerp(const sf::Vector2f a, const sf::Vector2f b, float t) {
 	return (1 - t) * a + t * b;
 }
 
@@ -14,7 +14,7 @@ float lerp(const float a, const float b, float t)
 	return (1 - t) * a + t * b;
 }
 
-sf::Vector2f Normalize(sf::Vector2f& vector, int multiplier) {
+sf::Vector2f Normalize(sf::Vector2f vector, int multiplier) {
 	float length = std::sqrt(vector.x * vector.x + vector.y * vector.y);
 
 	if (length != 0.f) {
@@ -31,7 +31,7 @@ int sign(float x){
 	return 0;
 }
 
-float Distance(const sf::Vector2f& v1, const sf::Vector2f& v2) {
+float Distance(const sf::Vector2f v1, const sf::Vector2f v2) {
 	float dx = v2.x - v1.x;
 	float dy = v2.y - v1.y;
 	return std::sqrt(dx * dx + dy * dy);
@@ -45,12 +45,12 @@ float clamp(float value, float low, float high) {
 	return value;
 }
 
-float Cross2D(const sf::Vector2f& a, const sf::Vector2f& b)
+float Cross2D(const sf::Vector2f a, const sf::Vector2f b)
 {
 	return a.x * b.y - a.y * b.x;
 }
 
-float Dot2D(const sf::Vector2f& a, const sf::Vector2f& b)
+float Dot2D(const sf::Vector2f a, const sf::Vector2f b)
 {
 	return a.x * b.x + a.y * b.y;
 }

@@ -204,13 +204,13 @@ std::vector<sf::Vector2f> BoundingBox::getEdgeDirections()
 
 void BoundingBox::CreateEdges()
 {
-	edgePoints.push_back(sf::Vector2f(position.top, position.left)); // top left
-	edgePoints.push_back(sf::Vector2f(position.top, position.left + position.width)); // top right
-	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left + position.width)); // bottom right
-	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left)); // bottom left
+	edgePoints.push_back(sf::Vector2f(position.left, position.top)); // top left
+	edgePoints.push_back(sf::Vector2f(position.left + position.width, position.top)); // top right
+	edgePoints.push_back(sf::Vector2f(position.left + position.width, position.top + position.height)); // bottom right
+	edgePoints.push_back(sf::Vector2f(position.left, position.top + position.height)); // bottom left
 
-	edgeDirections.push_back(sf::Vector2f(0, position.width)); // top
-	edgeDirections.push_back(sf::Vector2f(position.height, 0)); // right
-	edgeDirections.push_back(sf::Vector2f(0, -position.width)); // bottom
-	edgeDirections.push_back(sf::Vector2f(-position.height, 0)); // left
+	edgeDirections.push_back(sf::Vector2f(position.width, 0)); // top
+	edgeDirections.push_back(sf::Vector2f(0, position.height)); // right
+	edgeDirections.push_back(sf::Vector2f(-position.width, 0)); // bottom
+	edgeDirections.push_back(sf::Vector2f(0, -position.height)); // left
 }
