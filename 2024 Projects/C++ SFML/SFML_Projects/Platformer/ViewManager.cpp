@@ -73,6 +73,8 @@ void ViewManager::UpdateView()
 
 	if (magnitude > 0) magnitude -= shakeStrength;
 	if (magnitude < 0) magnitude += shakeStrength;
+
+	//view->zoom(.999001);
 }
 
 void ViewManager::ResetPosition()

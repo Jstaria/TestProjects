@@ -10,6 +10,7 @@
 #include "ViewManager.h"
 #include "Checkpoint.h"
 #include "GameManager.h"
+#include "Light.h"
 
 std::vector<std::string> data;
 
@@ -41,8 +42,6 @@ sf::View* view_ptr;
 sf::View view;
 
 sf::Clock clock2;
-
-BoundingBox bb;
 
 bool loadTexture(const std::string& id, const std::string& filename) {
     sf::Texture texture;
@@ -91,8 +90,6 @@ bool LoadSprite(std::string mapName, std::string file, std::map<std::string, sf:
 /// </summary>
 void LoadContent(sf::RenderWindow& window) {
     //data = FileIO::Instance()->ReadFromFile("Levels/File.txt");
-
-    bb = BoundingBox(sf::Vector2f(300, 300), sf::Vector2f(600, 600), sf::Color::Blue);
 
     outlineShader.loadFromFile("Shaders/Outline.frag", sf::Shader::Fragment);
     lightShader.loadFromFile("Shaders/Light.frag", sf::Shader::Fragment);
@@ -190,30 +187,6 @@ void LoadContent(sf::RenderWindow& window) {
 void Draw(sf::RenderWindow& window) {
     game->Draw(window);
     //testPNGLevel->Draw(window);
-
-    bb.Draw(window);
-
-    sf::Vector2f direction = window.mapPixelToCoords(sf::Mouse::getPosition()) - view.getCenter();
-    std::vector<sf::Vector2f> points = 
-        bb.RayCast(
-            view.getCenter(), 
-            Normalize(direction, 1000));
-
-    sf::VertexArray line(sf::Lines, 2); 
-    line[0] = view.getCenter();
-    line[1] = line[0].position + Normalize(direction,1000);
-    line[0].color = sf::Color::Red;
-
-    window.draw(line);
-
-    for (int i = 0; i < points.size(); i++)
-    {
-        sf::CircleShape shape(10);
-        shape.setOrigin(5, 5);
-        shape.setPosition(points[i]);
-
-        window.draw(shape);
-    }
 }
 
 void Update(sf::RenderWindow& window) {
@@ -232,10 +205,9 @@ int main()
     // Load our main content
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    desktop = sf::VideoMode(1280, 720);
+    desktop = sf::VideoMode(1920, 1080);
 
     view.setCenter(desktop.width * .5f, desktop.height * .5f);
-
     sf::RenderTexture renderTexture;
     renderTexture.create(desktop.width, desktop.height);
     sf::Vector2f ogPos = view.getCenter();

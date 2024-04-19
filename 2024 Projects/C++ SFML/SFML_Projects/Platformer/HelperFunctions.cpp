@@ -1,5 +1,9 @@
 #include "HelperFunctions.h"
 
+float degreesToRadians(float degrees) {
+	return degrees * 3.14159265358979323846f / 180.0f;
+}
+
 // Linear interpolation for sf::Vector2f
 sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t) {
 	return (1 - t) * a + t * b;
@@ -27,10 +31,26 @@ int sign(float x){
 	return 0;
 }
 
+float Distance(const sf::Vector2f& v1, const sf::Vector2f& v2) {
+	float dx = v2.x - v1.x;
+	float dy = v2.y - v1.y;
+	return std::sqrt(dx * dx + dy * dy);
+}
+
 float clamp(float value, float low, float high) {
 
 	if (value > high) return high;
 	if (value < low) return low;
 	
 	return value;
+}
+
+float Cross2D(const sf::Vector2f& a, const sf::Vector2f& b)
+{
+	return a.x * b.y - a.y * b.x;
+}
+
+float Dot2D(const sf::Vector2f& a, const sf::Vector2f& b)
+{
+	return a.x * b.x + a.y * b.y;
 }

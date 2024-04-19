@@ -303,9 +303,11 @@ void Level::Draw(sf::RenderWindow& window)
 		}
 	}
 
-	for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
-		it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
-	}
+	//for (auto it = bbArray->begin(); it != bbArray->end(); ++it) {
+	//	it->Draw(window); // Assuming 'target' is your render target (like sf::RenderWindow)
+	//}
+
+	bbArray->at(0).Draw(window);
 
 	for (size_t i = 0; i < interactableArray.size(); i++)
 	{

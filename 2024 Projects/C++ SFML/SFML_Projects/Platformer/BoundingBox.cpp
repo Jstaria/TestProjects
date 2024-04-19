@@ -110,7 +110,7 @@ std::vector<sf::Vector2f> BoundingBox::RayCast(sf::Vector2f rp, sf::Vector2f rd)
 		float t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
 		float t1 = (s_px + s_dx * t2 - r_px) / r_dx;
 
-		if (t1 <= 0 || !(t2 > 0 && t2 < 1)) continue;
+		if (!(t1 > 0 && t1 < 1) || !(t2 > 0 && t2 < 1)) continue;
 
 		t1s.push_back(t1);
 		rayPoints.push_back(rp + (rd * t1));
@@ -118,6 +118,49 @@ std::vector<sf::Vector2f> BoundingBox::RayCast(sf::Vector2f rp, sf::Vector2f rd)
 
 
 	return rayPoints;
+}
+
+std::vector<sf::Vector2f> BoundingBox::RayCastCorners(sf::Vector2f rp)
+{
+	//std::vector<float> t1s;
+	std::vector<sf::Vector2f> rayPoints;
+
+	//for (size_t i = 0; i < edgePoints.size(); i++)
+	//{
+	//	float minValue = 1000000000000;
+	//	sf::Vector2f closestPoint = sf::Vector2f(0,0);
+
+	//	for (size_t j = -1; j < 2; j++)
+	//	{
+	//		sf::Vector2f rd = rp - edgePoints[i] + sf::Vector2f(cos(j), sin(j));
+
+	//		if (Normalize(rd, 1) == Normalize(edgeDirections[i], 1)) continue;
+
+	//		float r_px = rp.x;
+	//		float r_py = rp.y;
+	//		float r_dx = rd.x;
+	//		float r_dy = rd.y;
+
+	//		float s_px = edgePoints[i].x;
+	//		float s_py = edgePoints[i].y;
+	//		float s_dx = edgeDirections[i].x;
+	//		float s_dy = edgeDirections[i].y;
+
+	//		float t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
+	//		float t1 = (s_px + s_dx * t2 - r_px) / r_dx;
+
+	//		if (!(t1 > 0 && t1 < 1) || !(t2 > 0 && t2 < 1)) continue;
+	//		if (t1 > minValue) continue;
+	//		
+	//		minValue = t1;
+	//		closestPoint = rp + (rd * t1);
+	//	}
+	//}
+
+
+	return rayPoints;
+
+	// doing this wrong, I need all of the edges for the light class, and once I have them all I can then ray cast because then it wont be segmented anymore
 }
 
 bool BoundingBox::CheckCollision(BoundingBox bb)
@@ -149,15 +192,25 @@ bool BoundingBox::isEqual(BoundingBox& bb)
 
 }
 
+std::vector<sf::Vector2f> BoundingBox::getEdgePoints()
+{
+	return edgePoints;
+}
+
+std::vector<sf::Vector2f> BoundingBox::getEdgeDirections()
+{
+	return edgeDirections;
+}
+
 void BoundingBox::CreateEdges()
 {
-	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left)); // left
-	edgePoints.push_back(sf::Vector2f(position.top, position.left)); // top
-	edgePoints.push_back(sf::Vector2f(position.top, position.left + position.width)); // right
-	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left + position.width)); // bottom
+	edgePoints.push_back(sf::Vector2f(position.top, position.left)); // top left
+	edgePoints.push_back(sf::Vector2f(position.top, position.left + position.width)); // top right
+	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left + position.width)); // bottom right
+	edgePoints.push_back(sf::Vector2f(position.top + position.height, position.left)); // bottom left
 
-	edgeDirections.push_back(sf::Vector2f(-position.height, 0));
-	edgeDirections.push_back(sf::Vector2f(0, position.width));
-	edgeDirections.push_back(sf::Vector2f(position.height, 0));
-	edgeDirections.push_back(sf::Vector2f(0, -position.width));
+	edgeDirections.push_back(sf::Vector2f(0, position.width)); // top
+	edgeDirections.push_back(sf::Vector2f(position.height, 0)); // right
+	edgeDirections.push_back(sf::Vector2f(0, -position.width)); // bottom
+	edgeDirections.push_back(sf::Vector2f(-position.height, 0)); // left
 }
