@@ -132,6 +132,9 @@ void Light::Draw(sf::RenderWindow& window)
 	//	window.draw(line);
 	//}
 
+	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(mesh.getBounds().getPosition()));
+	GlobalVariables::getShader("light")->setUniform("size", sf::Vector2f(mesh.getBounds().getSize()));
+
 	window.draw(mesh, GlobalVariables::getShader("light"));
 }
 

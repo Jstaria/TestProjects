@@ -1,13 +1,11 @@
+uniform sampler2D texture;
+
+uniform vec2 position;
+uniform vec2 size;
 
 void main()
 {
-    vec2 uv = gl_TexCoord[0].xy * 2.0 - 1.0;
+    vec2 uv = gl_FragCoord.xy / position;
 
-    float d = length(uv);
-
-    vec4 color = vec4(0.0,0.0,0.0,d);
-
-    // If not an outline pixel, keep original color
-
-    gl_FragColor = color;
+    gl_FragColor = vec4(uv, 0.0, 1.0);
 }
