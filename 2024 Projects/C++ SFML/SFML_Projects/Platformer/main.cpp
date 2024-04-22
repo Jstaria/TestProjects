@@ -179,7 +179,7 @@ void LoadContent(sf::RenderWindow& window) {
     player = new Player(playerSprites_ptr, sf::Vector2f(640, 360), 6, input);
     
     game = new GameManager(player, input);
-    game->SetLevel("Levels/EditorTest2");
+    game->SetLevel("Levels/EditorTest");
 
     //testPNGLevel = new Level("Levels/test.png", true);
 }

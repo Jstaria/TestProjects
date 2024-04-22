@@ -123,14 +123,14 @@ void Light::Draw(sf::RenderWindow& window)
 	//window.draw(shape);
 
 	sf::Vector2f center = ViewManager::Instance()->GetWindowView().getCenter();
-
+	sf::Vector2f size = window.getView().getSize();
 	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(
 		window.mapCoordsToPixel(
 			sf::Vector2f(
-				(mesh.getBounds().getPosition().x - center.x) * 2 + distance / 2,
-				(mesh.getBounds().getPosition().y - center.y) * 2 + distance / 2)
+				(mesh.getBounds().getPosition().x - center.x) * 2 + distance * 2,
+				(-mesh.getBounds().getPosition().y + center.y) * 2 - distance * 2)
 		)));
-	GlobalVariables::getShader("light")->setUniform("size", sf::Vector2f(mesh.getBounds().getSize()));
+	GlobalVariables::getShader("light")->setUniform("size", size);
 
 	window.draw(mesh, GlobalVariables::getShader("light"));
 
