@@ -14,7 +14,7 @@ float lerp(const float a, const float b, float t)
 	return (1 - t) * a + t * b;
 }
 
-sf::Vector2f Normalize(sf::Vector2f vector, int multiplier) {
+sf::Vector2f Normalize(sf::Vector2f vector, float multiplier) {
 	float length = std::sqrt(vector.x * vector.x + vector.y * vector.y);
 
 	if (length != 0.f) {
@@ -67,4 +67,18 @@ void SortPointsClockwise(std::vector<sf::Vector2f>& points, const sf::Vector2f& 
 	std::sort(points.begin(), points.end(), [&](const sf::Vector2f& p1, const sf::Vector2f& p2) {
 		return AngleBetweenPoints(p1, p2, reference) < AngleBetweenPoints(p2, p1, reference);
 		});
+}
+
+float magnitude(const sf::Vector2f& vec) {
+	return std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2));
+}
+
+// Function to limit the distance of a vector
+sf::Vector2f limitDistance(const sf::Vector2f& vec, float maxLength) {
+	float mag = magnitude(vec);
+	if (mag > maxLength) {
+		// Scale down the vector to maxLength while preserving direction
+		return vec * (maxLength / mag);
+	}
+	return vec;
 }

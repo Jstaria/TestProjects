@@ -12,7 +12,7 @@ float degreesToRadians(float degrees);
 sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t);
 float lerp(const float a, const float b, float t);
 
-sf::Vector2f Normalize(sf::Vector2f vector, int multiplier);
+sf::Vector2f Normalize(sf::Vector2f vector, float multiplier);
 
 float clamp(float value, float low, float high);
 
@@ -27,3 +27,7 @@ float Dot2D(const sf::Vector2f a, const sf::Vector2f b);
 float AngleBetweenPoints(const sf::Vector2f& p1, const sf::Vector2f& p2, const sf::Vector2f& reference);
 
 void SortPointsClockwise(std::vector<sf::Vector2f>& points, const sf::Vector2f& reference);
+
+float magnitude(const sf::Vector2f& vec);
+
+sf::Vector2f limitDistance(const sf::Vector2f& vec, float maxLength);

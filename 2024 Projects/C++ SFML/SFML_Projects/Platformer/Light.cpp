@@ -21,10 +21,14 @@ void Light::CalculateMesh(std::vector<BoundingBox> bbs)
 		std::vector<sf::Vector2f> tempEdgePoints = bbs[i].getEdgePoints();
 		std::vector<sf::Vector2f> tempEdgeDirections = bbs[i].getEdgeDirections();
 
+		sf::View view = ViewManager::Instance()->GetWindowView();
+
+		sf::FloatRect viewRect(view.getCenter() - view.getSize() * .5f, view.getSize());
+
+		if (!bbs[i].getRect().intersects(viewRect)) continue;
+
 		for (size_t j = 0; j < tempEdgePoints.size(); j++)
 		{
-			if (abs(Distance(tempEdgePoints[j], position)) > distance * 10) continue;
-
 			edgePoints.push_back(tempEdgePoints[j]);
 			edgeDirections.push_back(tempEdgeDirections[j]);
 		}
@@ -32,21 +36,29 @@ void Light::CalculateMesh(std::vector<BoundingBox> bbs)
 
 	for (size_t j = 0; j < edgePoints.size(); j++)
 	{
-		currentDirection = sf::Vector2f(sf::Vector2i(edgePoints[j]) - sf::Vector2i(position));
+		currentDirection = edgePoints[j] - position;
+		currentDirection = limitDistance(currentDirection, distance);
+
+		rayPoints.push_back(RayCast(position, currentDirection, edgePoints, edgeDirections));
+
+		float degrees = 20;
+
+		currentDirection = edgePoints[j] - position;
 		currentDirection = Normalize(currentDirection, distance);
 
-		rayPoints.push_back(RayCast(sf::Vector2f(sf::Vector2i(position)), currentDirection + sf::Vector2f(cos(degreesToRadians(10)), sin(degreesToRadians(10))), edgePoints, edgeDirections));
-		rayPoints.push_back(RayCast(sf::Vector2f(sf::Vector2i(position)), currentDirection, edgePoints, edgeDirections));
-		rayPoints.push_back(RayCast(sf::Vector2f(sf::Vector2i(position)), currentDirection - sf::Vector2f(cos(degreesToRadians(10)), sin(degreesToRadians(10))), edgePoints, edgeDirections));
+		rayPoints.push_back(RayCast(position, currentDirection + sf::Vector2f(cos(degreesToRadians(degrees)), sin(degreesToRadians(degrees))), edgePoints, edgeDirections));
+		rayPoints.push_back(RayCast(position, currentDirection - sf::Vector2f(cos(degreesToRadians(degrees)), sin(degreesToRadians(degrees))), edgePoints, edgeDirections));
 	}
 
-	for (size_t i = 0; i < 32; i++)
+
+	for (size_t i = 0; i < 33; i++)
 	{
 		currentDirection = sf::Vector2f(cos(degreesToRadians((360 / 32) * i)), sin(degreesToRadians((360 / 32) * i)));
 		currentDirection = Normalize(currentDirection, distance);
 		rayPoints.push_back(RayCast(sf::Vector2f(sf::Vector2i(position)), currentDirection, edgePoints, edgeDirections));
 	}
 
+	SortPointsClockwise(rayPoints, position);
 	SortPointsClockwise(rayPoints, position);
 
 	mesh = sf::VertexArray(sf::Triangles, rayPoints.size() * 3);
@@ -64,7 +76,7 @@ sf::Vector2f Light::RayCast(sf::Vector2f rp, sf::Vector2f rd, std::vector<sf::Ve
 {
 	std::vector<sf::Vector2f> rayPoints;
 
-	float minValue = 1000000000000;
+	float minValue = 100000;
 	sf::Vector2f closestPoint = rp;
 
 	if (edgePoints.size() == 0) {
@@ -74,7 +86,7 @@ sf::Vector2f Light::RayCast(sf::Vector2f rp, sf::Vector2f rd, std::vector<sf::Ve
 
 	for (size_t i = 0; i < edgePoints.size(); i++)
 	{
-		if (Normalize(rd, 1) == Normalize(edgeDirections[i], 1)) continue;
+		//if (Normalize(rd, 1) == Normalize(edgeDirections[i], 1)) continue;
 
 		float r_px = rp.x;
 		float r_py = rp.y;
@@ -89,20 +101,15 @@ sf::Vector2f Light::RayCast(sf::Vector2f rp, sf::Vector2f rd, std::vector<sf::Ve
 		float t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
 		float t1 = (s_px + s_dx * t2 - r_px) / r_dx;
 
-		if ((t1 > 0 && t1 < 1) && (t2 > 0 && t2 < 1) && t1 < minValue) {
-			closestPoint = rp + (rd * t1);
+		if ((t1 > 0 && t1 <= 1) && (t2 > 0 && t2 < 1) && t1 < minValue) {
+			closestPoint = sf::Vector2f(r_px + r_dx * t1, r_py + r_dy * t1);
 			minValue = t1;
 		}
 
 		if (i >= edgePoints.size() - 1 && closestPoint == rp) closestPoint = rp + rd;
-
-		//if (i == edgePoints.size() - 1) closestPoint = rp + rd * t1;
 	}
 
-	//rayPoints.push_back(closestPoint);
-
-	//closestPoint = sf::Vector2f(closestPoint.y, closestPoint.x);
-
+	//std::cout << minValue << std::endl;
 	return closestPoint;
 }
 
@@ -115,26 +122,28 @@ void Light::Draw(sf::RenderWindow& window)
 
 	//window.draw(shape);
 
-	//for (size_t i = 0; i < rayPoints.size(); i++)
-	//{
-	//	sf::VertexArray line(sf::Lines, 2);
-	//	line[0].position = position;
-	//	line[0].color = sf::Color::Yellow;
-	//	line[1].position = rayPoints[i];
-
-	//	sf::CircleShape shape(5);
-	//	shape.setOrigin(5, 5);
-	//	shape.setPosition(rayPoints[i]);
-	//	shape.setFillColor(sf::Color::Yellow);
-
-	//	window.draw(shape);
-
-	//	window.draw(line);
-	//}
-
 	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(mesh.getBounds().getPosition()));
 	GlobalVariables::getShader("light")->setUniform("size", sf::Vector2f(mesh.getBounds().getSize()));
 
 	window.draw(mesh, GlobalVariables::getShader("light"));
+
+	for (size_t i = 0; i < rayPoints.size(); i++)
+	{
+		sf::VertexArray line(sf::Lines, 2);
+		line[0].position = position;
+		line[0].color = sf::Color::Red;
+		line[1].position = rayPoints[i];
+
+		sf::CircleShape shape(5);
+		shape.setOrigin(5, 5);
+		shape.setPosition(rayPoints[i]);
+		shape.setFillColor(sf::Color::Blue);
+
+		window.draw(shape);
+
+		window.draw(line);
+	}
+
+
 }
 

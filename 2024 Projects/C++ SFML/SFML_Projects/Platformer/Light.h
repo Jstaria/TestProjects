@@ -3,6 +3,7 @@
 #include "BoundingBox.h"
 #include "GlobalVariables.h"
 #include "HelperFunctions.h"
+#include "ViewManager.h"
 
 class Light
 {
