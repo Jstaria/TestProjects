@@ -5,7 +5,13 @@ uniform vec2 size;
 
 void main()
 {
-    vec2 uv = gl_FragCoord.xy / position;
+    position.y = -position.y;
+    vec2 uv = gl_FragCoord.xy / vec2(1920,1080) * 2.0 - 1.0;
+    vec2 screenCenter = vec2(1920,1080) / 2;
+    vec2 offset = position;
+    uv -= offset / vec2(1920,1080);
 
-    gl_FragColor = vec4(uv, 0.0, 1.0);
+    float d = 1 - length(uv);
+
+    gl_FragColor = vec4(uv, 0.0, d);
 }

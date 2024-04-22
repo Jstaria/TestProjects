@@ -122,27 +122,34 @@ void Light::Draw(sf::RenderWindow& window)
 
 	//window.draw(shape);
 
-	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(mesh.getBounds().getPosition()));
+	sf::Vector2f center = ViewManager::Instance()->GetWindowView().getCenter();
+
+	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(
+		window.mapCoordsToPixel(
+			sf::Vector2f(
+				(mesh.getBounds().getPosition().x - center.x) * 2 + distance / 2,
+				(mesh.getBounds().getPosition().y - center.y) * 2 + distance / 2)
+		)));
 	GlobalVariables::getShader("light")->setUniform("size", sf::Vector2f(mesh.getBounds().getSize()));
 
 	window.draw(mesh, GlobalVariables::getShader("light"));
 
-	for (size_t i = 0; i < rayPoints.size(); i++)
-	{
-		sf::VertexArray line(sf::Lines, 2);
-		line[0].position = position;
-		line[0].color = sf::Color::Red;
-		line[1].position = rayPoints[i];
+	//for (size_t i = 0; i < rayPoints.size(); i++)
+	//{
+	//	sf::VertexArray line(sf::Lines, 2);
+	//	line[0].position = position;
+	//	line[0].color = sf::Color::Red;
+	//	line[1].position = rayPoints[i];
 
-		sf::CircleShape shape(5);
-		shape.setOrigin(5, 5);
-		shape.setPosition(rayPoints[i]);
-		shape.setFillColor(sf::Color::Blue);
+	//	sf::CircleShape shape(5);
+	//	shape.setOrigin(5, 5);
+	//	shape.setPosition(rayPoints[i]);
+	//	shape.setFillColor(sf::Color::Blue);
 
-		window.draw(shape);
+	//	window.draw(shape);
 
-		window.draw(line);
-	}
+	//	window.draw(line);
+	//}
 
 
 }
