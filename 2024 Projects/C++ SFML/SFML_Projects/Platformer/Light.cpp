@@ -122,7 +122,7 @@ void Light::Draw(sf::RenderWindow& window)
 
 	//window.draw(shape);
 
-	sf::Vector2f center = ViewManager::Instance()->GetWindowView().getCenter();
+	sf::Vector2f center = window.getView().getCenter();
 	sf::Vector2f size = window.getView().getSize();
 	GlobalVariables::getShader("light")->setUniform("position", sf::Vector2f(
 		window.mapCoordsToPixel(
