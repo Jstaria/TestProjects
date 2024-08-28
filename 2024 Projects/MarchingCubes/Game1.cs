@@ -25,8 +25,8 @@ namespace _3D_Programming
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
 
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
         }
 
         protected override void Initialize()
@@ -42,7 +42,7 @@ namespace _3D_Programming
             basicEffect.LightingEnabled = true;
             basicEffect.EnableDefaultLighting();
 
-            cube = new CubeMarching(25,10,25,.25f, 50);
+            cube = new CubeMarching(10,10,10,.5f, 200);
             cube.UpdateAll();
 
             base.Initialize();
@@ -59,6 +59,8 @@ namespace _3D_Programming
                 Exit();
 
             mainCamera.Update(gameTime);
+
+            cube.Update();
 
             base.Update(gameTime);
         }

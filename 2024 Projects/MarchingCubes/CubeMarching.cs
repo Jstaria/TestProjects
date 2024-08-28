@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 public struct Triangle
 {
@@ -31,6 +32,10 @@ public class CubeMarching
     private int length = 10;
     private int height = 10;
     private float heightThreshhold = .5f;
+
+    private float zOffset = 0;
+
+    private FastNoiseLite noise = new FastNoiseLite();
 
     // Geometric Info
     private VertexBuffer vertexBuffer; // Graphics buffer
@@ -54,9 +59,44 @@ public class CubeMarching
         this.length = length;
         this.heightThreshhold = heightThreshhold;
         this.scale = scale;
+
+        this.noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2S);
+        this.noise.SetFrequency(.1f);
     }
 
     #region Generic
+
+    public void Update()
+    {
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad8))
+        {
+            heightThreshhold += .01f;
+            heightThreshhold = MathF.Min(heightThreshhold, .99f);
+
+            UpdateAll();
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad2))
+        {
+            heightThreshhold -= .01f;
+            heightThreshhold = MathF.Max(heightThreshhold, 0.01f);
+            UpdateAll();
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad6))
+        {
+            zOffset += .01f;
+
+            UpdateAll();
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
+        {
+            zOffset -= .01f;
+
+            UpdateAll();
+        }
+    }
 
     public void UpdateAll()
     {
@@ -213,7 +253,7 @@ public class CubeMarching
             {
                 for (int z = 0; z < length + 1; z++)
                 {
-                    float currentHeight = x * z / 10;
+                    float currentHeight = noise.GetNoise(x, y, z + zOffset);
 
                     // Checking the depth value and assigning it(I'm pretty sure)
                     float newHeight = y <= currentHeight - 0.5f ? 0f : 
@@ -221,7 +261,7 @@ public class CubeMarching
                                       y > currentHeight ? y - currentHeight : 
                                       currentHeight - y;
 
-                    heights[x, y, z] = newHeight;
+                    heights[x, y, z] = currentHeight;
 
                     // 3D Noise
                     //float currentHeight = (float)NoiseS3D.Noise(x * noiseResolution / 15, y * noiseResolution / 15, z * noiseResolution / 15) / Mathf.PerlinNoise(x * noiseResolution, z * noiseResolution);
