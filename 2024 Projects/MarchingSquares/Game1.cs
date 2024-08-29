@@ -45,7 +45,7 @@ namespace MarchingSquares
 
             circleAsset = Content.Load<Texture2D>("circle");
 
-            squares = new MarchingSquares(150, 100, _graphics.PreferredBackBufferHeight, circleAsset, .1f, .005f);
+            squares = new MarchingSquares(450, 300, _graphics.PreferredBackBufferHeight, circleAsset, .1f, .005f);
             //squares.SetValuesRandomly();
             // TODO: use this.Content to load your game content here
         }

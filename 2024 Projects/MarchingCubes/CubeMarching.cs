@@ -46,6 +46,9 @@ public class CubeMarching
     private List<VertexPositionColorNormal> vertices = new List<VertexPositionColorNormal>();
     private List<Triangle> triangles = new List<Triangle>();
 
+    public int vertexCount {  get { return vertices.Count; } }
+    public int triangleCount {  get { return triangles.Count; } }
+
     // Start is called before the first frame update
 
     public VertexBuffer VertexBuffer { get { return vertexBuffer; } }
@@ -61,7 +64,7 @@ public class CubeMarching
         this.scale = scale;
 
         this.noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2S);
-        this.noise.SetFrequency(.1f);
+        this.noise.SetFrequency(.2f);
     }
 
     #region Generic
@@ -155,7 +158,7 @@ public class CubeMarching
         int configIndex = GetConfigurationIndex(cubeCorners);
 
         // Will not generate cubes behind camera
-        //float dotProduct = Vector3.Dot(position - cam.transform.position, cam.transform.forward);
+        // float dotProduct = Vector3.Dot(position - cam.transform.position, cam.transform.forward);
 
         if (configIndex == 0 || configIndex == 255) //|| dotProduct < 0)
         {
