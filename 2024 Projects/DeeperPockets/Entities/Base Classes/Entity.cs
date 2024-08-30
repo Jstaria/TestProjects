@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Entities
 {
-    internal abstract class Entity 
+    internal abstract class Entity
     {
         protected Vector2 pos;
         protected Vector2 drawPos;

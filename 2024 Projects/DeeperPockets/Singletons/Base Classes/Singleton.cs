@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Entities.Singletons
 {
     public abstract class Singleton<T>
     where T : Singleton<T>, new()

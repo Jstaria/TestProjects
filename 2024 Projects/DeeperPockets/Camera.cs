@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DeeperPockets.Interfaces;
+using DeeperPockets.Singletons;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;

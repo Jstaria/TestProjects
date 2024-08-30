@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DeeperPockets.Entities;
+using DeeperPockets.Singletons;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -47,6 +49,7 @@ namespace DeeperPockets
             player = new Player(10, spawnPos, square);
             entities = new List<TestEntity>();
 
+            // 9 test entities for testing player and camera movement
             for (int i = -1; i < 2; i++)
             {
                 for (int j = -1; j < 2; j++)
@@ -88,6 +91,7 @@ namespace DeeperPockets
 
             _spriteBatch.End();
 
+            // Draws debug information to the screen
             Debug.Instance.Draw(GraphicsDevice);
 
             base.Draw(gameTime);

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DeeperPockets.Interfaces;
+using DeeperPockets.Singletons;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -7,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Entities
 {
     internal class Player : Entity, IMove, IInput
     {
@@ -21,8 +23,8 @@ namespace DeeperPockets
 
         public Player(int Speed, Vector2 position, Texture2D tex) : base(position, tex)
         {
-            this.speed = Speed;
-        } 
+            speed = Speed;
+        }
 
         public void Move()
         {
@@ -53,7 +55,7 @@ namespace DeeperPockets
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(tex, new Rectangle((int)drawPos.X - tex.Width / 2, (int)drawPos.Y + tex.Height / 2, tex.Width, tex.Height), Color.White);
+            sb.Draw(tex, new Rectangle((int)drawPos.X - tex.Width / 2, (int)drawPos.Y - tex.Height / 2, tex.Width, tex.Height), Color.White);
         }
     }
 }

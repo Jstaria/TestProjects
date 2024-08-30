@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DeeperPockets.Singletons;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Entities
 {
     internal class TestEntity : Entity
     {
@@ -17,7 +18,7 @@ namespace DeeperPockets
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(tex, new Rectangle((int)drawPos.X - tex.Width / 2, (int)drawPos.Y + tex.Height / 2, tex.Width, tex.Height), Color.Red);
+            sb.Draw(tex, new Rectangle((int)drawPos.X - tex.Width / 2, (int)drawPos.Y - tex.Height / 2, tex.Width, tex.Height), Color.Red);
         }
 
         public override void Update(GameTime gameTime)

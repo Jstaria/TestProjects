@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DeeperPockets.Entities.Singletons;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Singletons
 {
     internal class Global : Singleton<Global>
     {

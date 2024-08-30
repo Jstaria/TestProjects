@@ -1,4 +1,6 @@
-﻿using MarchingSquares;
+﻿using DeeperPockets.Interfaces;
+using DeeperPockets.Libraries;
+using DeeperPockets.Singletons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,7 +20,7 @@ namespace DeeperPockets
         public Vector2 Size { get; set; }
 
         private Color color;
-        private float LineThickness;
+        private float LineThickness; // Not used right now
 
         public HitBox(Vector2 position, Vector2 size, Color color, float lineThickness)
         {
@@ -35,7 +37,7 @@ namespace DeeperPockets
             DrawPosition = Position - Global.Instance.WorldOffset - Global.Instance.CameraOffset;
         }
 
-        public bool Interects(Vector2 position, Vector2 size)
+        public bool Contains(Vector2 position, Vector2 size)
         {
             return
                 DrawPosition.X < position.X + size.X && DrawPosition.X + Size.X > position.X &&

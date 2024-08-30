@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeeperPockets
+namespace DeeperPockets.Interfaces
 {
     internal interface IObject
     {
-        public Vector2 Position { get;}
+        public Vector2 Position { get; }
         public Vector2 DrawPosition { get; }
-        public Vector2 Size { get;}   
+        public Vector2 Size { get; }
         public Texture2D Texture { get; }
     }
 }
