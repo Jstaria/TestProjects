@@ -15,8 +15,7 @@ namespace DeeperPockets
 
         private Texture2D square;
         private Player player;
-        private Camera camera = new Camera(5);
-
+        private Camera camera;
 
         private List<TestEntity> entities;
 
@@ -32,7 +31,9 @@ namespace DeeperPockets
         }
 
         protected override void Initialize()
-        { 
+        {
+            camera = new Camera(5, screenWidth, screenHeight);
+
             base.Initialize();
         }
 
@@ -86,6 +87,8 @@ namespace DeeperPockets
             player.Draw(_spriteBatch);
 
             _spriteBatch.End();
+
+            Debug.Instance.Draw(GraphicsDevice);
 
             base.Draw(gameTime);
         }

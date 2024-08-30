@@ -12,12 +12,12 @@ namespace DeeperPockets
     internal interface IInput
     {
         // Mouse Input
-        public abstract KeyboardState prevKBState { get; set; }
-        public abstract KeyboardState curKBState { get; set; }
+        public abstract KeyboardState prevKBState { get;  }
+        public abstract KeyboardState curKBState { get; }
 
         // Mouse Input
-        public abstract MouseState prevMouseState { get; set; }
-        public abstract MouseState curMouseState { get; set; }
+        public abstract MouseState prevMouseState { get;  }
+        public abstract MouseState curMouseState { get; }
 
     }
 }

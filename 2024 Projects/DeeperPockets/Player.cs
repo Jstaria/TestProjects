@@ -11,15 +11,17 @@ namespace DeeperPockets
 {
     internal class Player : Entity, IMove, IInput
     {
+        private int speed;
+
         public KeyboardState prevKBState { get; set; }
         public KeyboardState curKBState { get; set; }
         public MouseState prevMouseState { get; set; }
         public MouseState curMouseState { get; set; }
-        public int Speed { get; set; }
+        public int Speed { get { return speed; } }
 
         public Player(int Speed, Vector2 position, Texture2D tex) : base(position, tex)
         {
-            this.Speed = Speed;
+            this.speed = Speed;
         } 
 
         public void Move()

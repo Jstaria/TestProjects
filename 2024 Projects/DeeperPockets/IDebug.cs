@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DeeperPockets
 {
-    internal interface IMove
+    internal interface IDebug
     {
-        public abstract int Speed { get; }
-
-        void Move();
-
+        /// <summary>
+        /// Must use ShapeBatch
+        /// </summary>
+        public void Draw();
     }
 }

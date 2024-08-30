@@ -9,17 +9,27 @@ using System.Threading.Tasks;
 
 namespace DeeperPockets
 {
-    internal class Camera : IMove, IInput
+    internal class Camera : IMove, IInput, ICollision
     {
-        public int Speed { get; set; }
+        private int speed;
+        private HitBox hitBox;
+
+        public event ICollision.OnCollision OnCollisionEnter;
+
+        public int Speed { get { return speed; } }
         public KeyboardState prevKBState { get; set; }
         public KeyboardState curKBState { get; set; }
         public MouseState prevMouseState { get; set; }
         public MouseState curMouseState { get; set; }
 
-        public Camera(int speed)
+        public HitBox HitBox { get { return hitBox; } }
+
+        public Camera(int speed, int screenWidth, int screenHeight)
         {
-            Speed = speed;
+            this.hitBox = new HitBox(Vector2.Zero, new Vector2(screenWidth, screenHeight), Color.DarkRed, 5);
+            this.speed = speed;
+
+            if (Global.Instance.camera == null) Global.Instance.camera = this;
         }
 
         public void Move()
@@ -47,6 +57,11 @@ namespace DeeperPockets
             Move();
 
             if (curKBState.IsKeyDown(Keys.Space)) Global.Instance.CameraOffset = Vector2.Zero;
+        }
+
+        public void OnCollisionDetection()
+        {
+            if (OnCollisionEnter != null) OnCollisionEnter.Invoke();
         }
     }
 }

@@ -11,5 +11,7 @@ namespace DeeperPockets
     {
         public Vector2 WorldOffset; // Shift for everything minus player
         public Vector2 CameraOffset; // Shift for everything plus player
+
+        public Camera camera; // Global callback to camera
     }
 }
