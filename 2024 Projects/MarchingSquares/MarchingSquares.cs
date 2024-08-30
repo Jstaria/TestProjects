@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Design;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,8 @@ namespace MarchingSquares
         private int scale;
         private float speed;
 
+        private float smoothOffset;
+
         private SquarePointData[,] squareArray;
         private Random random;
         private Texture2D circleAsset;
@@ -25,6 +28,7 @@ namespace MarchingSquares
         private FastNoiseLite noise;
         private bool isSmooth = true;
         private float count = 0;
+        private float prevScrollValue;
 
         private List<Vector2> circles = new List<Vector2>() { new Vector2(500, 500), new Vector2(750, 750) };
 
@@ -89,6 +93,15 @@ namespace MarchingSquares
             }
 
             count += speed;
+
+            float currentScrollValue = Mouse.GetState().ScrollWheelValue;
+
+            if (currentScrollValue - prevScrollValue < 0) smoothOffset -= .1f;
+            if (currentScrollValue - prevScrollValue > 0) smoothOffset += .1f;
+
+            smoothOffset = MathHelper.Clamp(smoothOffset, 0, 1);
+
+            prevScrollValue = currentScrollValue;
         }
 
         #region startMethods
@@ -154,14 +167,14 @@ namespace MarchingSquares
 
         public void Draw()
         {
-            for (int i = 0; i < width + 1; i++)
-            {
-                for (int j = 0; j < height + 1; j++)
-                {
-                    ShapeBatch.Circle(squareArray[i, j].Position, 10, Color.White * squareArray[i, j].Data);
+            //for (int i = 0; i < width + 1; i++)
+            //{
+            //    for (int j = 0; j < height + 1; j++)
+            //    {
+            //        ShapeBatch.Circle(squareArray[i, j].Position, 10, Color.White * squareArray[i, j].Data);
 
-                }
-            }
+            //    }
+            //}
 
             for (int i = 0; i < width; i++)
             {
@@ -271,16 +284,16 @@ namespace MarchingSquares
         private void CreateLineListSmoothed(float a1, float b1, float c1, float d1)
         {
             float lerpAmt = (1 - a1) / (b1 - a1);
-            Vector2 a = new Vector2(MathHelper.Lerp(0, scale, lerpAmt), 0); // top edge
+            Vector2 a = new Vector2(MathHelper.Lerp(0, scale, MathHelper.Lerp(lerpAmt, .5f, smoothOffset)), 0); // top edge
 
             lerpAmt = (1 - b1) / (c1 - b1);
-            Vector2 b = new Vector2(scale, MathHelper.Lerp(0, scale, lerpAmt));   // right edge
+            Vector2 b = new Vector2(scale, MathHelper.Lerp(0, scale, MathHelper.Lerp(lerpAmt, .5f, smoothOffset)));   // right edge
 
             lerpAmt = (1 - d1) / (c1 - d1);
-            Vector2 c = new Vector2(MathHelper.Lerp(0, scale, lerpAmt), scale);  // bottom edge
+            Vector2 c = new Vector2(MathHelper.Lerp(0, scale, MathHelper.Lerp(lerpAmt, .5f, smoothOffset)), scale);  // bottom edge
 
             lerpAmt = (1 - a1) / (d1 - a1);
-            Vector2 d = new Vector2(0, MathHelper.Lerp(0, scale, lerpAmt));  // left edge
+            Vector2 d = new Vector2(0, MathHelper.Lerp(0, scale, MathHelper.Lerp(lerpAmt, .5f, smoothOffset)));  // left edge
 
             smoothedLines = new Dictionary<string, Vector2>()
             {

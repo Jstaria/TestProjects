@@ -9,13 +9,15 @@ namespace _3D_Programming
     public class Game1 : Game
     {
         public static GraphicsDeviceManager _graphics;
-        //private SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
 
         // Camera
         private Camera mainCamera;
 
         // Marching Cubes
         private CubeMarching cube;
+
+        private SpriteFont font;
 
         private BasicEffect basicEffect; // Tells XNA how to draw object
 
@@ -50,7 +52,8 @@ namespace _3D_Programming
 
         protected override void LoadContent()
         {
-            //_spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("font");
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,6 +96,13 @@ namespace _3D_Programming
                 pass.Apply();
                 GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount);
             }
+
+            //_spriteBatch.Begin();
+
+            //_spriteBatch.DrawString(font, cube.triangleCount.ToString(), new Vector2(100, 100), Color.Black);
+            //_spriteBatch.DrawString(font, cube.vertexCount.ToString(), new Vector2(100, 150), Color.Black);
+
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }
