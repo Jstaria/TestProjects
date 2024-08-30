@@ -85,14 +85,14 @@ public class CubeMarching
 
         if (Keyboard.GetState().IsKeyDown(Keys.NumPad6))
         {
-            zOffset += .01f;
+            zOffset += .1f;
 
             UpdateAll();
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
         {
-            zOffset -= .01f;
+            zOffset -= .1f;
 
             UpdateAll();
         }

@@ -42,7 +42,7 @@ namespace _3D_Programming
             basicEffect.LightingEnabled = true;
             basicEffect.EnableDefaultLighting();
 
-            cube = new CubeMarching(10,10,10,.5f, 200);
+            cube = new CubeMarching(20,10,20,.5f, 100);
             cube.UpdateAll();
 
             base.Initialize();
@@ -84,7 +84,7 @@ namespace _3D_Programming
             // and see both sides of the triangle
 
             RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
+            rasterizerState.CullMode = CullMode.CullClockwiseFace;
             GraphicsDevice.RasterizerState = rasterizerState;
 
             // Loop through all effects in shader, apply them, and draw our shader
