@@ -49,7 +49,7 @@ namespace DeeperPockets
         /// </summary>
         public void Draw()
         {
-            ShapeBatch.BoxOutline(Position.X, Position.Y, Size.X, Size.Y, color * .5f);
+            ShapeBatch.BoxOutline(DrawPosition.X, DrawPosition.Y, Size.X, Size.Y, color * .75f);
         }
     }
 }

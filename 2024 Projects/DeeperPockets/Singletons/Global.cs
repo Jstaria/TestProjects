@@ -14,5 +14,7 @@ namespace DeeperPockets.Singletons
         public Vector2 CameraOffset; // Shift for everything plus player
 
         public Camera camera; // Global callback to camera
+
+        public HitBox currentScreenBox; // Used to limit camera movement
     }
 }

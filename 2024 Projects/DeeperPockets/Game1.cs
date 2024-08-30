@@ -18,6 +18,7 @@ namespace DeeperPockets
         private Texture2D square;
         private Player player;
         private Camera camera;
+        private Map map;
 
         private List<TestEntity> entities;
 
@@ -35,6 +36,8 @@ namespace DeeperPockets
         protected override void Initialize()
         {
             camera = new Camera(5, screenWidth, screenHeight);
+
+            map = new Map();
 
             base.Initialize();
         }
@@ -65,6 +68,8 @@ namespace DeeperPockets
                 Exit();
 
             camera.Update(gameTime);
+            
+            map.Update();
 
             player.Update(gameTime);
 
