@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace DeeperPockets
         public MouseState curMouseState { get; set; }
 
         public HitBox HitBox { get { return hitBox; } }
+
+        public bool canMoveUp;
+        public bool canMoveDown;
+        public bool canMoveLeft;
+        public bool canMoveRight;
 
         public Camera(int speed, int screenWidth, int screenHeight)
         {
@@ -48,6 +54,8 @@ namespace DeeperPockets
             if (velocity != Vector2.Zero) velocity.Normalize();
 
             velocity *= Speed;
+
+            System.Diagnostics.Debug.WriteLine(Global.Instance.currentScreenBox.Intersects(hitBox));
 
             Global.Instance.CameraOffset += velocity;
 

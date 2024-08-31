@@ -15,6 +15,8 @@ namespace DeeperPockets.Entities
     {
         private int speed;
 
+        private Vector2 originalPos;
+
         public KeyboardState prevKBState { get; set; }
         public KeyboardState curKBState { get; set; }
         public MouseState prevMouseState { get; set; }
@@ -24,6 +26,7 @@ namespace DeeperPockets.Entities
         public Player(int Speed, Vector2 position, Texture2D tex) : base(position, tex)
         {
             speed = Speed;
+            originalPos = position;
         }
 
         public void Move()
@@ -41,7 +44,17 @@ namespace DeeperPockets.Entities
 
             velocity *= Speed;
 
-            Global.Instance.WorldOffset += velocity;
+            Vector2 worldVelocity = Global.Instance.currentScreenBox.ExitingCheck(Global.Instance.camera.HitBox, velocity)[0];
+
+            float marginOfError = 5;
+
+            if (pos.X < originalPos.X - marginOfError || pos.X > originalPos.X + marginOfError) worldVelocity.X = 0;
+            if (pos.Y < originalPos.Y - marginOfError || pos.Y > originalPos.Y + marginOfError) worldVelocity.Y = 0;
+
+            Global.Instance.WorldOffset += worldVelocity;
+
+            if (worldVelocity.X == 0) pos.X += velocity.X;
+            if (worldVelocity.Y == 0) pos.Y += velocity.Y;
 
             prevKBState = curKBState;
         }
