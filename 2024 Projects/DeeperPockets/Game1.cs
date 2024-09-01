@@ -83,7 +83,7 @@ namespace DeeperPockets
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
 

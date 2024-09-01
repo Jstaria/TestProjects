@@ -57,17 +57,64 @@ namespace DeeperPockets
         public List<Vector2> ExitingCheck(HitBox hitBox, Vector2 velocity)
         {
             Vector2 tempVel = velocity;
-            Vector2 tempPos = Vector2.Zero;
+            Vector2 tempPos = new Vector2(1000000,1000000);
+            Vector2 size = hitBox.Size;
 
-            if (hitBox.DrawPosition.X + velocity.X <= DrawPosition.X) tempPos.X = Position.X;
-            if (hitBox.DrawPosition.X + hitBox.Size.X + velocity.X >= DrawPosition.X + Size.X) tempPos.X = Position.X + Size.X;
-            if (hitBox.DrawPosition.Y + velocity.Y <= DrawPosition.Y) tempPos.Y = Position.Y;
-            if (hitBox.DrawPosition.Y + hitBox.Size.Y + velocity.Y >= DrawPosition.Y + Size.Y) tempPos.Y = Position.Y + Size.Y;
+            bool[] sideChecksH = new bool[] { false, false };
+            bool[] sideChecksV = new bool[] { false, false };
 
-            if (tempPos.X != 0) velocity.X = 0;
-            if (tempPos.Y != 0) velocity.Y = 0;
+            if (hitBox.DrawPosition.X + velocity.X <= DrawPosition.X)
+            {
+                tempPos.X = Position.X;
+                //sideChecksH[0] = true;
+            }
+            if (hitBox.DrawPosition.X + hitBox.Size.X + velocity.X >= DrawPosition.X + Size.X)
+            {
+                if (tempPos.X != 1000000)
+                {
+                    tempPos.X = Position.X + Size.X / 2;
+                    tempPos.X -= size.X / 2;
+                }
+                else
+                {
+                    tempPos.X = Position.X + Size.X;
+                    tempPos.X -= size.X;
+                }
+
+                
+                //sideChecksH[1] = true;
+            }
+            if (hitBox.DrawPosition.Y + velocity.Y <= DrawPosition.Y)
+            {
+                tempPos.Y = Position.Y;
+                //sideChecksV[0] = true;
+            }
+            if (hitBox.DrawPosition.Y + hitBox.Size.Y + velocity.Y >= DrawPosition.Y + Size.Y)
+            {
+                if (tempPos.Y != 1000000)
+                {
+                    tempPos.Y = Position.Y + Size.Y / 2;
+                    tempPos.Y -= size.Y / 2;
+                }
+
+                else
+                {
+                    tempPos.Y = Position.Y + Size.Y;
+                    tempPos.Y -= size.Y;
+                }
+                
+                //sideChecksV[1] = true;
+            }
+
+            if (tempPos.X != 1000000) velocity.X = 0;
+            if (tempPos.Y != 1000000) velocity.Y = 0;
 
             return new List<Vector2> { velocity, tempPos };
+        }
+
+        public void SetWorldPos(Vector2 pos)
+        {
+            this.DrawPosition = pos;
         }
 
         /// <summary>

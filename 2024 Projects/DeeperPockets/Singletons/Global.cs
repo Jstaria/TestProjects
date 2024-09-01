@@ -16,5 +16,6 @@ namespace DeeperPockets.Singletons
         public Camera camera; // Global callback to camera
 
         public HitBox currentScreenBox; // Used to limit camera movement
+        public HitBox currentWalkableArea; // Used for player movement
     }
 }

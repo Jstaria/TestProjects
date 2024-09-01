@@ -55,7 +55,7 @@ namespace DeeperPockets
 
             velocity *= Speed;
 
-            System.Diagnostics.Debug.WriteLine(Global.Instance.currentScreenBox.Intersects(hitBox));
+            //System.Diagnostics.Debug.WriteLine(Global.Instance.currentScreenBox.Intersects(hitBox));
 
             Global.Instance.CameraOffset += velocity;
 
@@ -67,6 +67,18 @@ namespace DeeperPockets
             Move();
 
             if (curKBState.IsKeyDown(Keys.Space)) Global.Instance.CameraOffset = Vector2.Zero;
+        }
+
+        public void SetCameraBound(Vector2 pos)
+        {
+            if (pos.X == 1000000)
+            {
+
+            }
+            if (pos.Y == 1000000)
+            {
+
+            }
         }
 
         public void OnCollisionDetection()

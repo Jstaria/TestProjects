@@ -12,10 +12,13 @@ namespace DeeperPockets
     internal class Map
     {
         HitBox currentMapBox;
+        HitBox currentWalkableArea;
+
         public Map() 
         {
-            currentMapBox = new HitBox(new Vector2(-1920 / 3f, -1080 / 3f), new Vector2(1920 * 1.5f, 1080 * 1.5f), Color.Yellow, 5);
+            currentMapBox = new HitBox(new Vector2(-1920 / 2, 1080 / 2 - 200), new Vector2(1920 * 2f, 200 * 2f), Color.Yellow, 5);
             Global.Instance.currentScreenBox = currentMapBox;
+            Global.Instance.currentWalkableArea = currentMapBox;
         }
 
         public void Update() {
