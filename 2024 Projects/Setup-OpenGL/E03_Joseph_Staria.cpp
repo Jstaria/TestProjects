@@ -8,59 +8,67 @@
 #include <GL/freeglut.h> //include glut for Windows
 #endif
 
+#include <math.h>
+#include <numbers>
+
 
 // the window's width and height
-int width, height;
+int width, height, maxVertices;
 
 void init(void)
 {
     // initialize the size of the window
     width = 600;
     height = 600;
+    maxVertices = 10;
 }
 
-void DrawTree(int x, int y, int tri_height, int tri_width, float heightOffset) {
-    // this is immedidate mode of OpenGL usded prior to OpenGL 3.0
-    // draw hull
-
-    glColor3f(0.75f, 0.5f, 0.0f);
+void DrawFilledCircle(float red, float green, float blue, float centerX, float centerY, float radius) {
+    
+    glColor3f(red, green, blue);
     glBegin(GL_POLYGON);
 
-    glVertex2f(x - ((float)tri_width / 2), 0);
-    glVertex2f(x - ((float)tri_width / 2), 1);
-    glVertex2f(x + ((float)tri_width / 2), 1);
-    glVertex2f(x + ((float)tri_width / 2), 0);
+    float radians = 2 * (atan(1) * 4) / maxVertices;
 
-    glEnd();
-
-    glColor3f(0.5f, 0.75f, 0.3f);
-    glBegin(GL_TRIANGLES);
-
-    int num = 3;
-
-    for (int i = 0; i < num; i++)
+    for (int i = 0; i < maxVertices; i++)
     {
-        glVertex2f((GLfloat)(x - (tri_width) * 2 + (i / (float)num * 1.5f)), (GLfloat)(y + i * tri_height - heightOffset * i) + 1);
-
-        glVertex2f((GLfloat)x, (GLfloat)(y + tri_height + i * tri_height - heightOffset * i / 5) + 1);
-        
-        glVertex2f((GLfloat)(x + (tri_width) * 2 - (i / (float)num * 1.5f)), (GLfloat)(y + i * tri_height - heightOffset * i) + 1);
+        glVertex2f(centerX + radius * cos(radians * i), centerY + radius * sin(radians * i));
     }
-
     glEnd();
 
-    glColor3f(1, 0, 0);
-    glPointSize(30.0f);
-    glBegin(GL_POINTS);
+    glutPostRedisplay();
+}
 
-    for (int i = 0; i < num; i++)
+void DrawWireframeCircle(float red, float green, float blue, float centerX, float centerY, float radius, float lineWidth) {
+
+    glColor3f(red, green, blue);
+    glLineWidth(lineWidth);
+    glBegin(GL_LINE_LOOP);
+
+    float radians = 2 * (atan(1) * 4) / maxVertices;
+
+    for (int i = 0; i < maxVertices; i++)
     {
-        glVertex2f((GLfloat)(x - (tri_width) * 2 + (i / (float)num * 1.5f)), (GLfloat)(y + i * tri_height - heightOffset * i) + 1);
-
-        glVertex2f((GLfloat)(x + (tri_width) * 2 - (i / (float)num * 1.5f)), (GLfloat)(y + i * tri_height - heightOffset * i) + 1);
+        glVertex2f(centerX + radius * cos(radians * i), centerY + radius * sin(radians * i));
     }
-
     glEnd();
+
+    glutPostRedisplay();
+}
+
+void Keyboard(unsigned char key, int x, int y) 
+{
+    switch (key) {
+    case '-':
+        maxVertices--;
+        //exit(0);
+        break;
+
+    case '+':
+        maxVertices++;
+        //exit(0);
+        break;
+    }
 }
 
 // called when the GL context need to be rendered
@@ -76,11 +84,9 @@ void display(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // specify the color for drawing
-    glColor3f(1.0, 0.0, 0.0);
-
     // this is immedidate mode of OpenGL usded prior to OpenGL 3.0
-    DrawTree(5, 0, 2, 1, .75f);
+    DrawFilledCircle(1, .5f, .75f, 5, 5, 3);
+    DrawWireframeCircle(.25f, .75f, 1, 5, 5, 3, 20);
 
     // specify the color for new drawing
     glColor3f(0.0, 0.0, 1.0);
@@ -130,11 +136,15 @@ int main(int argc, char* argv[])
 
     /* --- register callbacks with GLUT --- */
 
+    glutKeyboardFunc(Keyboard);
+
     //register function to handle window resizes
     glutReshapeFunc(reshape);
 
     //register function that draws in the window
     glutDisplayFunc(display);
+
+    
 
     //start the glut main loop
     glutMainLoop();
