@@ -29,5 +29,6 @@ public:
 	vector<float> GetPhysicsObjPos();
 	void ApplyForce(vector<float> force);
 	vector<float> GetPosition() { return position; }
+	PhysicsObject GetPhysicsObj() { return obj; }
 };
 

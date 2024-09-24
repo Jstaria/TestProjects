@@ -52,7 +52,7 @@ float prepareTime = 2.0f;
 Shape ball;
 
 void SpawnBall() {
-	ball = Shape(ballPos, ballColor, .25, 40, 200, .25, true, true);
+	ball = Shape(ballPos, ballColor, .25, 40, 500, .55, false, true);
 }
 
 void CreateFrameBuffer() {
@@ -137,7 +137,7 @@ void mouse() {
 		ball.ApplyForce(force);
 
 	if (MouseHandler::GetInstance()->isRightButtonDown())
-		ball.ApplyForce({ 10,0 });
+		ball.ApplyForce(ball.GetPhysicsObj().GetDirection());
 }
 
 void update() {
@@ -154,8 +154,6 @@ void update() {
 
 	mouse();
 	ball.Update([]() -> vector<float> {return ball.GetPhysicsObjPos(); });
-
-	
 
 	preTime = curTime; // the curTime become the preTime for the next frame
 	glutPostRedisplay();

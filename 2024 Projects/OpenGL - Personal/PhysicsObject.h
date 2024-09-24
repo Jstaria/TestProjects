@@ -17,6 +17,7 @@ private:
 	vector<float> direction = { 0, 0 };
 
 	bool useFriction, useGravity;
+	bool useForces = true;
 
 	void ScreenBounds();
 
@@ -29,6 +30,11 @@ public:
 	void ApplyGravity(vector<float> force);
 	void ApplyFriction(float coeff);
 	void FlipVelocity(bool x, bool y);
+	void ApplySpringForce(float springConstant, vector<float> center);
+
+	vector<float> GetDirection() { return direction; }
+	void SetPosition(vector<float> pos) { position = pos; }
+	void SetUseForces(bool use) { useForces = use; }
 
 	vector<float> Update();
 };

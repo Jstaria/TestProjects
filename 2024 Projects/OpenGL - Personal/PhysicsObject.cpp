@@ -6,7 +6,7 @@ vector<float> acceleration = { 0, 0 };
 vector<float> position = { 8, 9 };
 vector<float> direction = { 0, 0 };
 
-float maxVel = 10;
+float maxVel = 1;
 
 void PhysicsObject::ApplyGravity(vector<float> force)
 {
@@ -36,7 +36,16 @@ void PhysicsObject::ApplyFriction(float coeff)
 
 void PhysicsObject::FlipVelocity(bool x, bool y)
 {
-	velocity = { x ? -velocity[0] : velocity[0], y ? -velocity[1] : velocity[1] };
+	float dampening = .85f;
+	velocity = { x ? -velocity[0] * dampening: velocity[0], y ? -velocity[1] * dampening : velocity[1] };
+}
+
+void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center)
+{
+	vector<float> distance = { position[0] - center[0], position[1] - center[1] };
+	vector<float> force = { -springConstant * distance[0], -springConstant * distance[1] };
+
+	ApplyForce(force);
 }
 
 vector<float> PhysicsObject::Update()
@@ -54,12 +63,18 @@ vector<float> PhysicsObject::Update()
 
 	if (velMag != 0)
 		direction = { velocity[0] / velMag, velocity[1] / velMag };
+	else
+		direction = { 0,0 };
 
-	if (abs(velMag) < .00005f)
+	if (abs(velMag) < .0005f)
 		velocity = { 0,0 };
 
 	velocity[0] = min(velocity[0], maxVel);
 	velocity[1] = min(velocity[1], maxVel);
+	velocity[0] = max(velocity[0], -maxVel);
+	velocity[1] = max(velocity[1], -maxVel);
+
+	//printf("(%f,%f)\n", velocity[0], velocity[1]);
 
 	position = { position[0] + velocity[0] * deltaTime, position[1] + velocity[1] * deltaTime };
 

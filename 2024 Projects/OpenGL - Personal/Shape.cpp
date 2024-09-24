@@ -24,6 +24,8 @@ void Shape::Update(vector<float>(*func)()) {
 
 vector<float> Shape::GetPhysicsObjPos()
 {
+	obj.ApplySpringForce(4.0f, { 8,4.5f });
+
 	return obj.Update();
 }
 
