@@ -1,6 +1,6 @@
 // Course: 		    IGME 309
 // Student Name: 	Joseph Staria
-// Friday Exercise: 03
+// Assignment:      01
 
 #ifdef __APPLE__
 #include <GLUT/glut.h> // include glut for Mac
@@ -20,7 +20,7 @@ void init(void)
     // initialize the size of the window
     width = 600;
     height = 600;
-    maxVertices = 10;
+    maxVertices = 100;
 }
 
 void DrawFilledCircle(float red, float green, float blue, float centerX, float centerY, float radius) {
@@ -56,6 +56,40 @@ void DrawWireframeCircle(float red, float green, float blue, float centerX, floa
     glutPostRedisplay();
 }
 
+// 20 total objects
+void DrawPanda() 
+{
+    DrawFilledCircle(1, .5f, .75f, 5, 0, 4);
+    DrawWireframeCircle(.25f, .75f, 1, 5, 0, 4, 20);
+
+    DrawFilledCircle(1, .5f, .75f, 7, 7, 2);
+    DrawWireframeCircle(.25f, .75f, 1, 7, 7, 2, 5);
+
+    DrawFilledCircle(1, .5f, .75f, 3, 7, 2);
+    DrawWireframeCircle(.25f, .75, 1, 3, 7, 2, 5);
+
+    DrawFilledCircle(1, .5f, .75f, 5, 5, 3);
+    DrawWireframeCircle(.25f, .75f, 1, 5, 5, 3, 20);
+
+    DrawFilledCircle(0,0,0, 5, 5, 2);
+    DrawFilledCircle(1, .5f, .75f, 5, 5.5, 2);
+
+    DrawFilledCircle(1, 1, 1, 6, 6, 1);
+    DrawWireframeCircle(.25f, .75f, 1, 6, 6, 1, 5);
+
+    DrawFilledCircle(1, 1, 1, 4, 6, 1);
+    DrawWireframeCircle(.25f, .75, 1, 4, 6, 1, 5);
+
+    DrawFilledCircle(0,0,0, 4, 6, .75f);
+    DrawFilledCircle(0,0,0, 6, 6, .75f);
+
+    DrawFilledCircle(1, .5f, .75f, 8, 1, 1.5);
+    DrawWireframeCircle(.25f, .75f, 1, 8, 1, 1.5, 5);
+
+    DrawFilledCircle(1, .5f, .75f, 2, 1, 1.5);
+    DrawWireframeCircle(.25f, .75, 1, 2, 1, 1.5, 5);
+}
+
 void Keyboard(unsigned char key, int x, int y) 
 {
     switch (key) {
@@ -84,9 +118,7 @@ void display(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // this is immedidate mode of OpenGL usded prior to OpenGL 3.0
-    DrawFilledCircle(1, .5f, .75f, 5, 5, 3);
-    DrawWireframeCircle(.25f, .75f, 1, 5, 5, 3, 20);
+    DrawPanda();
 
     // specify the color for new drawing
     glColor3f(0.0, 0.0, 1.0);
