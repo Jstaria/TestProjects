@@ -6,7 +6,7 @@ vector<float> acceleration = { 0, 0 };
 vector<float> position = { 8, 9 };
 vector<float> direction = { 0, 0 };
 
-float maxVel = 1;
+float maxVel = 3;
 
 void PhysicsObject::ApplyGravity(vector<float> force)
 {
@@ -56,7 +56,7 @@ void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center,
 
 vector<float> PhysicsObject::Update()
 {
-	if (useGravity) ApplyGravity(vector<float> {0, -.0098f});
+	if (useGravity) ApplyGravity(vector<float> {0, -.098f});
 	if (useFriction) ApplyFriction(frictionCoeff);
 
 	float deltaTime = GlobalVariables::GetInstance()->getDeltaTime();
@@ -91,23 +91,24 @@ vector<float> PhysicsObject::Update()
 void PhysicsObject::ScreenBounds()
 {
 	float offset = .002;
+	float deltaTime = GlobalVariables::GetInstance()->getDeltaTime();
 
-	if (position[0] + radius + velocity[0] > 16)
+	if (position[0] + radius + velocity[0] * deltaTime > 16)
 	{
 		FlipVelocity(true, false);
 		position = { 16 - radius - offset, position[1] };
 	}
-	if (position[0] - radius + velocity[0] < 0) {
+	if (position[0] - radius + velocity[0] * deltaTime < 0) {
 		FlipVelocity(true, false);
 		position = { 0 + radius + offset, position[1] };
 	}
 
-	if (position[1] + radius + velocity[1] > 9) {
+	if (position[1] + radius + velocity[1] * deltaTime > 9) {
 		FlipVelocity(false, true);
 		position = { position[0], 9 - radius - offset };
 	}
 
-	if (position[1] - radius + velocity[1] < 0) {
+	if (position[1] - radius + velocity[1] * deltaTime < 0) {
 		FlipVelocity(false, true);
 		position = { position[0], 0 + radius + offset };
 	}

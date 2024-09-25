@@ -51,6 +51,8 @@ int score = 0;
 bool ballIsActive = false;
 float prepareTime = 2.0f;
 
+float oldTimeSinceStart = 0;
+
 
 //Shape ball;
 //Shape anchor;
@@ -59,7 +61,7 @@ SoftBody softBody;
 void SpawnBall() {
 	//ball = Shape(ballPos, ballColor, .25, 40, 100, .55, true, true);
 	//anchor = Shape(anchorPos, ballColor, .1f, 4, 1, 1, false, false);
-	softBody = SoftBody(6, SoftBodyShape::Square, ballPos, .3f, 6);
+	softBody = SoftBody(2, SoftBodyShape::Square, ballPos, 2.0f, 200);
 }
 
 void CreateFrameBuffer() {
@@ -137,7 +139,7 @@ void mouse(Shape& shape) {
 
 	float forceMag = sqrtf(force[0] * force[0] + force[1] * force[1]);
 
-	float strength = 50;
+	float strength = 200;
 
 	if (forceMag != 0)
 		force = { force[0] / forceMag * strength, force[1] / forceMag * strength};
@@ -155,21 +157,23 @@ void update() {
 	auto currentTime = high_resolution_clock::now();
 	
 	//deltaTime = (float)(curTime - preTime) / 1000; // frame-different time in seconds 
-	deltaTime = duration_cast<duration<float>>(currentTime - lastTime).count() * 100;
-	//printf("%f\n", deltaTime);
+	float timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
+	deltaTime = (timeSinceStart - oldTimeSinceStart) / 100;
 	GlobalVariables::GetInstance()->setDeltaTime(deltaTime);
+	oldTimeSinceStart = timeSinceStart;
 
-	lastTime = currentTime;
+	//lastTime = currentTime;
 
 	mouse(softBody.GetFirstShape());
 	
-	printf("{%f,%f}\n", softBody.GetFirstShape().GetPosition()[0], softBody.GetFirstShape().GetPosition()[1]);
+	printf("%f\n", deltaTime);
+	//printf("{%f,%f}\n", softBody.GetFirstShape().GetPosition()[0], softBody.GetFirstShape().GetPosition()[1]);
 
 	softBody.Update();
 	//ball.GetPhysicsObj().ApplySpringForce(50, { 8,9.0f }, 2);
 	//ball.Update();
 
-	preTime = curTime; // the curTime become the preTime for the next frame
+	//preTime = curTime; // the curTime become the preTime for the next frame
 	glutPostRedisplay();
 }
 
