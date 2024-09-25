@@ -15,6 +15,7 @@
 #include "Shape.h"
 #include "MouseHandler.h"
 #include "GlobalVariables.h"
+#include "SoftBody.h"
 
 using namespace std;
 using namespace chrono;
@@ -50,12 +51,15 @@ int score = 0;
 bool ballIsActive = false;
 float prepareTime = 2.0f;
 
-Shape ball;
-Shape anchor;
+
+//Shape ball;
+//Shape anchor;
+SoftBody softBody;
 
 void SpawnBall() {
-	ball = Shape(ballPos, ballColor, .25, 40, 500, .55, true, true);
-	anchor = Shape(anchorPos, ballColor, .1f, 4, 1, 1, false, false);
+	//ball = Shape(ballPos, ballColor, .25, 40, 100, .55, true, true);
+	//anchor = Shape(anchorPos, ballColor, .1f, 4, 1, 1, false, false);
+	softBody = SoftBody(6, SoftBodyShape::Square, ballPos, .3f, 6);
 }
 
 void CreateFrameBuffer() {
@@ -74,8 +78,9 @@ void display(void)
 	glClearColor(0.3, 0.6, 0.3, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	ball.Draw();
-	anchor.Draw();
+	//ball.Draw();
+	//anchor.Draw();
+	softBody.Draw();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -123,10 +128,10 @@ vector<float> GetMousePosition() {
 	return position;
 }
 
-void mouse() {
+void mouse(Shape& shape) {
 
 	vector<float> mousePosition = GetMousePosition();
-	vector<float> ballPosition = ball.GetPosition();
+	vector<float> ballPosition = shape.GetPosition();
 
 	vector<float> force = { mousePosition[0] - ballPosition[0], mousePosition[1] - ballPosition[1] };
 
@@ -138,10 +143,10 @@ void mouse() {
 		force = { force[0] / forceMag * strength, force[1] / forceMag * strength};
 
 	if (MouseHandler::GetInstance()->isLeftButtonDown())
-		ball.ApplyForce(force);
+		softBody.ApplyForce(force);
 
 	if (MouseHandler::GetInstance()->isRightButtonDown())
-		ball.ApplyForce(ball.GetPhysicsObj().GetDirection());
+		shape.ApplyForce(shape.GetPhysicsObj().GetDirection());
 }
 
 void update() {
@@ -156,10 +161,13 @@ void update() {
 
 	lastTime = currentTime;
 
-	mouse();
+	mouse(softBody.GetFirstShape());
 	
-	ball.GetPhysicsObj().ApplySpringForce(20.0f, { 8,9.0f }, 2);
-	ball.Update();
+	printf("{%f,%f}\n", softBody.GetFirstShape().GetPosition()[0], softBody.GetFirstShape().GetPosition()[1]);
+
+	softBody.Update();
+	//ball.GetPhysicsObj().ApplySpringForce(50, { 8,9.0f }, 2);
+	//ball.Update();
 
 	preTime = curTime; // the curTime become the preTime for the next frame
 	glutPostRedisplay();

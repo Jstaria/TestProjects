@@ -145,12 +145,14 @@
     <ClCompile Include="MouseHandler.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="SoftBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="MouseHandler.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="SoftBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

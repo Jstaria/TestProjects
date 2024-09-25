@@ -17,9 +17,11 @@ private:
 	PhysicsObject obj;
 
 public: 
-	Shape() {}
-	Shape(vector<float>& pos, vector<float>& c, float r, int s, float m, float f, bool g, bool fr) : 
-		position(pos), color(c), radius(r), sides(s)
+	bool isActive;
+
+	Shape() : isActive(false) {}
+	Shape(vector<float>& pos, vector<float>& c, float r, int s, float m, float f, bool g, bool fr) :
+		position(pos), color(c), radius(r), sides(s), isActive(true)
 	{
 		obj = PhysicsObject(pos, m, f, g, fr, r);
 	}

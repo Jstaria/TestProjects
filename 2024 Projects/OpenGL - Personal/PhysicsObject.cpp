@@ -47,7 +47,9 @@ void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center,
 
 	vector<float> force = { (position[0] - center[0]) / distance, (position[1] - center[1]) / distance};
 
-	force = { -springConstant * x * force[0], -springConstant * x * force[1]};
+	float b = .75;
+
+	force = { -springConstant * x * force[0] - velocity[0] * b, -springConstant * x * force[1] - velocity[1] * b };
 
 	ApplyForce(force);
 }
