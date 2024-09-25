@@ -27,7 +27,8 @@ int rasterSize[] = { 1280, 720 };
 
 // global parameters defining the ball
 int vertNum = 30; // total number of vertices for the circle
-vector<float> ballPos = vector<float> { 5.0f, 8.0f }; // center position of the circle
+vector<float> ballPos = vector<float> { 8, 5.5f }; // center position of the circle
+vector<float> anchorPos = vector<float>{ 8, 9 };
 vector<float> ballColor = vector<float>{ 1.0f, .5f, 1.0f };
 float radius = 0.3f; // circle's radius
 
@@ -50,9 +51,11 @@ bool ballIsActive = false;
 float prepareTime = 2.0f;
 
 Shape ball;
+Shape anchor;
 
 void SpawnBall() {
-	ball = Shape(ballPos, ballColor, .25, 40, 500, .55, false, true);
+	ball = Shape(ballPos, ballColor, .25, 40, 500, .55, true, true);
+	anchor = Shape(anchorPos, ballColor, .1f, 4, 1, 1, false, false);
 }
 
 void CreateFrameBuffer() {
@@ -72,6 +75,7 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ball.Draw();
+	anchor.Draw();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -128,7 +132,7 @@ void mouse() {
 
 	float forceMag = sqrtf(force[0] * force[0] + force[1] * force[1]);
 
-	float strength = 10;
+	float strength = 50;
 
 	if (forceMag != 0)
 		force = { force[0] / forceMag * strength, force[1] / forceMag * strength};
@@ -153,7 +157,9 @@ void update() {
 	lastTime = currentTime;
 
 	mouse();
-	ball.Update([]() -> vector<float> {return ball.GetPhysicsObjPos(); });
+	
+	ball.GetPhysicsObj().ApplySpringForce(20.0f, { 8,9.0f }, 2);
+	ball.Update();
 
 	preTime = curTime; // the curTime become the preTime for the next frame
 	glutPostRedisplay();

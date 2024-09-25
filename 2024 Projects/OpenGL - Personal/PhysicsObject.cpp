@@ -10,14 +10,14 @@ float maxVel = 1;
 
 void PhysicsObject::ApplyGravity(vector<float> force)
 {
-	acceleration[0] += force[0];
-	acceleration[1] += force[1];
+	(*acceleration)[0] += force[0];
+	(*acceleration)[1] += force[1];
 }
 
 void PhysicsObject::ApplyForce(vector<float> force)
 {
-	acceleration[0] += force[0] / mass;
-	acceleration[1] += force[1] / mass;
+	(*acceleration)[0] += force[0] / mass;
+	(*acceleration)[1] += force[1] / mass;
 }
 
 void PhysicsObject::ApplyFriction(float coeff)
@@ -36,28 +36,32 @@ void PhysicsObject::ApplyFriction(float coeff)
 
 void PhysicsObject::FlipVelocity(bool x, bool y)
 {
-	float dampening = .85f;
+	float dampening = .5f;
 	velocity = { x ? -velocity[0] * dampening: velocity[0], y ? -velocity[1] * dampening : velocity[1] };
 }
 
-void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center)
+void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center, float restLength)
 {
-	vector<float> distance = { position[0] - center[0], position[1] - center[1] };
-	vector<float> force = { -springConstant * distance[0], -springConstant * distance[1] };
+	float distance =  sqrtf(pow(position[0] - center[0], 2) + pow(position[1] - center[1], 2));
+	float x = distance - restLength;
+
+	vector<float> force = { (position[0] - center[0]) / distance, (position[1] - center[1]) / distance};
+
+	force = { -springConstant * x * force[0], -springConstant * x * force[1]};
 
 	ApplyForce(force);
 }
 
 vector<float> PhysicsObject::Update()
 {
-	if (useGravity) ApplyGravity(vector<float> {0, -.009800f});
+	if (useGravity) ApplyGravity(vector<float> {0, -.0098f});
 	if (useFriction) ApplyFriction(frictionCoeff);
 
 	float deltaTime = GlobalVariables::GetInstance()->getDeltaTime();
 
 	velocity = { 
-		velocity[0] + acceleration[0] * deltaTime, 
-		velocity[1] + acceleration[1] * deltaTime };
+		velocity[0] + (*acceleration)[0] * deltaTime,
+		velocity[1] + (*acceleration)[1] * deltaTime };
 
 	float velMag = abs(sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1]));
 
@@ -66,19 +70,16 @@ vector<float> PhysicsObject::Update()
 	else
 		direction = { 0,0 };
 
-	if (abs(velMag) < .0005f)
-		velocity = { 0,0 };
-
 	velocity[0] = min(velocity[0], maxVel);
 	velocity[1] = min(velocity[1], maxVel);
 	velocity[0] = max(velocity[0], -maxVel);
 	velocity[1] = max(velocity[1], -maxVel);
 
-	//printf("(%f,%f)\n", velocity[0], velocity[1]);
+	// printf("(%f,%f)\n", velocity[0], velocity[1]);
 
 	position = { position[0] + velocity[0] * deltaTime, position[1] + velocity[1] * deltaTime };
 
-	acceleration = { 0,0 };
+	(*acceleration) = { 0,0 };
 
 	ScreenBounds();
 

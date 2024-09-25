@@ -15,18 +15,11 @@ void Shape::Draw()
 	glEnd();
 }
 
-void Shape::Update(vector<float>(*func)()) {
-
-	position = func();
+void Shape::Update() 
+{
+	position = obj.Update();
 
 	//printf("(%f, %f)\n", position[0], position[1]);
-}
-
-vector<float> Shape::GetPhysicsObjPos()
-{
-	obj.ApplySpringForce(4.0f, { 8,4.5f });
-
-	return obj.Update();
 }
 
 void Shape::ApplyForce(vector<float> force)
