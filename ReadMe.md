@@ -61,6 +61,9 @@ My current list of Projects from most impressive/best portfolio pieces to still 
     - My first personal game, complete with data structures galore and beautifully and elegantly picked visuals, especially the particle systems
 
 ## Puzzle Golf (2023 Projects) (School Project)
+
+#### First Level
+![FirstLevel](https://i.imgur.com/joA508Y.png)
     - The first team-based game managed and led most design choices and was the lead programmer for it.
         - I programmed the ball collision detection, 
         - the power system, 
@@ -70,12 +73,14 @@ My current list of Projects from most impressive/best portfolio pieces to still 
 
 ## Path Finding (2023 Projects)
 
+#### Simple, Yet Elegant
 ![SimplePathFinding](https://i.imgur.com/AOHPeWZ.png)
 
     - Uses an altered version of Djikstra's, a flow model if you will. I wish I could find the documentation that I got the idea to try this, but alas.
 
 ## Hexagon Tiling (2023 Projects)
 
+#### SAT Collision Honeycombs :D
 ![SATCollision](https://i.imgur.com/bbAHRQC.png)
 
     - Uses the projection collision learned in 'Test Collision' further down the list to create a board of hexagon tiles. It also has a simple rainbow shader made with HLSL
