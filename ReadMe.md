@@ -4,12 +4,17 @@ My name is Joseph Staria and From here I will be implementing any ideas I have d
 
 My current list of Projects from most impressive/best portfolio pieces to still pretty good, just not my magnum opus
 
-#1 Being my personal favorite
+![Crypt Keeper](https://imgur.com/a/YhDu8dM)
 
-1. Clicker Slots (2023 Projects)
+## Crypt Keeper (2024 Projects/C++ SFML)
+    - Using SFML built a 2D platformer from scratchS
+    - Uses a custom built level creator which includes tiles, hitboxes, camera boundboxes
+    - Started a light system, mesh for lights built with world collision
+
+## Clicker Slots (2023 Projects)
     - My first personal game, complete with data structures galore and beautifully and elegantly picked visuals, especially the particle systems
 
-1.5. Puzzle Golf (2023 Projects) (School Project)
+## Puzzle Golf (2023 Projects) (School Project)
     - The first team-based game managed and led most design choices and was the lead programmer for it.
         - I programmed the ball collision detection, 
         - the power system, 
@@ -17,39 +22,39 @@ My current list of Projects from most impressive/best portfolio pieces to still 
         - designed the FileIO Class (which is an earlier rendition of what is used in 'Clicker Slots'),
     - because I was the team lead, I catered to team needs when programming challenges came up
 
-2. Marching Cubes (2024 Projects)
+## Marching Cubes (2024 Projects)
     - Using a 3D array of points, I can create 3D meshes using basic geometry
         - Mapping out all normals
         - Creating all triangles based on a triangulation table
         - Basic 3D and camera implementation using MonoGame Framework
 
-3. Marching Squares (2024 Projects)
+## Marching Squares (2024 Projects)
     - Using a 2D array of points from noise, I was able to create basic geometry both interpolated and not.
         - I went on to use this implementation in Unity to create meshes from the data
 
-4. Wave Function Collapse - After (2024 Projects)
+## Wave Function Collapse - After (2024 Projects)
     - My implementation of collapsing cells in a 2D array with rules for tiles
     - Creates a very mesmerizing pattern if I do say so myself
 
-5. Path Finding (2023 Projects)
+## Path Finding (2023 Projects)
     - Uses an altered version of Djikstra's, a flow model if you will. I wish I could find the documentation that I got the idea to try this, but alas.
 
-6. Hexagon Tiling (2023 Projects)
+## Hexagon Tiling (2023 Projects)
     - Uses the projection collision learned in 'Test Collision' further down the list to create a board of hexagon tiles. It also has a simple rainbow shader made with HLSL
 
-7. After Image (2023 Projects)
+## After Image (2023 Projects)
     - The first smooth player controller that also uses projection collision learned from 'Test Collision' to simulate attacking
     - Learned how to use double button presses
 
-8. Test Collision (2023 Projects)
+## Test Collision (2023 Projects)
     - After many attempts trying to find the perfect collision detection (well as perfect as I could code with less than a year in C#), I found it with a tutorial in projection collision
     - I first tried to implement what I was seeing in my math class using line-on-line intersection to rap an n-gon in lines and then determine if it was colliding with something. 
     - That was both expensive and bad because if you were in the center of an object, it would register
 
-9. Shadow (2023 Projects)
+## Shadow (2023 Projects)
     - Shadows based on vector math, first use of camera transform matrices
 
-10. Scare (2023 Projects)
+## Scare (2023 Projects)
     - Unfinished horror project that I wanted to use Dijkstra's for which then spawned Pathfinding in an effort to replicate it in a manner that wasn't going to lag any computer
     - Since I had a large board I wanted a large Dijkstra's area, but that's a pretty needy calculation
     - Shows the use of camera transforms and rotation of the flashlight
