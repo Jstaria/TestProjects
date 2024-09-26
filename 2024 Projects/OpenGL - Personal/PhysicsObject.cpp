@@ -36,7 +36,7 @@ void PhysicsObject::ApplyFriction(float coeff)
 
 void PhysicsObject::FlipVelocity(bool x, bool y)
 {
-	float dampening = .5f;
+	float dampening = .25f;
 	velocity = { x ? -velocity[0] * dampening: velocity[0], y ? -velocity[1] * dampening : velocity[1] };
 }
 
@@ -56,7 +56,7 @@ void PhysicsObject::ApplySpringForce(float springConstant, vector<float> center,
 
 vector<float> PhysicsObject::Update()
 {
-	if (useGravity) ApplyGravity(vector<float> {0, -.098f});
+	if (useGravity) ApplyGravity(vector<float> {0, -.98f});
 	if (useFriction) ApplyFriction(frictionCoeff);
 
 	float deltaTime = GlobalVariables::GetInstance()->getDeltaTime();

@@ -2,6 +2,9 @@
 // Student Name:	Joseph Staria
 // Friday Exercise:	04
 
+#include "GL/glew.h"
+#include "GL/GL.h"
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -17,24 +20,24 @@
 #include "GlobalVariables.h"
 #include "SoftBody.h"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+
 using namespace std;
 using namespace chrono;
 
-//GLint fbo, textureColorBuffer;
-//GLuint PPShader, vShader, fShader;
 
 float canvasSize[] = { 16.0f, 9.0f };
 int rasterSize[] = { 1280, 720 };
 
 // global parameters defining the ball
 int vertNum = 30; // total number of vertices for the circle
-vector<float> ballPos = vector<float> { 8, 5.5f }; // center position of the circle
+vector<float> ballPos = vector<float>{ 8, 2.5f }; // center position of the circle
 vector<float> anchorPos = vector<float>{ 8, 9 };
 vector<float> ballColor = vector<float>{ 1.0f, .5f, 1.0f };
 float radius = 0.3f; // circle's radius
-
-float velocity_x = 0.0f;
-float velocity_y = 0.0f;
 
 // bar
 float barPos[] = { 5.0f, 2.0f };	// center position of the bar
@@ -42,10 +45,7 @@ float barSize = 3.0f;
 float speed = 400.0f;
 
 // tracking the game time - millisecond 
-unsigned int curTime = 0;
-unsigned int preTime = 0;
 float deltaTime = 0;
-high_resolution_clock::time_point lastTime;
 
 int score = 0;
 bool ballIsActive = false;
@@ -61,16 +61,12 @@ SoftBody softBody;
 void SpawnBall() {
 	//ball = Shape(ballPos, ballColor, .25, 40, 100, .55, true, true);
 	//anchor = Shape(anchorPos, ballColor, .1f, 4, 1, 1, false, false);
-	softBody = SoftBody(2, SoftBodyShape::Square, ballPos, 2.0f, 200);
+	softBody = SoftBody(2, SoftBodyShape::Square, ballPos, 2.0f, 1000);
 }
 
-void CreateFrameBuffer() {
-	
-}
 
 void init(void)
 {
-	lastTime = high_resolution_clock::now();
 	std::srand(std::time(0));
 	SpawnBall();
 }
@@ -116,7 +112,7 @@ void keyboard(unsigned char key, int x, int y)
 	case 'd':
 		if (barPos[0] + speed * deltaTime + barSize / 2.0f < canvasSize[0])
 			barPos[0] += speed * deltaTime;
-		break;	
+		break;
 	}
 }
 
@@ -142,10 +138,13 @@ void mouse(Shape& shape) {
 	float strength = 200;
 
 	if (forceMag != 0)
-		force = { force[0] / forceMag * strength, force[1] / forceMag * strength};
+		force = { force[0] / forceMag * strength, force[1] / forceMag * strength };
 
 	if (MouseHandler::GetInstance()->isLeftButtonDown())
-		softBody.ApplyForce(force);
+	{
+		shape.ApplyForce(force);
+		softBody.ApplyForce({ force[0] * .1f, force[1] * .1f });
+	}
 
 	if (MouseHandler::GetInstance()->isRightButtonDown())
 		shape.ApplyForce(shape.GetPhysicsObj().GetDirection());
@@ -153,9 +152,9 @@ void mouse(Shape& shape) {
 
 void update() {
 	//curTime = glutGet(GLUT_ELAPSED_TIME); // returns the number of milliseconds since glutInit() was called.
-	
+
 	auto currentTime = high_resolution_clock::now();
-	
+
 	//deltaTime = (float)(curTime - preTime) / 1000; // frame-different time in seconds 
 	float timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
 	deltaTime = (timeSinceStart - oldTimeSinceStart) / 100;
@@ -165,11 +164,11 @@ void update() {
 	//lastTime = currentTime;
 
 	mouse(softBody.GetFirstShape());
-	
+
 	printf("%f\n", deltaTime);
 	//printf("{%f,%f}\n", softBody.GetFirstShape().GetPosition()[0], softBody.GetFirstShape().GetPosition()[1]);
-
-	softBody.Update();
+	if (deltaTime < .5f)
+		softBody.Update();
 	//ball.GetPhysicsObj().ApplySpringForce(50, { 8,9.0f }, 2);
 	//ball.Update();
 
@@ -194,8 +193,6 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(update);
-
-	preTime = glutGet(GLUT_ELAPSED_TIME);
 
 	glutMainLoop();
 	return 0;
