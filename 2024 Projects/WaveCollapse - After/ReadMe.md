@@ -1,4 +1,4 @@
-### [< Back](https://github.com/Jstaria/TestProjects/tree/main?tab=readme-ov-file#)
+### [< Back](https://github.com/Jstaria/TestProjects/tree/main?tab=readme-ov-file#readme)
 
 ## Wave Function Collapse - After (2024 Projects)
 
