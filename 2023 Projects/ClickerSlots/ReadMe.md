@@ -12,4 +12,4 @@
 #### Achievement System
 ![Achievements](https://i.imgur.com/V2B0XYp.png)
 
-    - My first personal game, complete with data structures galore and beautifully and elegantly picked visuals, especially the particle systems
+- My first personal game, complete with data structures galore and beautifully and elegantly picked visuals, especially the particle systems
