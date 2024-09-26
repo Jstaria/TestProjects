@@ -8,7 +8,10 @@ My current list of Projects from most impressive/best portfolio pieces to still 
 
 ## Crypt Keeper (2024 Projects/C++ SFML)
 
+#### General Test Level
 ![Crypt Keeper Test Level](https://i.imgur.com/jH10KCo.png)
+
+#### Level Editor Example
 ![Crypt Keeper Editor](https://i.imgur.com/W6zY8Yo.png)
 
     - Using SFML built a 2D platformer from scratchS
@@ -17,6 +20,7 @@ My current list of Projects from most impressive/best portfolio pieces to still 
 
 ## Marching Cubes (2024 Projects)
 
+#### Low Frequency Noise Generated Mesh
 ![MarchingCubeAlgo](https://i.imgur.com/CQ7iPDX.png)
 
     - Using a 3D array of points, I can create 3D meshes using basic geometry
