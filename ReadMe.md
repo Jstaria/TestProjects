@@ -4,9 +4,13 @@ My name is Joseph Staria and From here I will be implementing any ideas I have d
 
 My current list of Projects from most impressive/best portfolio pieces to still pretty good, just not my magnum opus
 
-![Crypt Keeper](https://i.imgur.com/jH10KCo.png)
+
 
 ## Crypt Keeper (2024 Projects/C++ SFML)
+
+![Crypt Keeper Test Level](https://i.imgur.com/jH10KCo.png)
+![Crypt Keeper Editor](https://i.imgur.com/W6zY8Yo.png)
+
     - Using SFML built a 2D platformer from scratchS
     - Uses a custom built level creator which includes tiles, hitboxes, camera boundboxes
     - Started a light system, mesh for lights built with world collision
