@@ -1,8 +1,8 @@
-Welcome to my public Test Project Repo!!!
+# Welcome to my public Test Project Repo!!!
 
-My name is Joseph Staria and From here I will be implementing any ideas I have during my free time!
+## My name is Joseph Staria and From here I will be implementing any ideas I have during my free time!
 
-My current list of Projects from most impressive/best portfolio pieces to still pretty good, just not my magnum opus
+### These are my noteworthy projects, some of which I deem the current best! In order of top to bottom.
 
 ## ![Soft Body Physics Implementation (2024 Projects/Personal OpenGL)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/OpenGL%20-%20Personal/SoftBody#readme)
 
