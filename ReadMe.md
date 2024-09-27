@@ -4,7 +4,7 @@ My name is Joseph Staria and From here I will be implementing any ideas I have d
 
 My current list of Projects from most impressive/best portfolio pieces to still pretty good, just not my magnum opus
 
-
+## ![Soft Body Physics Implementation (2024 Projects/Personal OpenGL)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/OpenGL%20-%20Personal/SoftBody#readme)
 
 ## ![Crypt Keeper (2024 Projects/C++ SFML)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/C%2B%2B%20SFML/SFML_Projects#readme)
 
