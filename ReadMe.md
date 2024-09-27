@@ -2,7 +2,7 @@
 
 ## My name is Joseph Staria and From here I will be implementing any ideas I have during my free time!
 
-### These are my noteworthy projects, some of which I deem the current best! In order of top to bottom.
+### These are my noteworthy projects, some of which I deem the current best! In order, from top to bottom.
 
 ## ![Soft Body Physics Implementation (2024 Projects/Personal OpenGL)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/OpenGL%20-%20Personal/SoftBody#readme)
 
