@@ -22,6 +22,6 @@
 
 ## ![Hexagon Tiling (2023 Projects)](https://github.com/Jstaria/TestProjects/tree/main/2023%20Projects/HexagonTiling#readme)
 
-Other Projects That weren't mentioned are still good, but they are more foundation-building than show-off work
+Other projects that weren't mentioned are still good, but they are more foundation-building than show-off work
 
 Oh also, if you want a cool screen saver I made in my first month or two at RIT, you should look at 2022 Projects, there is only one item
