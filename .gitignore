@@ -23,7 +23,7 @@
 *.[Cc]ache
 *.ilk
 *.log
-*.lib
+#*.lib
 *.sbr
 *.sdf
 ipch/
@@ -54,7 +54,7 @@ monodroid*.msi
 /CompiledContent/Windows8/IgnoreMe.dll
 /CompiledContent/Windows/IgnoreMe.dll
 *.cachefile
-*.dll
+#*.dll
 
 
 
@@ -76,12 +76,12 @@ monodroid*.msi
 *.userprefs
 
 # Build results
-[Dd]ebug/
+#[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
+#x64/
+#x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
@@ -127,7 +127,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+#*.obj
 *.iobj
 *.pch
 *.pdb
@@ -401,3 +401,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
