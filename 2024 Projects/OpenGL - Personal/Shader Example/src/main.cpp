@@ -40,16 +40,16 @@ unsigned char g_keyStates[256];
 
 char v_shader_file[] =
 //".\\shaders\\basic.vert";
-//".\\shaders\\displacement.vert"; // vertex displacement shader with perlin noise
+".\\shaders\\displacement.vert"; // vertex displacement shader with perlin noise
 //".\\shaders\\perVert_lambert.vert"; // basic lambert lighting  
- ".\\shaders\\perFrag_lambert.vert"; // basic lambert lighting with per-fragment implementation
+// ".\\shaders\\perFrag_lambert.vert"; // basic lambert lighting with per-fragment implementation
 // ".\\shaders\\toon_shading.vert"; // basic toon shading with per-fragment implementation
 
 char f_shader_file[] =
 //".\\shaders\\basic.frag";
-// ".\\shaders\\displacement.frag"; // vertex displacement shader with perlin noise
+ ".\\shaders\\displacement.frag"; // vertex displacement shader with perlin noise
 // ".\\shaders\\perVert_lambert.frag"; // basic lambert shading 
- ".\\shaders\\perFrag_lambert.frag"; // basic lambert shading with per-fragment implementation
+// ".\\shaders\\perFrag_lambert.frag"; // basic lambert shading with per-fragment implementation
 // ".\\shaders\\toon_shading.frag"; // basic toon shading with per-fragment implementation
 
 const char meshFile[128] = 

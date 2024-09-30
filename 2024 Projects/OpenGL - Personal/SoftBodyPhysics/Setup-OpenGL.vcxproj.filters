@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="E04-Joseph-Staria.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shape.cpp">
@@ -31,6 +31,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoftBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessingClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,12 +59,27 @@
     <ClInclude Include="SoftBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex_shader.glsl">
+    <None Include="vertex_shader.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="fragment_shader.glsl">
+    <None Include="fragment_shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\basic.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\basic.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

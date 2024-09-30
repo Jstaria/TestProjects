@@ -140,10 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="E04-Joseph-Staria.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="GlobalVariables.cpp" />
     <ClCompile Include="MouseHandler.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="PostProcessingClass.cpp" />
+    <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="SoftBody.cpp" />
   </ItemGroup>
@@ -151,12 +154,17 @@
     <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="MouseHandler.h" />
     <ClInclude Include="PhysicsObject.h" />
+    <ClInclude Include="PostProcessingClass.h" />
+    <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="SoftBody.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment_shader.glsl" />
-    <None Include="vertex_shader.glsl" />
+    <None Include="fragment_shader.frag" />
+    <None Include="shaders\basic.frag" />
+    <None Include="shaders\basic.vert" />
+    <None Include="vertex_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

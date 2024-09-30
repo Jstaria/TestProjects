@@ -25,6 +25,8 @@
 #include <sstream>
 #include <string>
 
+#include "PostProcessingClass.h"
+
 using namespace std;
 using namespace chrono;
 
@@ -54,6 +56,8 @@ float prepareTime = 2.0f;
 float oldTimeSinceStart = 0;
 
 
+PostProcessingClass ppc;
+
 //Shape ball;
 //Shape anchor;
 SoftBody softBody;
@@ -64,21 +68,37 @@ void SpawnBall() {
 	softBody = SoftBody(2, SoftBodyShape::Square, ballPos, 2.0f, 1000);
 }
 
+char v_shader_file[] =
+"./shaders/basic.vert";
+
+char f_shader_file[] =
+"./shaders/basic.frag";
 
 void init(void)
 {
 	std::srand(std::time(0));
 	SpawnBall();
+
+	ppc.Create(v_shader_file, f_shader_file);
+}
+
+void drawScene() {
+	
+	//glUseProgram(0);
+	glClearColor(0.3, 0.6, 0.3, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	softBody.Draw();
 }
 
 void display(void)
 {
-	glClearColor(0.3, 0.6, 0.3, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_LIGHTING);
+	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
 
-	//ball.Draw();
-	//anchor.Draw();
-	softBody.Draw();
+	// Drawing the post-processing mesh will draw the scene inside it when rendering to the fbo
+	ppc.Draw(drawScene);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -165,7 +185,7 @@ void update() {
 
 	mouse(softBody.GetFirstShape());
 
-	printf("%f\n", deltaTime);
+	//printf("%f\n", deltaTime);
 	//printf("{%f,%f}\n", softBody.GetFirstShape().GetPosition()[0], softBody.GetFirstShape().GetPosition()[1]);
 	if (deltaTime < .5f)
 		softBody.Update();
@@ -178,11 +198,12 @@ void update() {
 
 int main(int argc, char* argv[])
 {
-	init();
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
 	glutInitWindowSize(rasterSize[0], rasterSize[1]);
 	glutCreateWindow("Pong!");
+
+	glewInit();
 
 	// Register mouse input callbacks with GLUT
 	glutMouseFunc(MouseHandler::MouseButtonCallback);
@@ -193,6 +214,8 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(update);
+
+	init();
 
 	glutMainLoop();
 	return 0;
