@@ -36,7 +36,8 @@ public:
 	ShaderClass fShader;
 	ShaderClass vShader;
 
-	mat4 modelMat; // Probably won't be used
+	mat4 model;
+	mat4 MVP;
 
 	float normal_offset = 0.0f;
 
@@ -46,7 +47,7 @@ public:
 
 	void Create(const char* v_shader_file, const char* f_shader_file);
 	void RenderToFBO(void (*func)());
-	void Draw(void (*func)());
+	void Draw(void (*func)(), mat4 view, mat4 proj);
 
 private:
 	void computeNormals();

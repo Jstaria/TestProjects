@@ -41,6 +41,21 @@ vector<float> anchorPos = vector<float>{ 8, 9 };
 vector<float> ballColor = vector<float>{ 1.0f, .5f, 1.0f };
 float radius = 0.3f; // circle's radius
 
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+// Create view matrix
+glm::mat4 viewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
+
+float fov = glm::radians(45.0f); // Field of view in radians
+float aspectRatio = rasterSize[0] / rasterSize[1]; // Aspect ratio of your window
+float nearPlane = 0.1f; // Near clipping plane
+float farPlane = 100.0f; // Far clipping plane
+
+// Create projection matrix
+glm::mat4 projectionMatrix = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
+
 // bar
 float barPos[] = { 5.0f, 2.0f };	// center position of the bar
 float barSize = 3.0f;
@@ -84,7 +99,7 @@ void init(void)
 
 void drawScene() {
 	
-	//glUseProgram(0);
+	glUseProgram(0);
 	glClearColor(0.3, 0.6, 0.3, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -98,7 +113,7 @@ void display(void)
 	glEnable(GL_MULTISAMPLE);
 
 	// Drawing the post-processing mesh will draw the scene inside it when rendering to the fbo
-	ppc.Draw(drawScene);
+	ppc.Draw(drawScene, viewMatrix, projectionMatrix);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

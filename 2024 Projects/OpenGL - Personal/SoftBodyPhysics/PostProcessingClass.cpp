@@ -2,6 +2,7 @@
 
 PostProcessingClass::PostProcessingClass()
 {
+	model = mat4(1.0f);
 }
 
 PostProcessingClass::~PostProcessingClass()
@@ -54,6 +55,8 @@ void PostProcessingClass::Create(const char* v_shader_file, const char* f_shader
 
 void PostProcessingClass::RenderToFBO(void(*func)())
 {
+	//prepareFBOandTextureBuffer();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(0);
@@ -63,7 +66,7 @@ void PostProcessingClass::RenderToFBO(void(*func)())
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void PostProcessingClass::Draw(void (*func)())
+void PostProcessingClass::Draw(void (*func)(), mat4 view, mat4 proj)
 {
 	// Render frame buffer to fbo
 	RenderToFBO(func);
@@ -78,7 +81,10 @@ void PostProcessingClass::Draw(void (*func)())
 
 	glUseProgram(shaderProg.id);
 	
+	MVP = model * view * proj;
+
 	shaderProg.setInt("screenTexture", 0);
+	shaderProg.setMatric4v("MVP", 1, value_ptr(MVP));
 
 	// Only gives me a fullscreen quad if I double world coord scalings
 	glBegin(GL_QUADS);
@@ -162,7 +168,7 @@ void PostProcessingClass::prepareVBOandShaders(const char* v_shader_file, const 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+	//glEnableVertexAttribArray(1);
 
 	// Unbind the VAO (to avoid accidental modification later)
 	glBindVertexArray(0);
@@ -180,17 +186,28 @@ void PostProcessingClass::prepareFBOandTextureBuffer()
 	glGenTextures(1, &textureColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) 
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cerr << "Framebuffer not complete!" << endl;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//glDeleteRenderbuffers(1, &rbo);
+	//glDeleteFramebuffers(1, &fbo);
 }
 
 // Just trying to figure out what is wrong here, for the most part I get GL_INVALID_ENUM, dont know why

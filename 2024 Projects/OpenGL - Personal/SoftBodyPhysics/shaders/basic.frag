@@ -13,5 +13,5 @@ void main()
     vec4 screenColor = texture(screenTexture, uv);
     
     // Example: blend with a color (adjust as needed)
-    FragColor = mix(screenColor, vec4(1.0, 1.0, 1.0, 1.0), 0.01);  // Blend with white
+    FragColor = mix(screenColor, vec4(1,0,0,1), 1);  // Blend with white
 }
