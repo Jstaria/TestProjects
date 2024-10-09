@@ -5,7 +5,7 @@
 
 ### These are my noteworthy projects, some of which I deem the current best! In order, from top to bottom.
 
-## ![Soft Body Physics Implementation (2024 Projects/Personal OpenGL)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/OpenGL%20-%20Personal/SoftBody#readme)
+## ![Soft Body Physics Implementation (2024 Projects/Personal OpenGL)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/OpenGL%20-%20Personal/SoftBodyPhysics#readme)
 
 ## ![Crypt Keeper (2024 Projects/C++ SFML)](https://github.com/Jstaria/TestProjects/tree/main/2024%20Projects/C%2B%2B%20SFML/SFML_Projects#readme)
 
