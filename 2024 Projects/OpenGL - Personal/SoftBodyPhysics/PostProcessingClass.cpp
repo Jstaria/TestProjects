@@ -23,10 +23,17 @@ void PostProcessingClass::Create(const char* v_shader_file, const char* f_shader
 	// Fullscreen, 2 triangle mesh
 	vector<vec3> ori_vertices = {
 		// Positions        // TexCoords
-		vec3(0.0f, 9.0f, 10.0f),  // Top-left
-		vec3(0.0f,0.0f, 10.0f),  // Bottom-left
-		vec3( 16.0f,0.0f, 10.0f),  // Bottom-right
-		vec3( 16.0f, 9.0f, 10.0f)   // Top-right
+		vec3(0.0f, 9.0f, 0.0f),  // Top-left
+		vec3(0.0f,0.0f, 0.0f),  // Bottom-left
+		vec3( 16.0f,0.0f, 0.0f),  // Bottom-right
+		vec3( 16.0f, 9.0f, 0.0f)   // Top-right
+	};
+
+	vec2 texCoords[] = {
+	vec2(0.0f, 1.0f),  // Top-left
+	vec2(0.0f, 0.0f),  // Bottom-left
+	vec2(1.0f, 0.0f),  // Bottom-right
+	vec2(1.0f, 1.0f)   // Top-right
 	};
 
 	vector<uvec3> ori_triangles = {
@@ -58,10 +65,20 @@ void PostProcessingClass::RenderToFBO(void(*func)())
 	//prepareFBOandTextureBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glClearColor(0.3, 0.6, 0.3, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(0);
+	glEnable(GL_DEPTH_TEST);
+	//glUseProgram(0);
 
-	func();
+	glColor3f(1, .25, 1);
+	glBegin(GL_POLYGON);
+	glVertex3f(0.0f, 0.5f, 0.0f); // Top-left
+	glVertex3f(0.0f, 0.0f, 0.0f); //Bottom-left
+	glVertex3f(1.0f, 0.0f, 0.0f); //Bottom-right
+	glVertex3f(0.0f, 0.5f, 0.0f); //Top-right
+	glEnd();
+
+	//func();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -69,30 +86,43 @@ void PostProcessingClass::RenderToFBO(void(*func)())
 void PostProcessingClass::Draw(void (*func)(), mat4 view, mat4 proj)
 {
 	// Render frame buffer to fbo
-	RenderToFBO(func);
+	
+
 
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glUseProgram(shaderProg.id);
+
+	glDisable(GL_DEPTH_TEST);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	if (vert_num <= 0 || tri_num <= 0)
 		return;
 
-	glUseProgram(shaderProg.id);
+	
 	
 	MVP = model * view * proj;
 
 	shaderProg.setInt("screenTexture", 0);
-	shaderProg.setMatric4v("MVP", 1, value_ptr(MVP));
+	//shaderProg.setMatric4v("MVP", 1, value_ptr(MVP));
 
 	// Only gives me a fullscreen quad if I double world coord scalings
-	glBegin(GL_QUADS);
-	glVertex3f(-16.0f, 9.0f, 0.0f); // Top-left
-	glVertex3f(-16.0f, -9.0f, 0.0f); // Bottom-left
-	glVertex3f(16.0f, -9.0f, 0.0f); // Bottom-right
-	glVertex3f(16.0f, 9.0f, 0.0f); // Top-right
-	glEnd();
+	// Setup VAO and VBO
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0); // Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
+
+	glEnableVertexAttribArray(1); // Texture attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)(sizeof(vec3)));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glDrawElements(GL_TRIANGLES, tri_num * 3, GL_UNSIGNED_INT, 0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindVertexArray(0);
 
 	// Commented out because I don't know if this is doing *anything*
 	// Well, it did at one point, *I think*
@@ -143,43 +173,45 @@ void PostProcessingClass::prepareVBOandShaders(const char* v_shader_file, const 
 	vShader.Destroy();
 	fShader.Destroy();
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * vert_num, vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &nbo);
-	glBindBuffer(GL_ARRAY_BUFFER, nbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * vert_num, vnormals, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uvec3) * tri_num, triangles, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, nbo);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	glEnableVertexAttribArray(0);
-	//glEnableVertexAttribArray(1);
-
-	// Unbind the VAO (to avoid accidental modification later)
-	glBindVertexArray(0);
-
-	// Unbind the buffers (optional, but good practice)
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glGenVertexArrays(1, &vao);
+	//glBindVertexArray(vao);
+	//
+	//glGenBuffers(1, &vbo);
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * vert_num, vertices, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//
+	//glGenBuffers(1, &nbo);
+	//glBindBuffer(GL_ARRAY_BUFFER, nbo);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * vert_num, vnormals, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//
+	//glGenBuffers(1, &ibo);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uvec3) * tri_num, triangles, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	//
+	//glBindBuffer(GL_ARRAY_BUFFER, nbo);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	//
+	//glEnableVertexAttribArray(0);
+	////glEnableVertexAttribArray(1);
+	//
+	//// Unbind the VAO (to avoid accidental modification later)
+	//glBindVertexArray(0);
+	//
+	//// Unbind the buffers (optional, but good practice)
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void PostProcessingClass::prepareFBOandTextureBuffer()
 {
+	// Generate buffer once
+	// ----------------------------------------------------------------------------------------------
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -190,21 +222,24 @@ void PostProcessingClass::prepareFBOandTextureBuffer()
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// ----------------------------------------------------------------------------------------------
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
 
-	unsigned int rbo;
+	
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cerr << "Framebuffer not complete!" << endl;
+	auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	if (fboStatus != GL_FRAMEBUFFER_COMPLETE) {
+		cout << "FBO ERROR: " << fboStatus << endl;
+	}
 
 	//glDeleteRenderbuffers(1, &rbo);
 	//glDeleteFramebuffers(1, &fbo);

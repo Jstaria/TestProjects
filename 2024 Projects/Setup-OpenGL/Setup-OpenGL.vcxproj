@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyMesh.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="MyMesh.h" />
+    <ClCompile Include="E08-Joseph-Staria.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -30,7 +30,8 @@ public:
 	vec3* fnormals;
 	vec3* vnormals;
 
-	GLuint vao, vbo, nbo, ibo, fbo;
+	GLuint vao, vbo, nbo, ibo;
+	unsigned int fbo, rbo;
 	GLuint textureColorBuffer;
 	ShaderProgram shaderProg;
 	ShaderClass fShader;

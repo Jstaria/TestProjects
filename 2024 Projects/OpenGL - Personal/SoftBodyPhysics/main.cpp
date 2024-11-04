@@ -99,9 +99,7 @@ void init(void)
 
 void drawScene() {
 	
-	glUseProgram(0);
-	glClearColor(0.3, 0.6, 0.3, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glUseProgram(0);
 
 	softBody.Draw();
 }
@@ -112,8 +110,14 @@ void display(void)
 	//glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 
+	ppc.RenderToFBO(drawScene);
+
 	// Drawing the post-processing mesh will draw the scene inside it when rendering to the fbo
 	ppc.Draw(drawScene, viewMatrix, projectionMatrix);
+
+	//glUseProgram(0);
+
+	//drawScene();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
