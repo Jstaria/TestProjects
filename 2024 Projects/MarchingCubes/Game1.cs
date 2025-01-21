@@ -44,7 +44,7 @@ namespace _3D_Programming
             basicEffect.LightingEnabled = true;
             basicEffect.EnableDefaultLighting();
 
-            cube = new CubeMarching(20,10,20,.5f, 100);
+            cube = new CubeMarching(15,20,15,.01f, 100, .05f);
             cube.UpdateAll();
 
             base.Initialize();
@@ -87,13 +87,17 @@ namespace _3D_Programming
             // and see both sides of the triangle
 
             RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.CullClockwiseFace;
+            rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
             GraphicsDevice.RasterizerState = rasterizerState;
 
             // Loop through all effects in shader, apply them, and draw our shader
             foreach(EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
+
+                if (vertexBuffer == null)
+                    continue;
+
                 GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount);
             }
 

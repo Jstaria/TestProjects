@@ -53,9 +53,9 @@ public class CubeMarching
 
     public VertexBuffer VertexBuffer { get { return vertexBuffer; } }
 
-    public CubeMarching() : this(10,10,10,.5f, 10) { }
+    public CubeMarching() : this(10,10,10,.5f, 10, .05f) { }
 
-    public CubeMarching(int width, int height, int length, float heightThreshhold, float scale)
+    public CubeMarching(int width, int height, int length, float heightThreshhold, float scale, float frequency)
     {
         this.width = width;
         this.height = height;
@@ -64,7 +64,7 @@ public class CubeMarching
         this.scale = scale;
 
         this.noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2S);
-        this.noise.SetFrequency(.2f);
+        this.noise.SetFrequency(frequency);
     }
 
     #region Generic
@@ -149,6 +149,9 @@ public class CubeMarching
         }
 
         // An array of drawables we will give to the GPU
+        if (triangleCount == 0)
+            return;
+
         vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColorNormal), vertices.Count, BufferUsage.WriteOnly);
         vertexBuffer.SetData<VertexPositionColorNormal>(vertices.ToArray());
     }
@@ -207,7 +210,7 @@ public class CubeMarching
             Vector3 edge1 = triangle.vertices[1] - triangle.vertices[0];
             Vector3 edge2 = triangle.vertices[2] - triangle.vertices[0];
 
-            Vector3 Normal = Vector3.Normalize(Vector3.Cross(edge1, edge2));
+            Vector3 Normal = Vector3.Normalize(Vector3.Cross(edge2, edge1));
 
             triangle.normal = Normal;
             triangle.faceCount = 1;
